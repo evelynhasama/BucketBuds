@@ -11,7 +11,7 @@ Original App Design Project - README
 
 ## Overview
 ### Description
-Collaborative bucket list app that allows users to create shared bucket lists with their friends and family. Users will schedule their bucket list activities and share photos with each other.
+Collaborative bucket list app that allows users to create shared bucket lists with their friends and family. Users will schedule their bucket list activities and get inspiration for activities.
 
 ### App Evaluation
 [Evaluation of your app across the following attributes]
