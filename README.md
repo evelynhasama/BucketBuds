@@ -11,7 +11,7 @@ Original App Design Project - README
 
 ## Overview
 ### Description
-Collaborative bucket list app that allows users to create shared bucket lists with their friends and family. Users will schedule their bucket list activities and get inspiration for activities.
+Collaborative bucket list app that allows users to create shared bucket lists with their friends and family. Users will schedule their bucket list activities and get inspiration and resources for activities.
 
 ### App Evaluation
 [Evaluation of your app across the following attributes]
@@ -39,8 +39,9 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
 * User can reorder or delete items in the bucket list
 * User can schedule events with the group using the [G Calendar API](https://developers.google.com/calendar/api/v3/reference) and/or [G Calendar Service](https://developers.google.com/apps-script/reference/calendar)
 * Users can route to event locations through on-device Google Maps
-* User can see sort/filter list by completed/active activity status, event date, alphabetical order
+* User can see sort/filter list by completed/active bucket status, alphabetical order
 * User can get inspiration for activities they may be interested in through the [Eventbrite API](https://www.eventbrite.com/platform/docs/introduction) or [Bored API](https://www.boredapi.com/)
+* User can find helpful resources on the web
  
 
 **Optional Nice-to-have Stories**
@@ -66,7 +67,7 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
 * Profile screen
     * User can view their profile, bio, list of friends
     * User can remove friends
-* Add friends screen
+* Add friends screen (Fragment)
     * User can add friends (other users) by phone number or username
 * Home Stream screen
     * User can view all of their bucket lists
@@ -75,13 +76,12 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
 * Bucket List screen
     * User can reorder or delete items in the bucket list
     * User can add activities with details (name, description, location) to a bucket list
-        * Fragment?
-    * User can see sort/filter list by completed/active activity status, event date, alphabetical order
 * Activity Details screen
     * User can schedule events with the group using the [G Calendar API](https://developers.google.com/calendar/api/v3/reference) and/or [G Calendar Service](https://developers.google.com/apps-script/reference/calendar)
     * Users can route to event locations through on-device Google Maps
 * Inspiration screen
     * User can get inspiration for activities they may be interested in through the [Eventbrite API](https://www.eventbrite.com/platform/docs/introduction) or [Bored API](https://www.boredapi.com/)
+    * User can find helpful resources on the web
 
 ### 3. Navigation
 
@@ -101,9 +101,8 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    * Login screen
 * Profile screen
     * Add Friends screen
-* Add Friends screen
-    * Profile screen (back)
-    * None
+* Add Friends screen (Fragment)
+    * Profile screen
 * Home Stream screen
     * Bucket List screen (when tapping on bucket list)
 * Create Bucket List screen
