@@ -33,6 +33,7 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
 * User can add friends (other users) by phone number or username
 * User can remove friends
 * User can view their profile, bio, list of friends
+* User can edit their profile information
 * User can create lists shared amongst friends with list descriptions and ideal finish date
 * User can view all of their bucket lists
 * User can add activities with details (name, description, location, date/time) to a bucket list 
@@ -49,14 +50,15 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
 * User can check if everyone's calenders are free or busy using the [Freebusy: query](https://developers.google.com/calendar/api/v3/reference/freebusy/query)
 * User can upload photos of completed activities into the bucket
     * User can view photo details and which activity
-* Users can chat with the group through on-device messaging
+* Users can chat with the group through on-device messaging or in-app Parse chat
 * When adding friends, user's contacts can provide suggestions
 * User can copy/add over inspiration activities to their lists
-* User can add friends to a list after list creation
+* User can add friends to a bucket list after list creation
 * User can modify activity details
 * User can search through their home stream of bucket lists
 * User can search through bucket list for activity
-* User can sort/filter their home stream of bucket lists
+* User can view friends' profiles
+
 
 ### 2. Screen Archetypes
 
@@ -67,6 +69,7 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
 * Profile screen
     * User can view their profile, bio, list of friends
     * User can remove friends
+    * User can edit their profile information
 * Add friends screen (Fragment)
     * User can add friends (other users) by phone number or username
 * Home Stream screen
