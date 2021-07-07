@@ -116,8 +116,10 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
     * None
 
 ## Wireframes
-[Add picture of your hand sketched wireframes in this section]
-<img src="YOUR_WIREFRAME_IMAGE_URL" width=600>
+* Login and Create Account Workflow
+   * <img src="https://github.com/evelynhasama/BucketBuds/blob/main/wireframes/login.jpg" width=500>
+* Main Workflow
+   * <img src="https://github.com/evelynhasama/BucketBuds/blob/main/wireframes/mainworkflow.jpg" width=900>
 
 ### [BONUS] Digital Wireframes & Mockups
 
