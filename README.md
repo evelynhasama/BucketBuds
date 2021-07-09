@@ -178,6 +178,30 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    | calendars     | Array    | list of calenderIds for Google Calendar API |
 
 ### Networking
-- [Add list of network requests by screen ]
+#### List of network requests by screen
+* Login screen
+    * logInInBackground()
+* Registration screen
+    * signUpInBackground()
+* Profile screen
+    * PUT update user profile info 
+    * GET get user's profile info
+* Add Friends screen (Fragment)
+    * GET query for users by search
+    * PUT update friends list
+* Home Stream screen
+    * GET get user's list of buckets
+    * GET query for the bucket lists
+* Create Bucket List screen
+    * PUT create a bucket list
+    * PUT add to user's list of buckets
+* Bucket List screen
+    * GET get list of activities
+    * GET query for activities
+    * PUT create new activities
+* Activity Details screen
+    * PUT modify the activity info
+* Inspiration screen
+    * None
 - [Create basic snippets for each Parse network request]
 - [OPTIONAL: List endpoints if using existing API such as Yelp]
