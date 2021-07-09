@@ -39,7 +39,6 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
 * User can add activities with details (name, description, location, date/time) to a bucket list 
 * User can reorder or delete items in the bucket list
 * User can schedule events with the group using the [G Calendar API](https://developers.google.com/calendar/api/v3/reference) and/or [G Calendar Service](https://developers.google.com/apps-script/reference/calendar)
-* Users can route to event locations through on-device Google Maps
 * User can see sort/filter list by completed/active bucket status, alphabetical order
 * User can get inspiration for activities they may be interested in through the [Eventbrite API](https://www.eventbrite.com/platform/docs/introduction) or [Bored API](https://www.boredapi.com/)
 * User can find helpful resources on the web
@@ -55,6 +54,7 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
 * User can copy/add over inspiration activities to their lists
 * User can add friends to a bucket list after list creation
 * User can modify activity details
+* User can route to event locations through on-device Google Maps
 * User can search through their home stream of bucket lists
 * User can search through bucket list for activity
 * User can view friends' profiles
@@ -81,7 +81,6 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
     * User can add activities with details (name, description, location) to a bucket list
 * Activity Details screen
     * User can schedule events with the group using the [G Calendar API](https://developers.google.com/calendar/api/v3/reference) and/or [G Calendar Service](https://developers.google.com/apps-script/reference/calendar)
-    * Users can route to event locations through on-device Google Maps
 * Inspiration screen
     * User can get inspiration for activities they may be interested in through the [Eventbrite API](https://www.eventbrite.com/platform/docs/introduction) or [Bored API](https://www.boredapi.com/)
     * User can find helpful resources on the web
