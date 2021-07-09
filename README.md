@@ -129,9 +129,54 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
 ### [BONUS] Interactive Prototype
 
 ## Schema 
-[This section will be completed in Unit 9]
 ### Models
-[Add table of models]
+   
+#### User
+
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | objectId      | String   | unique id for the user (default field) |
+   | username      | String   | username |
+   | password      | String   | password |
+   | first         | String   | first name |
+   | last          | String   | last name |
+   | gmail         | String   | gmail address |
+   | calenderId    | String   | calenderId for Google Calendar API |
+   | bio           | String   | words to describe themself |
+   | image         | File     | profile picture |
+   | bucketCount   | Number   | number of user's buckets |
+   | friendCount   | Number   | number of user's friends |
+   | buckets       | Array    | list of the user's bucket lists |
+   | friends       | Array    | list of the user's friends |
+  
+#### Bucket List
+
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | objectId      | String   | unique id for the user post (default field) |
+   | name          | String   | bucket list name |
+   | image         | File     | bucket list cover image |
+   | description   | String   | description of bucket list |
+   | status        | Boolean  | false (active), true (completed) |
+   | createdAt     | DateTime | date when bucket is created (default field) |
+   | updatedAt     | DateTime | date when bucket is last updated (default field) |
+   | users         | Array    | list of users |
+   | calendars     | Array    | list of calenderIds for Google Calendar API |
+   | activites     | Array    | list of activities |
+   
+#### Activity
+
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | objectId      | String   | unique id for the activity (default field) |
+   | name          | String   | activity name |
+   | description   | String   | description of activity |
+   | status        | Boolean  | false (active), true (completed) |
+   | location      | String   | location name |
+   | time          | DateTime | when event is occuring |
+   | eventId       | String   | eventId for Google Calender API |
+   | calendars     | Array    | list of calenderIds for Google Calendar API |
+
 ### Networking
 - [Add list of network requests by screen ]
 - [Create basic snippets for each Parse network request]
