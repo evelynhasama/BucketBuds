@@ -146,10 +146,9 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    | image         | File     | profile picture |
    | bucketCount   | Number   | number of user's buckets |
    | friendCount   | Number   | number of user's friends |
-   | buckets       | Array    | list of the user's bucket lists |
    | friends       | Array    | list of the user's friends |
   
-#### Bucket List
+#### BucketList
 
    | Property      | Type     | Description |
    | ------------- | -------- | ------------|
@@ -161,8 +160,6 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    | createdAt     | DateTime | date when bucket is created (default field) |
    | updatedAt     | DateTime | date when bucket is last updated (default field) |
    | users         | Array    | list of users |
-   | calendars     | Array    | list of calenderIds for Google Calendar API |
-   | activites     | Array    | list of activities |
    
 #### Activity
 
@@ -175,33 +172,78 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    | location      | String   | location name |
    | time          | DateTime | when event is occuring |
    | eventId       | String   | eventId for Google Calender API |
-   | calendars     | Array    | list of calenderIds for Google Calendar API |
+   | bucket        | Pointer  | points to bucket |
+   | gmails        | Array    | list of user's gmails |
 
 ### Networking
 #### List of network requests by screen
 * Login screen
     * logInInBackground()
+       * ```java
+         ParseUser.logInInBackground(username, password, new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                if (e != null) {
+                    // Failed to login
+                    return;
+                }
+                // User is signed in
+            }
+         });
+         ```
 * Registration screen
     * signUpInBackground()
+      * ```java
+        ParseUser user = new ParseUser();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.signUpInBackground(new SignUpCallback() {
+            public void done(ParseException e) {
+                if (e != null) {
+                    // Failed to sign up
+                    return;
+                }
+                // User is signed up
+            }
+        });
+        ```
 * Profile screen
     * PUT update user profile info 
     * GET get user's profile info
 * Add Friends screen (Fragment)
     * GET query for users by search
+      *  ```java
+         // querying User class
+         query.startsWith("username", text);
+         ```
     * PUT update friends list
+      * ```java
+         put("friends", friends);
+         ``` 
 * Home Stream screen
-    * GET get user's list of buckets
     * GET query for the bucket lists
+      *  ```java
+         // querying BucketList class
+         query.whereContains("users", currentUser);
+         ``` 
 * Create Bucket List screen
     * PUT create a bucket list
-    * PUT add to user's list of buckets
 * Bucket List screen
-    * GET get list of activities
     * GET query for activities
+      *  ```java
+         // querying Activity class
+         query.whereEqualTo("bucket", bucket);
+         ``` 
     * PUT create new activities
 * Activity Details screen
     * PUT modify the activity info
 * Inspiration screen
     * None
-- [Create basic snippets for each Parse network request]
-- [OPTIONAL: List endpoints if using existing API such as Yelp]
+
+#### OPTIONAL: API Endpoints
+* [Google Calendar API](https://developers.google.com/calendar/api/v3/reference) ([Java Docs](https://googleapis.dev/java/google-api-services-calendar/latest/index.html)):
+   * Create event: POST https://www.googleapis.com/calendar/v3/calendars/calendarId/events
+   * Delete event: DELETE https://www.googleapis.com/calendar/v3/calendars/calendarId/events/eventId
+   * Update event: PUT https://www.googleapis.com/calendar/v3/calendars/calendarId/events/eventId
+* [Bored API](https://www.boredapi.com/documentation)
+   * Get a random event: GET http://www.boredapi.com/api/activity/
