@@ -40,7 +40,7 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
 * User can reorder or delete items in the bucket list
 * User can schedule events with the group using the [G Calendar API](https://developers.google.com/calendar/api/v3/reference) and/or [G Calendar Service](https://developers.google.com/apps-script/reference/calendar)
 * User can see sort/filter list by completed/active bucket status, alphabetical order
-* User can get inspiration for activities they may be interested in through the [Eventbrite API](https://www.eventbrite.com/platform/docs/introduction) or [Bored API](https://www.boredapi.com/)
+* User can get inspiration for activities they may be interested in through the APIs
 * User can find helpful resources on the web
  
 
@@ -82,7 +82,11 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
 * Activity Details screen
     * User can schedule events with the group using the [G Calendar API](https://developers.google.com/calendar/api/v3/reference) and/or [G Calendar Service](https://developers.google.com/apps-script/reference/calendar)
 * Inspiration screen
-    * User can get inspiration for activities they may be interested in through the [Eventbrite API](https://www.eventbrite.com/platform/docs/introduction) or [Bored API](https://www.boredapi.com/)
+    * User can get inspiration for activities they may be interested in through some of the following APIs:
+      * [Bored API](https://www.boredapi.com/)
+      * [Ticketmaster Dsicovery API](https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/)
+      * [SeatGeek API](https://platform.seatgeek.com/#events)
+      * [Musement API (actvities search)](https://api-docs.musement.com/docs/activities)
     * User can find helpful resources on the web
 
 ### 3. Navigation
@@ -132,33 +136,33 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    
 #### User
 
-   | Property      | Type     | Description |
-   | ------------- | -------- | ------------|
-   | objectId      | String   | unique id for the user (default field) |
-   | username      | String   | username |
-   | password      | String   | password |
-   | first         | String   | first name |
-   | last          | String   | last name |
-   | gmail         | String   | gmail address |
-   | calenderId    | String   | calenderId for Google Calendar API |
-   | bio           | String   | words to describe themself |
-   | image         | File     | profile picture |
-   | bucketCount   | Number   | number of user's buckets |
-   | friendCount   | Number   | number of user's friends |
-   | friends       | Array    | list of the user's friends |
+   | Property      | Type            | Description |
+   | ------------- | --------------- | ------------|
+   | objectId      | String          | unique id for the user (default field) |
+   | username      | String          | username |
+   | password      | String          | password |
+   | first         | String          | first name |
+   | last          | String          | last name |
+   | gmail         | String          | gmail address |
+   | calenderId    | String          | calenderId for Google Calendar API |
+   | bio           | String          | words to describe themself |
+   | image         | File            | profile picture |
+   | bucketCount   | Number          | number of user's buckets |
+   | friendCount   | Number          | number of user's friends |
+   | friends       | Relation<User>  | relation to user's friends |
   
 #### BucketList
 
-   | Property      | Type     | Description |
-   | ------------- | -------- | ------------|
-   | objectId      | String   | unique id for the user post (default field) |
-   | name          | String   | bucket list name |
-   | image         | File     | bucket list cover image |
-   | description   | String   | description of bucket list |
-   | status        | Boolean  | false (active), true (completed) |
-   | createdAt     | DateTime | date when bucket is created (default field) |
-   | updatedAt     | DateTime | date when bucket is last updated (default field) |
-   | users         | Array    | list of users |
+   | Property      | Type            | Description |
+   | ------------- | --------------- | ------------|
+   | objectId      | String          | unique id for the user post (default field) |
+   | name          | String          | bucket list name |
+   | image         | File            | bucket list cover image |
+   | description   | String          | description of bucket list |
+   | status        | Boolean         | false (active), true (completed) |
+   | createdAt     | DateTime        | date when bucket is created (default field) |
+   | updatedAt     | DateTime        | date when bucket is last updated (default field) |
+   | users         | Relation<User>  | relation to users who own the bucket list |
    
 #### Activity
 
@@ -217,23 +221,31 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
          ```
     * PUT update friends list
       * ```java
-         put("friends", friends);
+         friendsRelation = User.relation('friends');
+         friendsRelation.add(friend)
          ``` 
 * Home Stream screen
-    * GET query for the bucket lists
+    * GET query for the user's own bucket lists
       *  ```java
          // querying BucketList class
-         query.whereContains("users", currentUser);
+         query.whereEqualTo('users', user);
          ``` 
 * Create Bucket List screen
     * PUT create a bucket list
+      * ```java
+         bucketsRelation = BucketList.relation('users');
+         bucketsRelation.add(bucketlist)
+        ``` 
 * Bucket List screen
     * GET query for activities
       *  ```java
          // querying Activity class
-         query.whereEqualTo("bucket", bucket);
+         query.whereEqualTo("bucket", bucketlist);
          ``` 
     * PUT create new activities
+      * ```java
+        Activity.set('bucket', bucket);
+        ``` 
 * Activity Details screen
     * PUT modify the activity info
 * Inspiration screen
@@ -246,3 +258,6 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    * Update event: PUT https://www.googleapis.com/calendar/v3/calendars/calendarId/events/eventId
 * [Bored API](https://www.boredapi.com/documentation)
    * Get a random event: GET http://www.boredapi.com/api/activity/
+* [Ticketmaster Dsicovery API](https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/)
+* [SeatGeek API](https://platform.seatgeek.com/#events)
+* [Musement API (actvities search)](https://api-docs.musement.com/docs/activities)
