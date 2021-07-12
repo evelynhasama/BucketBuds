@@ -159,7 +159,7 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    | name          | String          | bucket list name |
    | image         | File            | bucket list cover image |
    | description   | String          | description of bucket list |
-   | status        | Boolean         | false (active), true (completed) |
+   | completed     | Boolean         | false (active), true (completed) |
    | createdAt     | DateTime        | date when bucket is created (default field) |
    | updatedAt     | DateTime        | date when bucket is last updated (default field) |
    | users         | Relation<User>  | relation to users who own the bucket list |
@@ -171,7 +171,7 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    | objectId      | String   | unique id for the activity (default field) |
    | name          | String   | activity name |
    | description   | String   | description of activity |
-   | status        | Boolean  | false (active), true (completed) |
+   | completed     | Boolean  | false (active), true (completed) |
    | location      | String   | location name |
    | time          | DateTime | when event is occuring |
    | eventId       | String   | eventId for Google Calender API |
