@@ -141,9 +141,9 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    | objectId      | String          | unique id for the user (default field) |
    | username      | String          | username |
    | password      | String          | password |
-   | first         | String          | first name |
-   | last          | String          | last name |
-   | gmail         | String          | gmail address |
+   | firstName     | String          | first name |
+   | lastName      | String          | last name |
+   | email         | String          | gmail address |
    | calenderId    | String          | calenderId for Google Calendar API |
    | bio           | String          | words to describe themself |
    | image         | File            | profile picture |
@@ -176,7 +176,9 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    | time          | DateTime | when event is occuring |
    | eventId       | String   | eventId for Google Calender API |
    | bucket        | Pointer  | points to bucket |
-   | gmails        | Array    | list of user's gmails |
+   | emails        | Array    | list of user's gmails |
+   | web           | String   | link to the activity web page |
+
 
 ### Networking
 #### List of network requests by screen
