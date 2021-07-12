@@ -173,9 +173,9 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    | description   | String   | description of activity |
    | completed     | Boolean  | false (active), true (completed) |
    | location      | String   | location name |
-   | time          | DateTime | when event is occuring |
+   | date          | DateTime | when event is occuring |
    | eventId       | String   | eventId for Google Calender API |
-   | bucket        | Pointer  | points to bucket |
+   | bucket        | Pointer  | points to bucket list |
    | emails        | Array    | list of user's gmails |
    | web           | String   | link to the activity web page |
 
