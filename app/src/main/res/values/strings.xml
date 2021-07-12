@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Bucket Buds</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
+    <string name="log_in">log in</string>
+    <string name="no_acct">Don\'t already have an account?</string>
+    <string name="sign_up">Sign up.</string>
 </resources>
