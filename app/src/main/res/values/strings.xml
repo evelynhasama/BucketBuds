@@ -16,4 +16,7 @@
     <string name="profile">profile</string>
     <string name="log_out">Log out</string>
     <string name="edit_profile_info">Edit Profile Info</string>
+    <string name="bio">bio...</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
 </resources>

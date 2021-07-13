@@ -3,6 +3,7 @@ package com.example.bucketbuds;
 import com.parse.ParseFile;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 public class User{
 
@@ -93,6 +94,10 @@ public class User{
     public void removeFriend(ParseUser friend) {
         ParseRelation<ParseUser> friendsRelation = user.getRelation(KEY_FRIENDS);
         friendsRelation.remove(friend);
+    }
+
+    public void saveInBackground(SaveCallback saveCallback) {
+        user.saveInBackground(saveCallback);
     }
 
 }
