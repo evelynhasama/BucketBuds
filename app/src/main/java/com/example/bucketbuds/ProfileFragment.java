@@ -1,6 +1,7 @@
 package com.example.bucketbuds;
 
 import android.content.Intent;
+import android.content.Intent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -44,10 +45,9 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.bumptech.glide.Glide;
 import com.parse.SaveCallback;
-
+import com.parse.ParseUser;
 import org.jetbrains.annotations.Contract;
 import org.w3c.dom.Text;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -314,6 +314,5 @@ public class ProfileFragment extends Fragment {
         Log.d(TAG, "updating friend Count");
         tvFriendCount.setText(String.valueOf(userPub.getFriendCount()));
     }
-
 
 }
