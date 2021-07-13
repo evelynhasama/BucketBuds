@@ -14,4 +14,5 @@
     <string name="inspo">inspo</string>
     <string name="buckets">buckets</string>
     <string name="profile">profile</string>
+    <string name="log_out">Log out</string>
 </resources>
