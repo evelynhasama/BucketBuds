@@ -2,7 +2,13 @@
     <string name="app_name">Bucket Buds</string>
     <string name="username">username</string>
     <string name="password">password</string>
+    <string name="confirm_password">confirm password</string>
+    <string name="first_name">first name</string>
+    <string name="last_name">last name</string>
+    <string name="gmail">gmail</string>
     <string name="log_in">log in</string>
     <string name="no_acct">Don\'t already have an account?</string>
-    <string name="sign_up">Sign up.</string>
+    <string name="agreement">You are agreeing to the Bucket Buds </string>
+    <string name="terms_of_service">Terms of Service</string>
+    <string name="sign_up">Sign up</string>
 </resources>

@@ -32,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (ParseUser.getCurrentUser() != null){
             goMainActivity();
+            ParseUser.logOut();
         }
 
         etPassword = findViewById(R.id.etPassword);
@@ -53,6 +54,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Navigate to sign up activity
                 Toast.makeText(LoginActivity.this, "Going to sign up screen", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -74,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void goMainActivity(){
+    public void goMainActivity(){
        // Navigate to main activity through intent
        Toast.makeText(LoginActivity.this, "Going to main activity", Toast.LENGTH_LONG).show();
     }
