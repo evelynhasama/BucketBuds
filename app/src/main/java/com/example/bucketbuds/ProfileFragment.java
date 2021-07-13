@@ -1,5 +1,6 @@
 package com.example.bucketbuds;
 
+import android.content.Intent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -39,6 +40,13 @@ import com.parse.ParseUser;
 import com.bumptech.glide.Glide;
 import com.parse.SaveCallback;
 
+import com.parse.ParseUser;
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link ProfileFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
 import java.io.File;
 import java.io.IOException;
 
@@ -291,5 +299,6 @@ public class ProfileFragment extends Fragment {
         // Return result
         return rotatedBitmap;
     }
+
 
 }
