@@ -32,7 +32,6 @@ public class LoginActivity extends AppCompatActivity {
 
         if (ParseUser.getCurrentUser() != null){
             goMainActivity();
-            ParseUser.logOut();
         }
 
         etPassword = findViewById(R.id.etPassword);
@@ -80,6 +79,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public void goMainActivity(){
        // Navigate to main activity through intent
-       Toast.makeText(LoginActivity.this, "Going to main activity", Toast.LENGTH_LONG).show();
+       Intent intent  = new Intent(LoginActivity.this, MainActivity.class);
+       startActivity(intent);
+       finish();
     }
 }

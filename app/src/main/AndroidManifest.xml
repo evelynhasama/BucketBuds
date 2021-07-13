@@ -13,7 +13,8 @@
         android:roundIcon="@drawable/bucket_buds_circle_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.BucketBuds">
-        <activity android:name=".SignupActivity"></activity>
+        <activity android:name=".SignupActivity" />
+        <activity android:name=".MainActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

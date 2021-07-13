@@ -2,6 +2,7 @@ package com.example.bucketbuds;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -78,7 +79,9 @@ public class SignupActivity extends AppCompatActivity {
 
     public void goMainActivity(){
         // Navigate to main activity through intent
-        Toast.makeText(SignupActivity.this, "Going to main activity", Toast.LENGTH_LONG).show();
+        Intent intent  = new Intent(SignupActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 }
