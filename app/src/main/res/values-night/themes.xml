@@ -1,0 +1,20 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.BucketBuds" parent="Theme.MaterialComponents.Light">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/powder_blue</item>
+        <item name="colorOnPrimary">@color/white_blue</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/lavender</item>
+        <item name="colorSecondaryVariant">@color/grape</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+        <!-- Customize your theme here. -->
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:textColorPrimary">@color/cadet_blue</item>
+        <item name="android:textColorSecondary">@color/powder_blue</item>
+        <item name="android:fontFamily">@font/lato</item>
+    </style>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="grape">#564787</color>
+    <color name="lavender">#DECEDB</color>
+    <color name="white_blue">#F2FDFF</color>
+    <color name="powder_blue">#A7DADC</color>
+    <color name="cadet_blue">#409DA0</color>
+    <color name="oxford_blue">#0E162F</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>
