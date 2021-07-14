@@ -6,7 +6,7 @@
 
     <EditText
         android:id="@+id/etFirstNameDE"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
         android:layout_marginTop="4dp"
@@ -17,7 +17,7 @@
 
     <EditText
         android:id="@+id/etLastNameDE"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
         android:layout_marginTop="4dp"
@@ -28,7 +28,7 @@
 
     <EditText
         android:id="@+id/etUsernameDE"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
         android:layout_marginTop="4dp"
@@ -50,7 +50,7 @@
 
     <EditText
         android:id="@+id/etBioDE"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
         android:layout_marginTop="4dp"

@@ -2,12 +2,20 @@ package com.example.bucketbuds;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,10 +40,14 @@ import com.bumptech.glide.Glide;
 import com.parse.SaveCallback;
 
 import java.io.File;
+import java.io.IOException;
 
 public class ProfileFragment extends Fragment {
 
     public static final String TAG = "ProfileFragment";
+    public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+    public static final String PHOTO_FILE_NAME = "profile_image.jpg";
+    public final String APP_TAG = "BucketBuds";
 
     View view;
     File photoFile;
@@ -85,9 +97,9 @@ public class ProfileFragment extends Fragment {
 
         ParseFile image = user.getImage();
         if (image == null){
-            Glide.with(view).load(R.drawable.profile_placeholder).transform(new CenterCrop(), new RoundedCorners(12)).into(ivProfileImage);
+            Glide.with(view).load(R.drawable.profile_placeholder).transform(new CenterCrop(), new RoundedCorners(20)).into(ivProfileImage);
         } else {
-            Glide.with(view).load(image.getUrl()).centerCrop().transform(new RoundedCorners(12)).into(ivProfileImage);
+            Glide.with(view).load(image.getUrl()).transform(new CenterCrop(), new RoundedCorners(20)).into(ivProfileImage);
         }
         tvFirst.setText(user.getFirstName());
         tvLast.setText(user.getLastName());
@@ -112,8 +124,7 @@ public class ProfileFragment extends Fragment {
         ivProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Change Profile Picture", Toast.LENGTH_LONG).show();
-                // TODO: Open camera to change profile picture
+                onLaunchCamera(v);
             }
         });
 
@@ -190,6 +201,95 @@ public class ProfileFragment extends Fragment {
 
         // Display the dialog
         alertDialog.show();
+    }
+
+    public void onLaunchCamera(View view) {
+        // create Intent to take a picture and return control to the calling application
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Create a File reference for future access
+        photoFile = getPhotoFileUri(PHOTO_FILE_NAME);
+
+        // wrap File object into a content provider
+        // required for API >= 24
+        // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
+        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider.bucketbuds", photoFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+
+        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
+        // So as long as the result is not null, it's safe to use the intent.
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            // Start the image capture intent to take photo
+            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        }
+    }
+
+    // Returns the File for a photo stored on disk given the fileName
+    public File getPhotoFileUri(String fileName) {
+        // Get safe storage directory for photos
+        // Use `getExternalFilesDir` on Context to access package-specific directories.
+        // This way, we don't need to request external read/write runtime permissions.
+        File mediaStorageDir = new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+            Log.d(APP_TAG, "failed to create directory");
+        }
+
+        // Return the file target for the photo based on filename
+        File file = new File(mediaStorageDir.getPath() + File.separator + fileName);
+
+        return file;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == getActivity().RESULT_OK) {
+                // Load the taken image into a preview
+                user.setImage(new ParseFile(photoFile));
+                user.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            Bitmap takenImage = rotateBitmapOrientation(photoFile.getAbsolutePath());
+                            Glide.with(view).load(takenImage).transform(new CenterCrop(), new RoundedCorners(20)).into(ivProfileImage);
+                        } else {
+                            Toast.makeText(getContext(), "Image failed to save", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            } else { // Result was a failure
+                Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public Bitmap rotateBitmapOrientation(String photoFilePath) {
+        // Create and configure BitmapFactory
+        BitmapFactory.Options bounds = new BitmapFactory.Options();
+        bounds.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(photoFilePath, bounds);
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        Bitmap bm = BitmapFactory.decodeFile(photoFilePath, opts);
+        // Read EXIF Data
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(photoFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+        int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
+        int rotationAngle = 0;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
+        // Rotate Bitmap
+        Matrix matrix = new Matrix();
+        matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
+        // Return result
+        return rotatedBitmap;
     }
 
 }
