@@ -31,6 +31,7 @@ public class FriendsPageFragment extends Fragment {
     public static final String ARG_USER_PUB = "ARG_USER_PUB";
     public static final String TAG = "PageFragment";
     public static final int FRIENDS_PAGE = 0;
+    public static final String KEY_FRIENDS = "friends";
 
     private int mPage;
     private List<User> friends;
@@ -108,6 +109,7 @@ public class FriendsPageFragment extends Fragment {
                 searchView.clearFocus();
                 return true;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;

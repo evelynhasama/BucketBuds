@@ -95,7 +95,6 @@ public class ProfileFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         user = User.getCurrentUser();
-
         tvUsername = view.findViewById(R.id.tvUsernamePF);
         tvFirst = view.findViewById(R.id.tvFirstNamePF);
         tvLast = view.findViewById(R.id.tvLastNamePF);
@@ -122,7 +121,7 @@ public class ProfileFragment extends Fragment {
 
         String bio = user.getBio();
         if (bio == null) {
-            tvBio.setText("");
+            tvBio.setText(0);
         } else {
             tvBio.setText(bio);
         }
@@ -182,7 +181,7 @@ public class ProfileFragment extends Fragment {
                 String email = etEmail.getText().toString();
 
                 if (username.isEmpty() || first.isEmpty() || last.isEmpty() || email.isEmpty()) {
-                    Toast.makeText(getContext(), "Name, username, and gmail are required", Toast.LENGTH_SHORT);
+                    Toast.makeText(getContext(), "Name, username, and email are required", Toast.LENGTH_SHORT);
                 } else {
                     alertDialog.cancel();
                     user.setUsername(username);
