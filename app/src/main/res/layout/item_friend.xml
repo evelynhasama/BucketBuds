@@ -51,7 +51,6 @@
                 android:layout_toEndOf="@+id/tvFirstNameIF"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 tools:text="Lee" />
 
             <ImageView
@@ -74,7 +73,6 @@
                 android:layout_toEndOf="@+id/ivProfileImageIF"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 tools:text="Ryan" />
 
             <TextView
