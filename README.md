@@ -193,34 +193,8 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
 #### List of network requests by screen
 * Login screen
     * logInInBackground()
-       * ```java
-         ParseUser.logInInBackground(username, password, new LogInCallback() {
-            @Override
-            public void done(ParseUser user, ParseException e) {
-                if (e != null) {
-                    // Failed to login
-                    return;
-                }
-                // User is signed in
-            }
-         });
-         ```
 * Registration screen
     * signUpInBackground()
-      * ```java
-        ParseUser user = new ParseUser();
-        user.setUsername(username);
-        user.setPassword(password);
-        user.signUpInBackground(new SignUpCallback() {
-            public void done(ParseException e) {
-                if (e != null) {
-                    // Failed to sign up
-                    return;
-                }
-                // User is signed up
-            }
-        });
-        ```
 * Profile screen
     * PUT update user profile info 
     * GET get user's profile info
