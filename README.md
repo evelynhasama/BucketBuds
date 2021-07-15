@@ -226,37 +226,14 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
     * GET get user's profile info
 * Add Friends screen (Fragment)
     * GET query for users by search
-      *  ```java
-         // querying User class
-         query.startsWith("username", text);
-         ```
     * PUT update friends list
-      * ```java
-         friendsRelation = User.relation('friends');
-         friendsRelation.add(friend)
-         ``` 
 * Home Stream screen
     * GET query for the user's own bucket lists
-      *  ```java
-         // querying BucketList class
-         query.whereEqualTo('users', user);
-         ``` 
 * Create Bucket List screen
     * PUT create a bucket list
-      * ```java
-         bucketsRelation = BucketList.relation('users');
-         bucketsRelation.add(bucketlist)
-        ``` 
 * Bucket List screen
     * GET query for activities
-      *  ```java
-         // querying Activity class
-         query.whereEqualTo("bucket", bucketlist);
-         ``` 
     * PUT create new activities
-      * ```java
-        Activity.set('bucket', bucket);
-        ``` 
 * Activity Details screen
     * PUT modify the activity info
 * Inspiration screen
