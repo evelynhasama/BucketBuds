@@ -32,13 +32,18 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     List<User> users;
     Boolean friendsBool;
     Fragment fragment;
+    List<String> friendsId;
+    UserPub currentUserPub;
+    public static final User currentUser = User.getCurrentUser();
 
     // pass in context and list of users
-    public FriendsAdapter(Context context, List<User> users, Boolean friendsBool, Fragment fragment){
+    public FriendsAdapter(Context context, List<User> users, UserPub currentUserPub, Boolean friendsBool, Fragment fragment, List<String> friendsId){
         this.friendsBool = friendsBool;
         this.context = context;
         this.users = users;
+        this.currentUserPub = currentUserPub;
         this.fragment = fragment;
+        this.friendsId = friendsId;
     }
 
     @NonNull
@@ -96,61 +101,39 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             }
         }
 
-        public void bind(User user, Boolean friendsBool) {
-            User currentUser = User.getCurrentUser();
+        public void bind(User user, Boolean friendsBool){
             if (friendsBool) {
-                tvBucketCount.setText(String.valueOf(user.getBucketCount()));
-                user.getFriendsQuery(new FindCallback<Friends>() {
-                    @Override
-                    public void done(List<Friends> objects, ParseException e) {
-                        tvFriendCount.setText(String.valueOf(objects.get(0).getFriendCount()));
-                    }
-                });
+                UserPub otherUserPub = user.getUserPubQuery();
+                tvBucketCount.setText(String.valueOf(otherUserPub.getBucketCount()));
+                tvFriendCount.setText(String.valueOf(otherUserPub.getFriendCount()));
                 // user selects a friend to remove
                 ivRemoveFriend.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        currentUser.getFriendsQuery(new FindCallback<Friends>() {
-                            @Override
-                            public void done(List<Friends> objects, ParseException e) {
-                                Friends myFriends = objects.get(0);
-                                myFriends.removeFriend(user);
-                                myFriends.saveInBackground(updateFriendsSaveCallback(false, user, getAdapterPosition()));
-                            }
-                        });
-                        user.getFriendsQuery(new FindCallback<Friends>() {
-                            @Override
-                            public void done(List<Friends> objects, ParseException e) {
-                                Friends otherFriends = objects.get(0);
-                                otherFriends.removeFriend(currentUser);
-                                otherFriends.saveInBackground(standardSaveCallback());
-                            }
-                        });
+                        otherUserPub.removeFriend(currentUser);
+                        currentUserPub.removeFriend(user);
+                        users.remove(user);
+                        updateFriends(false, getAdapterPosition(), otherUserPub);
                     }
                 });
             } else {
-                // user selects a friend to add
-                ivAddFriend.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        currentUser.getFriendsQuery(new FindCallback<Friends>() {
-                            @Override
-                            public void done(List<Friends> objects, ParseException e) {
-                                Friends myFriends = objects.get(0);
-                                myFriends.addFriend(user);
-                                myFriends.saveInBackground(updateFriendsSaveCallback(true, user, getAdapterPosition()));
-                            }
-                        });
-                        user.getFriendsQuery(new FindCallback<Friends>() {
-                            @Override
-                            public void done(List<Friends> objects, ParseException e) {
-                                Friends otherFriends = objects.get(0);
-                                otherFriends.addFriend(currentUser);
-                                otherFriends.saveInBackground(standardSaveCallback());
-                            }
-                        });
-                    }
-                });
+                // user is already added as a friend but appears in search
+                if (friendsId.contains(user.getObjectId())){
+                    ivAddFriend.setVisibility(View.GONE);
+                } else {
+                    ivAddFriend.setVisibility(View.VISIBLE);
+                    // user selects a friend to add
+                    ivAddFriend.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            UserPub otherUserPub = user.getUserPubQuery();
+                            otherUserPub.addFriend(currentUser);
+                            currentUserPub.addFriend(user);
+                            ivAddFriend.setVisibility(View.GONE);
+                            updateFriends(true, getAdapterPosition(), otherUserPub);
+                        }
+                    });
+                }
             }
             if (user.getImage() != null) {
                 Glide.with(context).load(user.getImage().getUrl()).circleCrop().into(ivProfileImage);
@@ -168,34 +151,33 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     }
 
     // Helper method for saving added or removed friend
-    public SaveCallback updateFriendsSaveCallback(Boolean added, User user, int position){
-        return new SaveCallback() {
+    public void updateFriends(Boolean added, int position, UserPub otherUserPub){
+        currentUserPub.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
-                    if (added) {
-                        Toast.makeText(context, "Friend added", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(context, "Friend removed", Toast.LENGTH_SHORT).show();
-                    }
-                    users.remove(user);
-                    notifyItemRemoved(position);
-                    ((ProfileFragment) fragment.getParentFragment()).updateFriendCount();
+                    otherUserPub.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                if (added) {
+                                    Toast.makeText(context, "Friend added", Toast.LENGTH_SHORT).show();
+                                    // notifyItemChanged(position);
+                                } else {
+                                    Toast.makeText(context, "Friend removed", Toast.LENGTH_SHORT).show();
+                                    notifyItemRemoved(position);
+                                }
+                                ((ProfileFragment) fragment.getParentFragment()).updateFriendCount();
+                            } else {
+                                Toast.makeText(context, "Friend action failed", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 } else {
                     Toast.makeText(context, "Friend action failed", Toast.LENGTH_SHORT).show();
                 }
             }
-        };
+        });
     }
 
-    public SaveCallback standardSaveCallback(){
-        return new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Log.d(TAG, String.valueOf(e));
-                }
-            }
-        };
-    }
 }

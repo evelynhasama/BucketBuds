@@ -1,11 +1,13 @@
 package com.example.bucketbuds;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.SearchView;
@@ -26,12 +28,12 @@ import okhttp3.Headers;
 
 public class PageFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
+    public static final String ARG_USER_PUB = "ARG_USER_PUB";
     public static final String TAG = "PageFragment";
     public static final String KEY_OBJECT_ID = "objectId";
     public static final String USER_CLASS = "_User";
     public static final String KEY_USERNAME = "username";
     public static final int FRIENDS_PAGE = 0;
-    public static final String KEY_FRIENDS = "friends";
 
     private int mPage;
     private List<User> friends;
@@ -41,11 +43,14 @@ public class PageFragment extends Fragment {
     FriendsAdapter friendsAdapter;
     FriendsAdapter addFriendsAdapter;
     User user;
+    UserPub userPub;
+    public List<String> friendIds;
 
 
-    public static PageFragment newInstance(int page) {
+    public static PageFragment newInstance(int page, UserPub userPub) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
+        args.putParcelable(ARG_USER_PUB, userPub);
         PageFragment fragment = new PageFragment();
         fragment.setArguments(args);
         return fragment;
@@ -54,7 +59,9 @@ public class PageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        friendIds = new ArrayList<>();
         mPage = getArguments().getInt(ARG_PAGE);
+        userPub = getArguments().getParcelable(ARG_USER_PUB);
         user = User.getCurrentUser();
         if (mPage == FRIENDS_PAGE) {
             friends = new ArrayList<>();
@@ -66,7 +73,9 @@ public class PageFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        List<String> friendIds = new ArrayList<>();
         if (mPage == FRIENDS_PAGE) {
+            hideKeyboard();
             friendsAdapter.clear();
             getFriends();
         } else {
@@ -82,12 +91,12 @@ public class PageFragment extends Fragment {
         RecyclerView rvUsers = view.findViewById(R.id.rvFriends);
         SearchView searchView = view.findViewById(R.id.svFriends);
         if (mPage == FRIENDS_PAGE) {
-            friendsAdapter = new FriendsAdapter(getContext(), friends, true, this);
+            friendsAdapter = new FriendsAdapter(getContext(), friends, userPub, true, this, new ArrayList<>());
             rvUsers.setAdapter(friendsAdapter);
             rvUsers.setLayoutManager(new LinearLayoutManager(context));
             searchView.setVisibility(View.GONE);
         } else {
-            addFriendsAdapter = new FriendsAdapter(getContext(), addFriends, false, this);
+            addFriendsAdapter = new FriendsAdapter(getContext(), addFriends, userPub,false, PageFragment.this, friendIds);
             rvUsers.setAdapter(addFriendsAdapter);
             rvUsers.setLayoutManager(new LinearLayoutManager(context));
             searchView.setVisibility(View.VISIBLE);
@@ -112,40 +121,27 @@ public class PageFragment extends Fragment {
 
     // gets the users who is friends with the current user
     private void getFriends() {
-        user.getFriendsQuery(new FindCallback<Friends>() {
-            @Override
-            public void done(List<Friends> objects, ParseException e) {
-                Friends friendsObj = objects.get(0);
-                friendsObj.getFriendsRelation().getQuery().findInBackground(getMyFindCallback(friendsAdapter, friends, true));
-            }
-        });
+        userPub.getFriendsRelation().getQuery().findInBackground(getMyFindCallback(friendsAdapter, friends, true));
     }
 
     // gets the users who are not friends with the current user and who's username starts with the query
     private void addFriends(String queryPrefix) {
-        List<String> friendIds = new ArrayList<>();
-        user.getFriendsQuery(new FindCallback<Friends>() {
+        friendIds.clear();
+        userPub.getFriendsRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
             @Override
-            public void done(List<Friends> objects, ParseException e) {
-                Friends friendsObj = objects.get(0);
-                friendsObj.getFriendsRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
-                    @Override
-                    public void done(List<ParseUser> friendUsers, ParseException e) {
-                        if (e == null){
-                            for (int i = 0; i < friendUsers.size(); i++) {
-                                friendIds.add(friendUsers.get(i).getObjectId());
-                            }
-                            ParseQuery<ParseUser> query = ParseQuery.getQuery(USER_CLASS);
-                            query.whereNotEqualTo(KEY_OBJECT_ID, User.getCurrentUser().getObjectId());
-                            query.whereNotContainedIn(KEY_OBJECT_ID, friendIds);
-                            query.whereStartsWith(KEY_USERNAME, queryPrefix);
-                            query.include(KEY_FRIENDS);
-                            query.findInBackground(getMyFindCallback(addFriendsAdapter, addFriends, false));
-                        } else {
-                            Log.d(TAG, "add friends, get friends relation failed: " + e);
-                        }
+            public void done(List<ParseUser> objects, ParseException e) {
+                if (e == null) {
+                    for (int i = 0; i < objects.size(); i++) {
+                        friendIds.add(objects.get(i).getObjectId());
                     }
-                });
+                    ParseQuery<ParseUser> query = ParseQuery.getQuery(USER_CLASS);
+                    query.whereNotEqualTo(KEY_OBJECT_ID, User.getCurrentUser().getObjectId());
+                    query.whereStartsWith(KEY_USERNAME, queryPrefix);
+                    query.include(User.KEY_USER_PUB);
+                    query.findInBackground(getMyFindCallback(addFriendsAdapter, addFriends, false));
+                } else {
+                    Log.d(TAG, "issue with adding friend ids", e);
+                }
             }
         });
     }
@@ -165,10 +161,19 @@ public class PageFragment extends Fragment {
                     }
                     adapter.notifyDataSetChanged();;
                 } else {
-                    Log.d(TAG, "add friends failed: " + e);
+                    Log.d(TAG, "issue with adding users to list", e);
                 }
             }
         };
+    }
+
+    public void hideKeyboard() {
+        Activity activity = getActivity();
+        View view = activity.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        }
     }
 
 }

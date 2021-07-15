@@ -1,5 +1,7 @@
 package com.example.bucketbuds;
 
+import android.util.Log;
+
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -21,9 +23,8 @@ public class User{
     public static final String KEY_LAST_NAME = "lastName";
     public static final String KEY_BIO = "bio";
     public static final String KEY_IMAGE = "image";
-    public static final String KEY_FRIENDS = "friends";
-    public static final String KEY_BUCKET_COUNT = "bucketCount";
-    public static final String KEY_FRIENDS_CLASS = "Friends";
+    public static final String KEY_USER_PUB = "userPub";
+    public static final String KEY_USERPUB_CLASS = "UserPub";
     public static final String TAG = "UserClass";
 
     public String getUsername(){
@@ -40,14 +41,6 @@ public class User{
 
     public void setEmail(String email){
         user.setEmail(email);
-    }
-
-    public int getBucketCount() {
-        return user.getInt(KEY_BUCKET_COUNT);
-    }
-
-    public void setBucketCount(int bucketCount) {
-        user.put(KEY_BUCKET_COUNT, bucketCount);
     }
 
     public String getFirstName() {
@@ -82,10 +75,19 @@ public class User{
         user.put(KEY_IMAGE, image);
     }
 
-    public void getFriendsQuery(FindCallback<Friends> findCallback) {
-        ParseQuery<Friends> query = ParseQuery.getQuery(KEY_FRIENDS_CLASS);
-        query.whereEqualTo("user", user);
-        query.findInBackground(findCallback);
+    public UserPub getUserPub() {
+        return (UserPub) user.getParseObject(KEY_USER_PUB);
+    }
+
+    public UserPub getUserPubQuery() {
+        ParseQuery<UserPub> query = ParseQuery.getQuery(KEY_USERPUB_CLASS);
+        try {
+            return query.get(getUserPub().getObjectId());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.d(TAG, "returning getUserPubQuery() null");
+            return null;
+        }
     }
 
     public void saveInBackground(SaveCallback saveCallback) {

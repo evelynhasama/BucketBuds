@@ -63,29 +63,42 @@ public class SignupActivity extends AppCompatActivity {
     private void signUpUser(String username, String fname, String lname, String email, String password){
         ParseUser user = new ParseUser();
         user.setUsername(username);
-        user.put("firstName", fname);
-        user.put("lastName", lname);
+        user.put(User.KEY_FIRST_NAME, fname);
+        user.put(User.KEY_LAST_NAME, lname);
         user.setPassword(password);
         user.setEmail(email);
-        Friends friends = new Friends();
-        friends.setUser(user);
-        friends.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e != null) {
-                        Log.d(TAG, String.valueOf(e));
-                    }
-                }
-            });
         user.signUpInBackground(new SignUpCallback() {
             public void done(ParseException e) {
                 if (e != null) {
-                    Toast.makeText(SignupActivity.this, "Failed to sign up", Toast.LENGTH_LONG).show();
-                    Log.e(TAG, "Issue with sign up", e);
+                    signUpFailedToast();
+                    Log.e(TAG, "Issue with user sign up", e);
                     return;
                 }
-                goMainActivity();
-                Toast.makeText(SignupActivity.this, "Successfully signed up", Toast.LENGTH_LONG).show();
+                UserPub userPub = new UserPub();
+                userPub.setUser(user);
+                userPub.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null) {
+                            signUpFailedToast();
+                            Log.e(TAG, "Issue with public user creation", e);
+                            return;
+                        }
+                        user.put(User.KEY_USER_PUB, userPub);
+                        user.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e != null) {
+                                    signUpFailedToast();
+                                    Log.e(TAG, "Issue with saving public user to profile", e);
+                                    return;
+                                }
+                                goMainActivity();
+                                Toast.makeText(SignupActivity.this, "Successfully signed up", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
             }
         });
     }
@@ -95,6 +108,10 @@ public class SignupActivity extends AppCompatActivity {
         Intent intent  = new Intent(SignupActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void signUpFailedToast(){
+        Toast.makeText(SignupActivity.this, "Failed to sign up", Toast.LENGTH_LONG).show();
     }
 
 }

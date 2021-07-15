@@ -52,7 +52,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Navigate to sign up activity
-                Toast.makeText(LoginActivity.this, "Going to sign up screen", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
                 startActivity(intent);
                 finish();
@@ -72,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 // navigate to main activity if user has signed in properly
                 goMainActivity();
-                Toast.makeText(LoginActivity.this, "Successfully logged in", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -83,4 +82,5 @@ public class LoginActivity extends AppCompatActivity {
        startActivity(intent);
        finish();
     }
+
 }

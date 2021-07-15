@@ -68,7 +68,7 @@ public class ProfileFragment extends Fragment {
     TabLayout tabLayout;
     ViewPager viewPager;
     User user;
-    Friends friendsObj;
+    UserPub userPub;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -112,17 +112,13 @@ public class ProfileFragment extends Fragment {
         tvFirst.setText(user.getFirstName());
         tvLast.setText(user.getLastName());
         tvUsername.setText("@"+user.getUsername());
-        user.getFriendsQuery(new FindCallback<Friends>() {
-            @Override
-            public void done(List<Friends> objects, ParseException e) {
-                tvFriendCount.setText(String.valueOf(objects.get(0).getFriendCount()));
-            }
-        });
-        tvBucketCount.setText(String.valueOf(user.getBucketCount()));
+        userPub = user.getUserPubQuery();
+        tvFriendCount.setText(String.valueOf(userPub.getFriendCount()));
+        tvBucketCount.setText(String.valueOf(userPub.getBucketCount()));
 
         String bio = user.getBio();
         if (bio == null) {
-            tvBio.setText(0);
+            tvBio.setText("");
         } else {
             tvBio.setText(bio);
         }
@@ -141,7 +137,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        viewPager.setAdapter(new PageFragmentAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, getContext()));
+        viewPager.setAdapter(new PageFragmentAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, getContext(), userPub));
 
         tabLayout.setupWithViewPager(viewPager);
 
@@ -189,7 +185,7 @@ public class ProfileFragment extends Fragment {
                 String email = etEmail.getText().toString();
 
                 if (username.isEmpty() || first.isEmpty() || last.isEmpty() || email.isEmpty()) {
-                    Toast.makeText(getContext(), "Name, username, and email are required", Toast.LENGTH_SHORT);
+                    Toast.makeText(getContext(), "Name, username, and gmail are required", Toast.LENGTH_SHORT);
                 } else {
                     alertDialog.cancel();
                     user.setUsername(username);
@@ -319,12 +315,7 @@ public class ProfileFragment extends Fragment {
     // updates friend count when friend is added or removed
     public void updateFriendCount(){
         Log.d(TAG, "updating friend Count");
-        user.getFriendsQuery(new FindCallback<Friends>() {
-            @Override
-            public void done(List<Friends> objects, ParseException e) {
-                tvFriendCount.setText(String.valueOf(objects.get(0).getFriendCount()));
-            }
-        });
+        tvFriendCount.setText(String.valueOf(userPub.getFriendCount()));
     }
 
 
