@@ -147,22 +147,31 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    | calenderId    | String          | calenderId for Google Calendar API |
    | bio           | String          | words to describe themself |
    | image         | File            | profile picture |
-   | bucketCount   | Number          | number of user's buckets |
-   | friendCount   | Number          | number of user's friends |
-   | friends       | Relation<User>  | relation to user's friends |
+   | userPub       | Pointer<UserPub>| points to user's public user |
+ 
+#### UserPub
+
+   | Property      | Type            | Description |
+   | ------------- | --------------- | ------------|
+   | objectId      | String          | unique id for the public user (default field) |
+   | user          | Pointer(User)   | user who's information is contained in the object |
+   | bucketCount   | Int             | user's number of buckets |
+   | buckets       | Relation(BucketList) | relation to user's buckets |
+   | friendCount   | Int             | user's number of friends |
+   | friends       | Relation(User)  | relation to user's friends |
   
 #### BucketList
 
    | Property      | Type            | Description |
    | ------------- | --------------- | ------------|
-   | objectId      | String          | unique id for the user post (default field) |
+   | objectId      | String          | unique id for the bucket (default field) |
    | name          | String          | bucket list name |
    | image         | File            | bucket list cover image |
    | description   | String          | description of bucket list |
    | completed     | Boolean         | false (active), true (completed) |
    | createdAt     | DateTime        | date when bucket is created (default field) |
    | updatedAt     | DateTime        | date when bucket is last updated (default field) |
-   | users         | Relation<User>  | relation to users who own the bucket list |
+   | users         | Relation(User)  | relation to users who own the bucket list |
    
 #### Activity
 
