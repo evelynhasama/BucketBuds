@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
 public class SignupActivity extends AppCompatActivity {
@@ -66,6 +67,16 @@ public class SignupActivity extends AppCompatActivity {
         user.put("lastName", lname);
         user.setPassword(password);
         user.setEmail(email);
+        Friends friends = new Friends();
+        friends.setUser(user);
+        friends.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e != null) {
+                        Log.d(TAG, String.valueOf(e));
+                    }
+                }
+            });
         user.signUpInBackground(new SignUpCallback() {
             public void done(ParseException e) {
                 if (e != null) {

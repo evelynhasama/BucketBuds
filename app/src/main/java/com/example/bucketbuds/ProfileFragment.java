@@ -13,6 +13,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Environment;
@@ -34,21 +35,18 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.material.shape.RoundedCornerTreatment;
 import com.google.android.material.tabs.TabLayout;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.bumptech.glide.Glide;
 import com.parse.SaveCallback;
 
-import com.parse.ParseUser;
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class ProfileFragment extends Fragment {
 
@@ -70,6 +68,7 @@ public class ProfileFragment extends Fragment {
     TabLayout tabLayout;
     ViewPager viewPager;
     User user;
+    Friends friendsObj;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -91,7 +90,8 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        user = new User(ParseUser.getCurrentUser());
+        user = User.getCurrentUser();
+
         tvUsername = view.findViewById(R.id.tvUsernamePF);
         tvFirst = view.findViewById(R.id.tvFirstNamePF);
         tvLast = view.findViewById(R.id.tvLastNamePF);
@@ -112,7 +112,12 @@ public class ProfileFragment extends Fragment {
         tvFirst.setText(user.getFirstName());
         tvLast.setText(user.getLastName());
         tvUsername.setText("@"+user.getUsername());
-        tvFriendCount.setText(String.valueOf(user.getFriendCount()));
+        user.getFriendsQuery(new FindCallback<Friends>() {
+            @Override
+            public void done(List<Friends> objects, ParseException e) {
+                tvFriendCount.setText(String.valueOf(objects.get(0).getFriendCount()));
+            }
+        });
         tvBucketCount.setText(String.valueOf(user.getBucketCount()));
 
         String bio = user.getBio();
@@ -136,7 +141,18 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        viewPager.setAdapter(new PageFragmentAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, getContext()));
+
+        tabLayout.setupWithViewPager(viewPager);
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+
     }
 
     public void showEditProfileDialog(){
@@ -298,6 +314,17 @@ public class ProfileFragment extends Fragment {
         Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
         // Return result
         return rotatedBitmap;
+    }
+
+    // updates friend count when friend is added or removed
+    public void updateFriendCount(){
+        Log.d(TAG, "updating friend Count");
+        user.getFriendsQuery(new FindCallback<Friends>() {
+            @Override
+            public void done(List<Friends> objects, ParseException e) {
+                tvFriendCount.setText(String.valueOf(objects.get(0).getFriendCount()));
+            }
+        });
     }
 
 
