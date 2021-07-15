@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Environment;
@@ -43,6 +44,9 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.bumptech.glide.Glide;
 import com.parse.SaveCallback;
+
+import org.jetbrains.annotations.Contract;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -142,13 +146,6 @@ public class ProfileFragment extends Fragment {
         tabLayout.setupWithViewPager(viewPager);
 
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume");
-
     }
 
     public void showEditProfileDialog(){
