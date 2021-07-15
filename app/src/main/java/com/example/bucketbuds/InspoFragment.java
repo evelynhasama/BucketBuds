@@ -60,4 +60,5 @@ public class InspoFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_inspo, container, false);
     }
+
 }

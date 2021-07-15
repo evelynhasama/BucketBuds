@@ -52,6 +52,8 @@ public class SignupActivity extends AppCompatActivity {
                     signUpUser(username, fname, lname, email, password);
                 } else {
                     Toast.makeText(SignupActivity.this, "Passwords do not match", Toast.LENGTH_LONG).show();
+                    etConfirmPassword.setText("", TextView.BufferType.EDITABLE);
+                    etPassword.setText("", TextView.BufferType.EDITABLE);
                 }
             }
         });

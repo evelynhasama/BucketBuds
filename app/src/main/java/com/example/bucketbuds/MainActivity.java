@@ -20,9 +20,9 @@ public class MainActivity extends AppCompatActivity {
         final FragmentManager fragmentManager = getSupportFragmentManager();
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
-        final Fragment fragment1 = new ProfileFragment();
-        final Fragment fragment2 = new BucketsFragment();
-        final Fragment fragment3 = new InspoFragment();
+        final Fragment fragment_profile = new ProfileFragment();
+        final Fragment fragment_buckets = new BucketsFragment();
+        final Fragment fragment_inspo = new InspoFragment();
 
         // handle navigation selection
         bottomNavigationView.setOnNavigationItemSelectedListener(
@@ -32,16 +32,16 @@ public class MainActivity extends AppCompatActivity {
                         Fragment fragment;
                         switch (item.getItemId()) {
                             case R.id.action_profile:
-                                fragment = fragment1;
+                                fragment = fragment_profile;
                                 break;
                             case R.id.action_buckets:
-                                fragment = fragment2;
+                                fragment = fragment_buckets;
                                 break;
                             case R.id.action_inspo:
-                                fragment = fragment3;
+                                fragment = fragment_inspo;
                                 break;
                             default:
-                                fragment = fragment2;
+                                fragment = fragment_buckets;
                                 break;
                         }
                         fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
@@ -51,4 +51,5 @@ public class MainActivity extends AppCompatActivity {
         // Set default selection
         bottomNavigationView.setSelectedItemId(R.id.action_buckets);
     }
+
 }
