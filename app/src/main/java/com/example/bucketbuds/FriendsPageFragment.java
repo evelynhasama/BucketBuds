@@ -169,6 +169,7 @@ public class FriendsPageFragment extends Fragment {
         };
     }
 
+
     public void hideKeyboard() {
         Activity activity = getActivity();
         View view = activity.getCurrentFocus();

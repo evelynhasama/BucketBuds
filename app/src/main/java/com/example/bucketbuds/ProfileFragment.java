@@ -121,7 +121,7 @@ public class ProfileFragment extends Fragment {
 
         String bio = user.getBio();
         if (bio == null) {
-            tvBio.setText(0);
+            tvBio.setText("");
         } else {
             tvBio.setText(bio);
         }
@@ -181,7 +181,7 @@ public class ProfileFragment extends Fragment {
                 String email = etEmail.getText().toString();
 
                 if (username.isEmpty() || first.isEmpty() || last.isEmpty() || email.isEmpty()) {
-                    Toast.makeText(getContext(), "Name, username, and email are required", Toast.LENGTH_SHORT);
+                    Toast.makeText(getContext(), "Name, username, and gmail are required", Toast.LENGTH_SHORT);
                 } else {
                     alertDialog.cancel();
                     user.setUsername(username);

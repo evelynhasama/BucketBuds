@@ -1,5 +1,7 @@
 package com.example.bucketbuds;
 
+import android.util.Log;
+
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import android.util.Log;
