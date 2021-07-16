@@ -14,6 +14,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -23,6 +24,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,6 +88,7 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
     }
 
@@ -313,6 +316,27 @@ public class ProfileFragment extends Fragment {
     public void updateFriendCount(){
         Log.d(TAG, "updating friend Count");
         tvFriendCount.setText(String.valueOf(userPub.getFriendCount()));
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem miLogout = menu.findItem(R.id.logout);
+        MenuItem miCreate = menu.findItem(R.id.miCreate);
+        miCreate.setVisible(false);
+        miLogout.setVisible(true);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.logout) {
+            ParseUser.logOut();
+            Intent intent = new Intent(getContext(), LoginActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

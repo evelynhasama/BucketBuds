@@ -15,8 +15,6 @@ import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    int selected;
-    MenuItem miLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
