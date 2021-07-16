@@ -15,6 +15,7 @@
         android:layout_marginHorizontal="30dp"
         android:layout_marginTop="5dp"
         android:hint="@string/describe_your_bucket_list"
+        android:inputType="textCapSentences"
         android:lines="2"
         android:textColor="@color/black"
         android:textSize="14sp" />
@@ -38,6 +39,7 @@
         android:layout_marginHorizontal="30dp"
         android:layout_marginTop="15dp"
         android:hint="@string/bucket_list_name"
+        android:inputType="textCapWords"
         android:textColor="@color/black"
         android:textStyle="bold" />
 

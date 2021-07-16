@@ -29,6 +29,7 @@ public class ParseApplication extends Application {
         builder.networkInterceptors().add(httpLoggingInterceptor);
 
         ParseObject.registerSubclass(UserPub.class);
+        ParseObject.registerSubclass(BucketList.class);
 
         // set applicationId, and server server based on the values in the back4app settings.
         // any network interceptors must be added with the Configuration Builder given this syntax

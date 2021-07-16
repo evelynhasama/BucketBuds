@@ -46,12 +46,21 @@ public class UserPub extends ParseObject {
         put(KEY_FRIEND_COUNT, friendCount);
     }
 
+    public ParseRelation<BucketList> getBucketsRelation() {
+        return getRelation(KEY_BUCKETS);
+    }
+
+    public void addBucket(BucketList bucketList) {
+        getBucketsRelation().add(bucketList);
+        setBucketCount(getBucketCount() + 1);
+    }
+
     public int getBucketCount() {
         return getInt(KEY_BUCKET_COUNT);
     }
 
     public void setBucketCount(int bucketCount) {
-        put(KEY_FRIEND_COUNT, bucketCount);
+        put(KEY_BUCKET_COUNT, bucketCount);
     }
 
 }
