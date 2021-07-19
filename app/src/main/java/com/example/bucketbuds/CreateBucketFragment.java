@@ -166,14 +166,14 @@ public class CreateBucketFragment extends Fragment {
                             addSaveBucketList(myUserPub);
                             bucketList.addFriends(bucketFriends);
                             bucketList.saveInBackground(getStandardSaveCallback("bucketList add friends "));
+                            FragmentActivity activity = getActivity();
+                            activity.getSupportFragmentManager().popBackStack();
                         } else {
                             Toast.makeText(getContext(), "Failed to create bucket list", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
-            FragmentActivity activity = getActivity();
-            activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, BucketsFragment.class, null).commit();
         }
         return super.onOptionsItemSelected(item);
     }
