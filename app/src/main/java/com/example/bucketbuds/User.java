@@ -1,9 +1,15 @@
 package com.example.bucketbuds;
 
+import android.util.Log;
+
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseRelation;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import java.util.List;
 
 public class User{
 
@@ -16,10 +22,13 @@ public class User{
     public static final String KEY_FIRST_NAME = "firstName";
     public static final String KEY_LAST_NAME = "lastName";
     public static final String KEY_BIO = "bio";
-    public static final String KEY_FRIENDS = "friends";
     public static final String KEY_IMAGE = "image";
-    public static final String KEY_BUCKET_COUNT = "bucketCount";
-    public static final String KEY_FRIEND_COUNT = "friendCount";
+    public static final String KEY_USER_PUB = "userPub";
+    public static final String KEY_USERPUB_CLASS = "UserPub";
+    public static final String TAG = "UserClass";
+    public static final String KEY_OBJECT_ID = "objectId";
+    public static final String USER_CLASS = "_User";
+    public static final String KEY_USERNAME = "username";
 
     public String getUsername(){
         return user.getUsername();
@@ -35,23 +44,6 @@ public class User{
 
     public void setEmail(String email){
         user.setEmail(email);
-    }
-
-
-    public int getBucketCount() {
-        return user.getInt(KEY_BUCKET_COUNT);
-    }
-
-    public void setBucketCount(int bucketCount) {
-        user.put(KEY_BUCKET_COUNT, bucketCount);
-    }
-
-    public int getFriendCount() {
-        return user.getInt(KEY_FRIEND_COUNT);
-    }
-
-    public void setFriendCount(int friendCount) {
-        user.put(KEY_FRIEND_COUNT, friendCount);
     }
 
     public String getFirstName() {
@@ -86,18 +78,35 @@ public class User{
         user.put(KEY_IMAGE, image);
     }
 
-    public void addFriend(ParseUser friend) {
-        ParseRelation<ParseUser> friendsRelation = user.getRelation(KEY_FRIENDS);
-        friendsRelation.add(friend);
+    public UserPub getUserPub() {
+        return (UserPub) user.getParseObject(KEY_USER_PUB);
     }
 
-    public void removeFriend(ParseUser friend) {
-        ParseRelation<ParseUser> friendsRelation = user.getRelation(KEY_FRIENDS);
-        friendsRelation.remove(friend);
+    public UserPub getUserPubQuery() {
+        ParseQuery<UserPub> query = ParseQuery.getQuery(KEY_USERPUB_CLASS);
+        try {
+            return query.get(getUserPub().getObjectId());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.d(TAG, "returning getUserPubQuery() null");
+            return null;
+        }
     }
 
     public void saveInBackground(SaveCallback saveCallback) {
         user.saveInBackground(saveCallback);
+    }
+
+    public ParseUser getParseUser() {
+        return user;
+    }
+
+    public String getObjectId() {
+        return user.getObjectId();
+    }
+
+    public static User getCurrentUser() {
+        return new User(ParseUser.getCurrentUser());
     }
 
 }

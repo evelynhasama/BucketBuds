@@ -4,6 +4,16 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:gravity="center_horizontal"
+        android:text="@string/edit_profile_info"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
     <EditText
         android:id="@+id/etFirstNameDE"
         android:layout_width="match_parent"
@@ -13,7 +23,8 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
         android:fontFamily="@font/lato"
-        android:hint="@string/first_name" />
+        android:hint="@string/first_name"
+        android:textSize="14sp" />
 
     <EditText
         android:id="@+id/etLastNameDE"
@@ -24,7 +35,8 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
         android:fontFamily="@font/lato"
-        android:hint="@string/last_name" />
+        android:hint="@string/last_name"
+        android:textSize="14sp" />
 
     <EditText
         android:id="@+id/etUsernameDE"
@@ -35,7 +47,8 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
         android:hint="@string/username"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:textSize="14sp" />
 
     <EditText
         android:id="@+id/etEmailDE"
@@ -46,7 +59,8 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
         android:fontFamily="@font/lato"
-        android:hint="@string/gmail" />
+        android:hint="@string/gmail"
+        android:textSize="14sp" />
 
     <EditText
         android:id="@+id/etBioDE"
@@ -57,7 +71,9 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
         android:fontFamily="@font/lato"
-        android:hint="@string/bio" />
+        android:hint="@string/bio"
+        android:lines="2"
+        android:textSize="14sp" />
 
     <RelativeLayout
         android:layout_width="match_parent"

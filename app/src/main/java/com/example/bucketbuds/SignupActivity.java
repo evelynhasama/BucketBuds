@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
 public class SignupActivity extends AppCompatActivity {
@@ -39,7 +40,8 @@ public class SignupActivity extends AppCompatActivity {
         etConfirmPassword = findViewById(R.id.etConfirmPasswordSA);
 
         btnSignup = findViewById(R.id.btnSignup);
-        btnSignup.setOnClickListener(new View.OnClickListener() {
+
+        View.OnClickListener signupClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String username = etUsername.getText().toString();
@@ -56,27 +58,30 @@ public class SignupActivity extends AppCompatActivity {
                     etPassword.setText("", TextView.BufferType.EDITABLE);
                 }
             }
-        });
+        };
+        btnSignup.setOnClickListener(signupClickListener);
     }
 
     private void signUpUser(String username, String fname, String lname, String email, String password){
         ParseUser user = new ParseUser();
         user.setUsername(username);
-        user.put("firstName", fname);
-        user.put("lastName", lname);
+        user.put(User.KEY_FIRST_NAME, fname);
+        user.put(User.KEY_LAST_NAME, lname);
         user.setPassword(password);
         user.setEmail(email);
-        user.signUpInBackground(new SignUpCallback() {
+        SignUpCallback signUpCallback = new SignUpCallback() {
             public void done(ParseException e) {
                 if (e != null) {
-                    Toast.makeText(SignupActivity.this, "Failed to sign up", Toast.LENGTH_LONG).show();
-                    Log.e(TAG, "Issue with sign up", e);
+                    signUpFailedToast();
+                    Log.e(TAG, "Issue with user sign up", e);
                     return;
                 }
-                goMainActivity();
-                Toast.makeText(SignupActivity.this, "Successfully signed up", Toast.LENGTH_LONG).show();
+                UserPub userPub = new UserPub();
+                userPub.setUser(user);
+                userPub.saveInBackground(userPubSaveCallback(user, userPub));
             }
-        });
+        };
+        user.signUpInBackground(signUpCallback);
     }
 
     public void goMainActivity(){
@@ -84,6 +89,42 @@ public class SignupActivity extends AppCompatActivity {
         Intent intent  = new Intent(SignupActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void signUpFailedToast(){
+        Toast.makeText(SignupActivity.this, "Failed to sign up", Toast.LENGTH_LONG).show();
+    }
+
+    // helper method for the innermost save callback, saving userPub to user
+    public SaveCallback finalUserSaveCallback() {
+        return new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    signUpFailedToast();
+                    Log.e(TAG, "Issue with saving public user to profile", e);
+                    return;
+                }
+                goMainActivity();
+                Toast.makeText(SignupActivity.this, "Successfully signed up", Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
+
+    // helper method for save callback, saving creating userPub pointing to user
+    public SaveCallback userPubSaveCallback(ParseUser user, UserPub userPub) {
+        return new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    signUpFailedToast();
+                    Log.e(TAG, "Issue with public user creation", e);
+                    return;
+                }
+                user.put(User.KEY_USER_PUB, userPub);
+                user.saveInBackground(finalUserSaveCallback());
+            }
+        };
     }
 
 }

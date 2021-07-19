@@ -1,5 +1,6 @@
 package com.example.bucketbuds;
 
+import android.content.Intent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,6 +13,8 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Environment;
@@ -33,14 +36,21 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.material.shape.RoundedCornerTreatment;
 import com.google.android.material.tabs.TabLayout;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.bumptech.glide.Glide;
 import com.parse.SaveCallback;
 
+import org.jetbrains.annotations.Contract;
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class ProfileFragment extends Fragment {
 
@@ -62,6 +72,7 @@ public class ProfileFragment extends Fragment {
     TabLayout tabLayout;
     ViewPager viewPager;
     User user;
+    UserPub userPub;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -83,7 +94,8 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        user = new User(ParseUser.getCurrentUser());
+        user = User.getCurrentUser();
+
         tvUsername = view.findViewById(R.id.tvUsernamePF);
         tvFirst = view.findViewById(R.id.tvFirstNamePF);
         tvLast = view.findViewById(R.id.tvLastNamePF);
@@ -104,12 +116,13 @@ public class ProfileFragment extends Fragment {
         tvFirst.setText(user.getFirstName());
         tvLast.setText(user.getLastName());
         tvUsername.setText("@"+user.getUsername());
-        tvFriendCount.setText(String.valueOf(user.getFriendCount()));
-        tvBucketCount.setText(String.valueOf(user.getBucketCount()));
+        userPub = user.getUserPubQuery();
+        tvFriendCount.setText(String.valueOf(userPub.getFriendCount()));
+        tvBucketCount.setText(String.valueOf(userPub.getBucketCount()));
 
         String bio = user.getBio();
         if (bio == null) {
-            tvBio.setText(0);
+            tvBio.setText("");
         } else {
             tvBio.setText(bio);
         }
@@ -127,6 +140,10 @@ public class ProfileFragment extends Fragment {
                 onLaunchCamera(v);
             }
         });
+
+        viewPager.setAdapter(new FriendsPageFragmentAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, getContext(), userPub));
+
+        tabLayout.setupWithViewPager(viewPager);
 
         return view;
     }
@@ -165,7 +182,7 @@ public class ProfileFragment extends Fragment {
                 String email = etEmail.getText().toString();
 
                 if (username.isEmpty() || first.isEmpty() || last.isEmpty() || email.isEmpty()) {
-                    Toast.makeText(getContext(), "Name, username, and email are required", Toast.LENGTH_SHORT);
+                    Toast.makeText(getContext(), "Name, username, and gmail are required", Toast.LENGTH_SHORT);
                 } else {
                     alertDialog.cancel();
                     user.setUsername(username);
@@ -291,5 +308,12 @@ public class ProfileFragment extends Fragment {
         // Return result
         return rotatedBitmap;
     }
+
+    // updates friend count when friend is added or removed
+    public void updateFriendCount(){
+        Log.d(TAG, "updating friend Count");
+        tvFriendCount.setText(String.valueOf(userPub.getFriendCount()));
+    }
+
 
 }
