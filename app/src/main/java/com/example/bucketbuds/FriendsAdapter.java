@@ -157,18 +157,18 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         SaveCallback otherUserSaveCallback = new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if (e == null) {
-                    if (added) {
-                        Toast.makeText(context, "Friend added", Toast.LENGTH_SHORT).show();
-                        // notifyItemChanged(position);
-                    } else {
-                        Toast.makeText(context, "Friend removed", Toast.LENGTH_SHORT).show();
-                        notifyItemRemoved(position);
-                    }
-                    ((ProfileFragment) fragment.getParentFragment()).updateFriendCount();
+                if (e != null) {
+                    Toast.makeText(context, "Friend action failed", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Toast.makeText(context, "Friend action failed", Toast.LENGTH_SHORT).show();
+                if (added) {
+                    Toast.makeText(context, "Friend added", Toast.LENGTH_SHORT).show();
+                    // notifyItemChanged(position);
+                } else {
+                    Toast.makeText(context, "Friend removed", Toast.LENGTH_SHORT).show();
+                    notifyItemRemoved(position);
+                }
+                ((ProfileFragment) fragment.getParentFragment()).updateFriendCount();
             }
         };
 

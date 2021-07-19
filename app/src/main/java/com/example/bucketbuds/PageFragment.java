@@ -132,18 +132,18 @@ public class PageFragment extends Fragment {
         FindCallback<ParseUser> addFriendsFindCallback =  new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
-                if (e == null) {
-                    for (int i = 0; i < objects.size(); i++) {
-                        friendIds.add(objects.get(i).getObjectId());
-                    }
-                    ParseQuery<ParseUser> query = ParseQuery.getQuery(USER_CLASS);
-                    query.whereNotEqualTo(KEY_OBJECT_ID, User.getCurrentUser().getObjectId());
-                    query.whereStartsWith(KEY_USERNAME, queryPrefix);
-                    query.include(User.KEY_USER_PUB);
-                    query.findInBackground(getMyFindCallback(addFriendsAdapter, addFriends, false));
+                if (e != null) {
+                    Log.d(TAG, "issue with adding friend ids", e);
                     return;
                 }
-                Log.d(TAG, "issue with adding friend ids", e);
+                for (int i = 0; i < objects.size(); i++) {
+                    friendIds.add(objects.get(i).getObjectId());
+                }
+                ParseQuery<ParseUser> query = ParseQuery.getQuery(USER_CLASS);
+                query.whereNotEqualTo(KEY_OBJECT_ID, User.getCurrentUser().getObjectId());
+                query.whereStartsWith(KEY_USERNAME, queryPrefix);
+                query.include(User.KEY_USER_PUB);
+                query.findInBackground(getMyFindCallback(addFriendsAdapter, addFriends, false));
             }
         };
         userPub.getFriendsRelation().getQuery().findInBackground(addFriendsFindCallback);
@@ -154,18 +154,18 @@ public class PageFragment extends Fragment {
         return new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> allUsers, ParseException e) {
-                if (e == null) {
-                    for (int i = 0; i < allUsers.size(); i++) {
-                        users.add(new User(allUsers.get(i)));
-                    }
-                    // search result for friend is empty
-                    if (!friendsBool && users.isEmpty()) {
-                        Toast.makeText(getContext(), "No results found", Toast.LENGTH_SHORT).show();
-                    }
-                    adapter.notifyDataSetChanged();
+                if (e != null) {
+                    Log.d(TAG, "issue with adding users to list", e);
                     return;
                 }
-                Log.d(TAG, "issue with adding users to list", e);
+                for (int i = 0; i < allUsers.size(); i++) {
+                    users.add(new User(allUsers.get(i)));
+                }
+                // search result for friend is empty
+                if (!friendsBool && users.isEmpty()) {
+                    Toast.makeText(getContext(), "No results found", Toast.LENGTH_SHORT).show();
+                }
+                adapter.notifyDataSetChanged();
             }
         };
     }
