@@ -55,6 +55,7 @@ public class BucketList extends ParseObject {
         for (User friend: friends) {
             relation.add(friend.getParseUser());
         }
+        relation.add(ParseUser.getCurrentUser());
     }
 
     public void setImage(ParseFile image) {

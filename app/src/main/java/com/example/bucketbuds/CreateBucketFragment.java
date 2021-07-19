@@ -57,6 +57,7 @@ public class CreateBucketFragment extends Fragment {
     List<BucketFriendListItem> allItemsList;
     UserPub myUserPub;
     BucketList bucketList;
+    BucketFriendHeaderItem header_suggest;
 
     public CreateBucketFragment() {
         // Required empty public constructor
@@ -93,7 +94,7 @@ public class CreateBucketFragment extends Fragment {
         BucketFriendHeaderItem header_added = new BucketFriendHeaderItem();
         header_added.setSection("Added Friends");
         allItemsList.add(header_added);
-        BucketFriendHeaderItem header_suggest = new BucketFriendHeaderItem();
+        header_suggest = new BucketFriendHeaderItem();
         header_suggest.setSection("Suggested Friends");
         allItemsList.add(header_suggest);
 
@@ -101,22 +102,23 @@ public class CreateBucketFragment extends Fragment {
         rvBucketFriends.setAdapter(adapter);
         rvBucketFriends.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        myUserPub.getFriendsRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
+        FindCallback<ParseUser> friendsSaveCallback = new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> friends, ParseException e) {
-                if (e == null){
-                    for (int i = 0; i < friends.size(); i++) {
-                        BucketFriendItem friendItem = new BucketFriendItem();
-                        friendItem.setUser(new User(friends.get(i)));
-                        friendItem.setAdded(false);
-                        allItemsList.add(friendItem);
-                    }
-                    adapter.notifyDataSetChanged();
-                } else {
+                if (e != null) {
                     Log.d(TAG, "issue with adding friends to list", e);
+                    return;
                 }
+                for (int i = 0; i < friends.size(); i++) {
+                    BucketFriendItem friendItem = new BucketFriendItem();
+                    friendItem.setUser(new User(friends.get(i)));
+                    friendItem.setAdded(false);
+                    allItemsList.add(friendItem);
+                }
+                adapter.notifyDataSetChanged();
             }
-        });
+        };
+        myUserPub.getFriendsRelation().getQuery().findInBackground(friendsSaveCallback);
 
         ivBucketImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,7 +144,7 @@ public class CreateBucketFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.miCreate) {
             // find index of Suggested header
-            int i = 1;
+            int i = allItemsList.indexOf(header_suggest);
             List<User> bucketFriends = new ArrayList<>();
             while (allItemsList.get(i).getType() != BucketFriendListItem.TYPE_HEADER) {
                 bucketFriends.add(((BucketFriendItem) allItemsList.get(i)).getUser());
@@ -150,29 +152,12 @@ public class CreateBucketFragment extends Fragment {
             }
             if (etBucketName.getText().toString().isEmpty()) {
                 Toast.makeText(getContext(), "Give your bucket list a name", Toast.LENGTH_SHORT).show();
-            } else if (allItemsList.size() == 0) {
+            } else if (bucketFriends.size() == 0) {
                 Toast.makeText(getContext(), "Add at least 1 friend", Toast.LENGTH_SHORT).show();
             } else {
                 bucketList.setName(etBucketName.getText().toString());
                 bucketList.setDescription(etBucketDescription.getText().toString());
-                bucketList.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e == null) {
-                            for (User friend: bucketFriends) {
-                                UserPub userPub = friend.getUserPubQuery();
-                                addSaveBucketList(userPub);
-                            }
-                            addSaveBucketList(myUserPub);
-                            bucketList.addFriends(bucketFriends);
-                            bucketList.saveInBackground(getStandardSaveCallback("bucketList add friends "));
-                            FragmentActivity activity = getActivity();
-                            activity.getSupportFragmentManager().popBackStack();
-                        } else {
-                            Toast.makeText(getContext(), "Failed to create bucket list", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                bucketList.saveInBackground(getBucketSaveCallback(bucketFriends));
             }
         }
         return super.onOptionsItemSelected(item);
@@ -257,6 +242,28 @@ public class CreateBucketFragment extends Fragment {
                 }
                 break;
         }
+    }
+
+    // helper function for saving the created bucket
+    public SaveCallback getBucketSaveCallback(List<User> bucketFriends) {
+        return new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Toast.makeText(getContext(), "Failed to create bucket list", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                for (User friend : bucketFriends) {
+                    UserPub userPub = friend.getUserPubQuery();
+                    addSaveBucketList(userPub);
+                }
+                addSaveBucketList(myUserPub);
+                bucketList.addFriends(bucketFriends);
+                bucketList.saveInBackground(getStandardSaveCallback("bucketList add friends "));
+                FragmentActivity activity = getActivity();
+                activity.getSupportFragmentManager().popBackStack();
+            }
+        };
     }
 
 }

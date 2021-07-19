@@ -81,7 +81,7 @@ public class BucketFriendsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 } else {
                     friendViewHolder.ivUpdateFriend.setImageResource(R.drawable.ic_person_add);
                 }
-                friendViewHolder.ivUpdateFriend.setOnClickListener(new View.OnClickListener() {
+                View.OnClickListener updateFriendClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         allItemsList.remove(position);
@@ -105,7 +105,8 @@ public class BucketFriendsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         notifyItemMoved(position, movePosition);
                         notifyItemChanged(movePosition, null);
                     }
-                });
+                };
+                friendViewHolder.ivUpdateFriend.setOnClickListener(updateFriendClickListener);
 
                 break;
 
