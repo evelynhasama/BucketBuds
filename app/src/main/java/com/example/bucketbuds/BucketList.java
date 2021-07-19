@@ -16,6 +16,8 @@ public class BucketList extends ParseObject {
     public static final String KEY_COMPLETED = "completed";
     public static final String KEY_USERS = "users";
     public static final String KEY_IMAGE = "image";
+    public static final String KEY_BUCKET_UPDATED = "updatedAt";
+    public static final String KEY_BUCKET_CREATED = "createdAt";
     public static final String TAG = "BucketListClass";
 
     public BucketList(){}

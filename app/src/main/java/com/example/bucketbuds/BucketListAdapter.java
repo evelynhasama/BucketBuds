@@ -2,6 +2,7 @@ package com.example.bucketbuds;
 
 import android.app.usage.NetworkStats;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,13 +24,16 @@ import java.util.List;
 
 public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.ViewHolder> {
 
+    public static final String TAG = "BucketListAdapter";
     Context context;
     List<BucketList> buckets;
     View view;
+    int selectedFilterId;
 
-    public BucketListAdapter(Context context, List<BucketList> buckets){
+    public BucketListAdapter(Context context, List<BucketList> buckets, int selectedFilterId){
         this.context = context;
         this.buckets = buckets;
+        this.selectedFilterId = selectedFilterId;
     }
 
     @NonNull
@@ -63,6 +67,13 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
         }
 
         public void bind(BucketList bucket) {
+            Boolean bucketCompleted = bucket.getCompleted();
+            if ((selectedFilterId == R.id.rbCompleted && !bucketCompleted) || (selectedFilterId == R.id.rbActive && bucketCompleted)) {
+                itemView.setVisibility(View.GONE);
+                return;
+            }
+            itemView.setVisibility(View.VISIBLE);
+
             Glide.with(context).load(bucket.getImage().getUrl()).centerCrop().into(ivBucketImage);
             tvBucketName.setText(bucket.getName());
 
@@ -79,6 +90,11 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
 
     public void clear(){
         buckets.clear();
+    }
+
+    public void filter(int id){
+        selectedFilterId = id;
+        notifyDataSetChanged();
     }
 
 }
