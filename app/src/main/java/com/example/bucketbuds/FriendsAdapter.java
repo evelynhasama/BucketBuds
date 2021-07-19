@@ -107,7 +107,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 tvBucketCount.setText(String.valueOf(otherUserPub.getBucketCount()));
                 tvFriendCount.setText(String.valueOf(otherUserPub.getFriendCount()));
                 // user selects a friend to remove
-                ivRemoveFriend.setOnClickListener(new View.OnClickListener() {
+                View.OnClickListener removeFriendClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         otherUserPub.removeFriend(currentUser);
@@ -115,7 +115,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                         users.remove(user);
                         updateFriends(false, getAdapterPosition(), otherUserPub);
                     }
-                });
+                };
+                ivRemoveFriend.setOnClickListener(removeFriendClickListener);
             } else {
                 // user is already added as a friend but appears in search
                 if (friendsId.contains(user.getObjectId())){
