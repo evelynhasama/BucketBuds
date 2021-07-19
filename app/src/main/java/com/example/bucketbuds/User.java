@@ -26,6 +26,9 @@ public class User{
     public static final String KEY_USER_PUB = "userPub";
     public static final String KEY_USERPUB_CLASS = "UserPub";
     public static final String TAG = "UserClass";
+    public static final String KEY_OBJECT_ID = "objectId";
+    public static final String USER_CLASS = "_User";
+    public static final String KEY_USERNAME = "username";
 
     public String getUsername(){
         return user.getUsername();

@@ -9,14 +9,14 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
-public class PageFragmentAdapter extends FragmentPagerAdapter {
+public class FriendsPageFragmentAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 2;
     private String tabTitles[] = new String[] { "Friends", "Add Friends" };
     public static final String TAG = "PageFragmentAdapter";
     Context context;
     UserPub userPub;
 
-    public PageFragmentAdapter(@NonNull @NotNull FragmentManager fm, int behavior, Context context, UserPub userPub) {
+    public FriendsPageFragmentAdapter(@NonNull @NotNull FragmentManager fm, int behavior, Context context, UserPub userPub) {
         super(fm, behavior);
         this.context = context;
         this.userPub = userPub;
@@ -26,7 +26,7 @@ public class PageFragmentAdapter extends FragmentPagerAdapter {
     @NotNull
     @Override
     public Fragment getItem(int position) {
-        return PageFragment.newInstance(position, userPub);
+        return FriendsPageFragment.newInstance(position, userPub);
     }
 
     @Override

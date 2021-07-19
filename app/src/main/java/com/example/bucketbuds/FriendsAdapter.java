@@ -51,6 +51,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View view;
+        // friendsBool is true if user is a friend, false if user is not a friend
         if (friendsBool) {
             view = LayoutInflater.from(context).inflate(R.layout.item_friend, parent, false);
         } else {
@@ -103,39 +104,9 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
         public void bind(User user, Boolean friendsBool){
             if (friendsBool) {
-                UserPub otherUserPub = user.getUserPub();
-                tvBucketCount.setText(String.valueOf(otherUserPub.getBucketCount()));
-                tvFriendCount.setText(String.valueOf(otherUserPub.getFriendCount()));
-                // user selects a friend to remove
-                View.OnClickListener removeFriendClickListener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        otherUserPub.removeFriend(currentUser);
-                        currentUserPub.removeFriend(user);
-                        users.remove(user);
-                        updateFriends(false, getAdapterPosition(), otherUserPub);
-                    }
-                };
-                ivRemoveFriend.setOnClickListener(removeFriendClickListener);
+                bindFriends(user);
             } else {
-                // user is already added as a friend but appears in search
-                if (friendsId.contains(user.getObjectId())){
-                    ivAddFriend.setVisibility(View.GONE);
-                } else {
-                    ivAddFriend.setVisibility(View.VISIBLE);
-                    // user selects a friend to add
-                    View.OnClickListener addFriendClickListener = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            UserPub otherUserPub = user.getUserPub();
-                            otherUserPub.addFriend(currentUser);
-                            currentUserPub.addFriend(user);
-                            ivAddFriend.setVisibility(View.GONE);
-                            updateFriends(true, getAdapterPosition(), otherUserPub);
-                        }
-                    };
-                    ivAddFriend.setOnClickListener(addFriendClickListener);
-                }
+                bindNotFriends(user);
             }
             if (user.getImage() != null) {
                 Glide.with(context).load(user.getImage().getUrl()).circleCrop().into(ivProfileImage);
@@ -145,6 +116,44 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             tvUsername.setText("@"+user.getUsername());
             tvFirstName.setText(user.getFirstName());
             tvLastName.setText(user.getLastName());
+        }
+
+        public void bindFriends(User user) {
+            UserPub otherUserPub = user.getUserPub();
+            tvBucketCount.setText(String.valueOf(otherUserPub.getBucketCount()));
+            tvFriendCount.setText(String.valueOf(otherUserPub.getFriendCount()));
+            // user selects a friend to remove
+            View.OnClickListener removeFriendClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    otherUserPub.removeFriend(currentUser);
+                    currentUserPub.removeFriend(user);
+                    users.remove(user);
+                    updateFriends(false, getAdapterPosition(), otherUserPub);
+                }
+            };
+            ivRemoveFriend.setOnClickListener(removeFriendClickListener);
+        }
+
+        public void bindNotFriends(User user) {
+            // user is already added as a friend but appears in search
+            if (friendsId.contains(user.getObjectId())){
+                ivAddFriend.setVisibility(View.GONE);
+            } else {
+                ivAddFriend.setVisibility(View.VISIBLE);
+                // user selects a friend to add
+                View.OnClickListener addFriendClickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UserPub otherUserPub = user.getUserPub();
+                        otherUserPub.addFriend(currentUser);
+                        currentUserPub.addFriend(user);
+                        ivAddFriend.setVisibility(View.GONE);
+                        updateFriends(true, getAdapterPosition(), otherUserPub);
+                    }
+                };
+                ivAddFriend.setOnClickListener(addFriendClickListener);
+            }
         }
     }
 
@@ -160,6 +169,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             public void done(ParseException e) {
                 if (e != null) {
                     Toast.makeText(context, "Friend action failed", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, String.valueOf(e));
                     return;
                 }
                 if (added) {

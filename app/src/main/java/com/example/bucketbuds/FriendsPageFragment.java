@@ -26,13 +26,10 @@ import java.util.List;
 
 import okhttp3.Headers;
 
-public class PageFragment extends Fragment {
+public class FriendsPageFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
     public static final String ARG_USER_PUB = "ARG_USER_PUB";
     public static final String TAG = "PageFragment";
-    public static final String KEY_OBJECT_ID = "objectId";
-    public static final String USER_CLASS = "_User";
-    public static final String KEY_USERNAME = "username";
     public static final int FRIENDS_PAGE = 0;
 
     private int mPage;
@@ -47,11 +44,11 @@ public class PageFragment extends Fragment {
     public List<String> friendIds;
 
 
-    public static PageFragment newInstance(int page, UserPub userPub) {
+    public static FriendsPageFragment newInstance(int page, UserPub userPub) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
         args.putParcelable(ARG_USER_PUB, userPub);
-        PageFragment fragment = new PageFragment();
+        FriendsPageFragment fragment = new FriendsPageFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -96,7 +93,7 @@ public class PageFragment extends Fragment {
             rvUsers.setLayoutManager(new LinearLayoutManager(context));
             searchView.setVisibility(View.GONE);
         } else {
-            addFriendsAdapter = new FriendsAdapter(getContext(), addFriends, userPub,false, PageFragment.this, friendIds);
+            addFriendsAdapter = new FriendsAdapter(getContext(), addFriends, userPub,false, FriendsPageFragment.this, friendIds);
             rvUsers.setAdapter(addFriendsAdapter);
             rvUsers.setLayoutManager(new LinearLayoutManager(context));
             searchView.setVisibility(View.VISIBLE);
@@ -139,9 +136,9 @@ public class PageFragment extends Fragment {
                 for (int i = 0; i < objects.size(); i++) {
                     friendIds.add(objects.get(i).getObjectId());
                 }
-                ParseQuery<ParseUser> query = ParseQuery.getQuery(USER_CLASS);
-                query.whereNotEqualTo(KEY_OBJECT_ID, User.getCurrentUser().getObjectId());
-                query.whereStartsWith(KEY_USERNAME, queryPrefix);
+                ParseQuery<ParseUser> query = ParseQuery.getQuery(User.USER_CLASS);
+                query.whereNotEqualTo(User.KEY_OBJECT_ID, User.getCurrentUser().getObjectId());
+                query.whereStartsWith(User.KEY_USERNAME, queryPrefix);
                 query.include(User.KEY_USER_PUB);
                 query.findInBackground(getMyFindCallback(addFriendsAdapter, addFriends, false));
             }

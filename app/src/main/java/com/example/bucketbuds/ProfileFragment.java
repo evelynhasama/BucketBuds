@@ -141,7 +141,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        viewPager.setAdapter(new PageFragmentAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, getContext(), userPub));
+        viewPager.setAdapter(new FriendsPageFragmentAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, getContext(), userPub));
 
         tabLayout.setupWithViewPager(viewPager);
 
