@@ -65,9 +65,9 @@ public class PageFragment extends Fragment {
         user = User.getCurrentUser();
         if (mPage == FRIENDS_PAGE) {
             friends = new ArrayList<>();
-        } else {
-            addFriends = new ArrayList<>();
+            return;
         }
+        addFriends = new ArrayList<>();
     }
 
     @Override
@@ -78,9 +78,9 @@ public class PageFragment extends Fragment {
             hideKeyboard();
             friendsAdapter.clear();
             getFriends();
-        } else {
-            addFriendsAdapter.clear();
+            return;
         }
+        addFriendsAdapter.clear();
     }
 
     @Override
@@ -101,7 +101,8 @@ public class PageFragment extends Fragment {
             rvUsers.setLayoutManager(new LinearLayoutManager(context));
             searchView.setVisibility(View.VISIBLE);
         }
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+        SearchView.OnQueryTextListener searchQueryTextListener = new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // Reset SearchView
@@ -110,24 +111,25 @@ public class PageFragment extends Fragment {
                 searchView.clearFocus();
                 return true;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
-        });
+        };
+
+        searchView.setOnQueryTextListener(searchQueryTextListener);
         return view;
     }
 
     // gets the users who is friends with the current user
     private void getFriends() {
-        userPub.getFriendsRelation().getQuery().findInBackground(getMyFindCallback(friendsAdapter, friends, true));
+        userPub.getFriendsRelation().getQuery().include(User.KEY_USER_PUB).findInBackground(getMyFindCallback(friendsAdapter, friends, true));
     }
 
     // gets the users who are not friends with the current user and who's username starts with the query
     private void addFriends(String queryPrefix) {
         friendIds.clear();
-        userPub.getFriendsRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
+        FindCallback<ParseUser> addFriendsFindCallback =  new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
                 if (e == null) {
@@ -139,11 +141,12 @@ public class PageFragment extends Fragment {
                     query.whereStartsWith(KEY_USERNAME, queryPrefix);
                     query.include(User.KEY_USER_PUB);
                     query.findInBackground(getMyFindCallback(addFriendsAdapter, addFriends, false));
-                } else {
-                    Log.d(TAG, "issue with adding friend ids", e);
+                    return;
                 }
+                Log.d(TAG, "issue with adding friend ids", e);
             }
-        });
+        };
+        userPub.getFriendsRelation().getQuery().findInBackground(addFriendsFindCallback);
     }
 
     // helper method for adding all users when querying
@@ -151,18 +154,18 @@ public class PageFragment extends Fragment {
         return new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> allUsers, ParseException e) {
-                if (e == null){
+                if (e == null) {
                     for (int i = 0; i < allUsers.size(); i++) {
                         users.add(new User(allUsers.get(i)));
                     }
                     // search result for friend is empty
-                    if (!friendsBool && users.isEmpty()){
+                    if (!friendsBool && users.isEmpty()) {
                         Toast.makeText(getContext(), "No results found", Toast.LENGTH_SHORT).show();
                     }
-                    adapter.notifyDataSetChanged();;
-                } else {
-                    Log.d(TAG, "issue with adding users to list", e);
+                    adapter.notifyDataSetChanged();
+                    return;
                 }
+                Log.d(TAG, "issue with adding users to list", e);
             }
         };
     }

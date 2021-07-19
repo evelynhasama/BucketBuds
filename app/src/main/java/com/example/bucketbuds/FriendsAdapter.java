@@ -103,7 +103,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
         public void bind(User user, Boolean friendsBool){
             if (friendsBool) {
-                UserPub otherUserPub = user.getUserPubQuery();
+                UserPub otherUserPub = user.getUserPub();
                 tvBucketCount.setText(String.valueOf(otherUserPub.getBucketCount()));
                 tvFriendCount.setText(String.valueOf(otherUserPub.getFriendCount()));
                 // user selects a friend to remove
@@ -123,16 +123,17 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 } else {
                     ivAddFriend.setVisibility(View.VISIBLE);
                     // user selects a friend to add
-                    ivAddFriend.setOnClickListener(new View.OnClickListener() {
+                    View.OnClickListener addFriendClickListener = new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            UserPub otherUserPub = user.getUserPubQuery();
+                            UserPub otherUserPub = user.getUserPub();
                             otherUserPub.addFriend(currentUser);
                             currentUserPub.addFriend(user);
                             ivAddFriend.setVisibility(View.GONE);
                             updateFriends(true, getAdapterPosition(), otherUserPub);
                         }
-                    });
+                    };
+                    ivAddFriend.setOnClickListener(addFriendClickListener);
                 }
             }
             if (user.getImage() != null) {
@@ -152,27 +153,30 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
     // Helper method for saving added or removed friend
     public void updateFriends(Boolean added, int position, UserPub otherUserPub){
+
+        SaveCallback otherUserSaveCallback = new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    if (added) {
+                        Toast.makeText(context, "Friend added", Toast.LENGTH_SHORT).show();
+                        // notifyItemChanged(position);
+                    } else {
+                        Toast.makeText(context, "Friend removed", Toast.LENGTH_SHORT).show();
+                        notifyItemRemoved(position);
+                    }
+                    ((ProfileFragment) fragment.getParentFragment()).updateFriendCount();
+                    return;
+                }
+                Toast.makeText(context, "Friend action failed", Toast.LENGTH_SHORT).show();
+            }
+        };
+
         currentUserPub.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
-                    otherUserPub.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e == null) {
-                                if (added) {
-                                    Toast.makeText(context, "Friend added", Toast.LENGTH_SHORT).show();
-                                    // notifyItemChanged(position);
-                                } else {
-                                    Toast.makeText(context, "Friend removed", Toast.LENGTH_SHORT).show();
-                                    notifyItemRemoved(position);
-                                }
-                                ((ProfileFragment) fragment.getParentFragment()).updateFriendCount();
-                            } else {
-                                Toast.makeText(context, "Friend action failed", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+                    otherUserPub.saveInBackground(otherUserSaveCallback);
                 } else {
                     Toast.makeText(context, "Friend action failed", Toast.LENGTH_SHORT).show();
                 }
