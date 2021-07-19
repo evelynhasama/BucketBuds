@@ -1,4 +1,4 @@
-package com.example.bucketbuds;
+package com.evelynhasama.bucketbuds;
 
 import com.parse.ParseClassName;
 import com.parse.ParseFile;

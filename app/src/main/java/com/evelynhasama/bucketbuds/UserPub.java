@@ -1,13 +1,9 @@
-package com.example.bucketbuds;
-
-import android.util.Log;
+package com.evelynhasama.bucketbuds;
 
 import com.parse.ParseClassName;
-import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 @ParseClassName("UserPub")
 public class UserPub extends ParseObject {

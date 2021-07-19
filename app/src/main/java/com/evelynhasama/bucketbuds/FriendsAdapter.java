@@ -1,4 +1,4 @@
-package com.example.bucketbuds;
+package com.evelynhasama.bucketbuds;
 
 import android.content.Context;
 import android.util.Log;
@@ -14,14 +14,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHolder> {
@@ -169,7 +166,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             public void done(ParseException e) {
                 if (e != null) {
                     Toast.makeText(context, "Friend action failed", Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, String.valueOf(e));
+                    Log.d(TAG, String.valueOf(e));
                     return;
                 }
                 if (added) {

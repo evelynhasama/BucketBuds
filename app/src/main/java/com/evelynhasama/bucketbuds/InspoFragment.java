@@ -1,4 +1,4 @@
-package com.example.bucketbuds;
+package com.evelynhasama.bucketbuds;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;

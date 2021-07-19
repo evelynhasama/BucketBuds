@@ -1,4 +1,4 @@
-package com.example.bucketbuds;
+package com.evelynhasama.bucketbuds;
 
 public class BucketFriendHeaderItem extends BucketFriendListItem {
 
