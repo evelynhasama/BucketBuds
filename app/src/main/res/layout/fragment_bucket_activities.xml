@@ -20,18 +20,18 @@
 
     <ImageView
         android:id="@+id/ivBucketImageFBA"
-        android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="0dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
         tools:src="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/tvBucketNameFBA"
-        android:layout_width="match_parent"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivBucketImageFBA"
-        android:layout_centerHorizontal="true"
         android:layout_marginHorizontal="30dp"
         android:layout_marginTop="15dp"
         android:textColor="@color/black"
@@ -46,57 +46,44 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp">
 
     </androidx.recyclerview.widget.RecyclerView>
 
     <Button
         android:id="@+id/btnEditBucketFBA"
-        android:layout_width="160dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvBucketDescriptionFBA"
+        android:layout_alignBottom="@+id/ivBucketImageFBA"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="0dp"
         android:backgroundTint="@color/lavender"
-        android:text="Edit Bucket Info"
+        android:elevation="10dp"
+        android:text="Edit Bucket"
         android:textColor="@color/black"
         android:textSize="12sp" />
 
     <Button
         android:id="@+id/btnAddActivityFBA"
-        android:layout_width="160dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvBucketDescriptionFBA"
+        android:layout_alignBottom="@+id/ivBucketImageFBA"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="0dp"
         android:backgroundTint="@color/powder_blue"
+        android:elevation="10dp"
         android:text="Add Activity"
         android:textColor="@color/black"
         android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/tvCompletedFBA"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="134dp"
-        android:layout_marginEnd="27dp"
-        android:background="@color/white"
-        android:padding="5dp"
-        android:text="TextView"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        tools:text="Active" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvBucketFriendsFBA"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_below="@+id/btnEditBucketFBA"
+        android:layout_height="80dp"
+        android:layout_below="@+id/tvBucketDescriptionFBA"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_centerHorizontal="true"
@@ -104,4 +91,20 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="20dp"
         android:orientation="horizontal" />
+
+    <Switch
+        android:id="@+id/swCompletedFBA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivBucketImageFBA"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="15dp"
+        android:showText="true"
+        android:textColor="@color/white"
+        android:textOff="@string/active"
+        android:textOn="@string/completed"
+        android:textSize="10sp"
+        android:thumbTint="@color/white_blue"
+        android:trackTint="@color/powder_blue" />
 </RelativeLayout>

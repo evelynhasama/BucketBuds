@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="80dp"
-    android:layout_height="60dp">
+    android:layout_height="80dp">
 
     <ImageView
         android:id="@+id/ivProfileImageIBFC"
@@ -17,13 +17,14 @@
 
     <TextView
         android:id="@+id/tvFirstNameIBFC"
-        android:layout_width="40dp"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="15dp"
+        android:layout_below="@+id/ivProfileImageIBFC"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="10dp"
         android:background="@color/white"
+        android:ellipsize="end"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="10sp"
