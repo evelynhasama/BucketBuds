@@ -141,9 +141,10 @@ public class CreateBucketFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.miCreate) {
             // find index of Suggested header
-            int i = allItemsList.indexOf(header_suggest);
+            int headerPosition = allItemsList.indexOf(header_suggest);
             List<User> bucketFriends = new ArrayList<>();
-            while (allItemsList.get(i).getType() != BucketFriendListItem.TYPE_HEADER) {
+            int i = 1;
+            while (i < headerPosition) {
                 bucketFriends.add(((BucketFriendItem) allItemsList.get(i)).getUser());
                 i ++;
             }
