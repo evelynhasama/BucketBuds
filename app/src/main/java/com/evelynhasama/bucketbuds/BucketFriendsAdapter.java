@@ -143,7 +143,7 @@ public class BucketFriendsAdapter extends RecyclerView.Adapter<RecyclerView.View
             tvUsername = v.findViewById(R.id.tvUsernameIAF);
             tvFirstName = v.findViewById(R.id.tvFirstNameIAF);
             tvLastName = v.findViewById(R.id.tvLastNameIAF);
-            ivUpdateFriend = v.findViewById(R.id.ivAddFriendIAF);
+            ivUpdateFriend = v.findViewById(R.id.ivCheckBoxFBA);
 
         }
     }

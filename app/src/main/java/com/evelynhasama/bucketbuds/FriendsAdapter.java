@@ -95,7 +95,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 tvUsername = itemView.findViewById(R.id.tvUsernameIAF);
                 tvFirstName = itemView.findViewById(R.id.tvFirstNameIAF);
                 tvLastName = itemView.findViewById(R.id.tvLastNameIAF);
-                ivAddFriend = itemView.findViewById(R.id.ivAddFriendIAF);
+                ivAddFriend = itemView.findViewById(R.id.ivCheckBoxFBA);
             }
         }
 

@@ -79,7 +79,7 @@ public class CreateBucketFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_create_bucket, container, false);
         etBucketName = view.findViewById(R.id.etBucketNameFCB);
         etBucketDescription = view.findViewById(R.id.etBucketDescriptionFCB);
-        rvBucketFriends = view.findViewById(R.id.rvBucketFriendsFCB);
+        rvBucketFriends = view.findViewById(R.id.rvActivitiesFBA);
         ivBucketImage = view.findViewById(R.id.ivBucketImageFCB);
 
         Glide.with(getContext()).load(R.drawable.bucket_placeholder).centerCrop().into(ivBucketImage);

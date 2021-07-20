@@ -68,7 +68,7 @@
                 tools:text="someone" />
 
             <ImageView
-                android:id="@+id/ivAddFriendIAF"
+                android:id="@+id/ivCheckBoxFBA"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
