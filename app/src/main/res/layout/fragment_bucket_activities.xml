@@ -13,7 +13,7 @@
         android:layout_below="@+id/tvBucketNameFBA"
         android:layout_centerHorizontal="true"
         android:layout_marginHorizontal="30dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:textColor="@color/black"
         android:textSize="14sp"
         tools:text="bucket description" />
@@ -88,7 +88,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:orientation="horizontal" />
 

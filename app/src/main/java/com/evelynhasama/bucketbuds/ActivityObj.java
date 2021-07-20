@@ -14,6 +14,7 @@ public class ActivityObj extends ParseObject {
     public static final String KEY_LOCATION = "location";
     public static final String KEY_DATE = "date";
     public static final String KEY_WEB = "web";
+    public static final String KEY_UPDATED = "updatedAt";
 
 
     public BucketList getBucket() {

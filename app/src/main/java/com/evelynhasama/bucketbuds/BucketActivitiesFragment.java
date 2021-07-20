@@ -33,6 +33,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.parse.FindCallback;
+import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -54,11 +55,14 @@ public class BucketActivitiesFragment extends Fragment {
     View view;
     List<User> users;
     BucketUsersAdapter bucketUsersAdapter;
+    BucketActivitiesAdapter activitiesAdapter;
     ImageView ivBucketImageDEB;
     ImageView ivBucketImage;
     TextView tvBucketName;
     TextView tvBucketDescription;
-
+    List<BucketActivityItem> allActivityItemsList;
+    int completedHeaderPosition;
+    BucketActivityHeaderItem header_completed;
 
     public BucketActivitiesFragment() {
     }
@@ -131,7 +135,43 @@ public class BucketActivitiesFragment extends Fragment {
             }
         });
 
-        // TODO: recycler view activities
+        allActivityItemsList = new ArrayList<>();
+
+        // add headers to the list
+        BucketActivityHeaderItem header_active = new BucketActivityHeaderItem();
+        header_active.setSection("Active");
+        allActivityItemsList.add(header_active);
+        header_completed = new BucketActivityHeaderItem();
+        header_completed.setSection("Completed");
+        allActivityItemsList.add(header_completed);
+        completedHeaderPosition = 1;
+
+        activitiesAdapter = new BucketActivitiesAdapter(getContext(), allActivityItemsList);
+        rvBucketActivities.setAdapter(activitiesAdapter);
+        rvBucketActivities.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        bucketList.getActivitiesRelation().getQuery().addDescendingOrder(ActivityObj.KEY_UPDATED).findInBackground(new FindCallback<ActivityObj>() {
+            @Override
+            public void done(List<ActivityObj> objects, ParseException e) {
+                if (e != null){
+                    Log.d(TAG, "adding activities", e);
+                    return;
+                }
+                for (ActivityObj activityObj:objects) {
+                    BucketActivityObjItem activityObjItem = new BucketActivityObjItem();
+                    activityObjItem.setActivityObj(activityObj);
+                    if (activityObj.getCompleted()){
+                        // move to completed section
+                        allActivityItemsList.add(activityObjItem);
+                    } else {
+                        // move to active section
+                        allActivityItemsList.add(completedHeaderPosition, activityObjItem);
+                        completedHeaderPosition ++;
+                    }
+                }
+               activitiesAdapter.notifyDataSetChanged();
+            }
+        });
 
         return view;
     }
@@ -201,7 +241,11 @@ public class BucketActivitiesFragment extends Fragment {
                             Log.d(TAG, String.valueOf(e));
                             return;
                         }
-                        // adapter.notifydatasetchanged
+                        BucketActivityObjItem activityObjItem = new BucketActivityObjItem();
+                        activityObjItem.setActivityObj(activityObj);
+                        completedHeaderPosition = allActivityItemsList.indexOf(header_completed);
+                        allActivityItemsList.add(completedHeaderPosition, activityObjItem);
+                        activitiesAdapter.notifyItemInserted(completedHeaderPosition);
                         alertDialog.dismiss();
                     }
                 });
@@ -337,5 +381,5 @@ public class BucketActivitiesFragment extends Fragment {
                 break;
         }
     }
-    
+
 }
