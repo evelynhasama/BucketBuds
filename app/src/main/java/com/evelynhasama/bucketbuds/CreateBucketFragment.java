@@ -103,7 +103,7 @@ public class CreateBucketFragment extends Fragment {
             @Override
             public void done(List<ParseUser> friends, ParseException e) {
                 if (e != null) {
-                    Log.d(TAG, "issue with adding friends to list", e);
+                    Log.e(TAG, "issue with adding friends to list", e);
                     return;
                 }
                 for (int i = 0; i < friends.size(); i++) {
@@ -166,7 +166,7 @@ public class CreateBucketFragment extends Fragment {
             @Override
             public void done(ParseException e) {
                 if (e != null) {
-                    Log.d(TAG, errorDescription + e);
+                    Log.e(TAG, errorDescription + e);
                 }
             }
         };
@@ -209,36 +209,36 @@ public class CreateBucketFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if ((data != null) && requestCode == PICK_PHOTO_CODE) {
-            Uri photoUri = data.getData();
-
-            // Load the image located at photoUri into selectedImage
-            Bitmap selectedImage = loadFromUri(photoUri);
-            ivBucketImage.setImageBitmap(selectedImage);
-
-            // convert to ParseFile and set to BucketList
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            selectedImage.compress(Bitmap.CompressFormat.PNG,100,stream);
-            byte[] byteArray = stream.toByteArray();
-
-            ParseFile file = new ParseFile(PHOTO_FILE_NAME, byteArray);
-            bucketList.setImage(file);
+        if(data == null || requestCode != PICK_PHOTO_CODE) {
+            return;
         }
+        Uri photoUri = data.getData();
+
+        // Load the image located at photoUri into selectedImage
+        Bitmap selectedImage = loadFromUri(photoUri);
+        ivBucketImage.setImageBitmap(selectedImage);
+
+        // convert to ParseFile and set to BucketList
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        selectedImage.compress(Bitmap.CompressFormat.PNG,100,stream);
+        byte[] byteArray = stream.toByteArray();
+
+        ParseFile file = new ParseFile(PHOTO_FILE_NAME, byteArray);
+        bucketList.setImage(file);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults)
     {
-        switch (requestCode) {
-            case PICK_PHOTO_CODE:
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(galleryIntent, PICK_PHOTO_CODE);
-                } else {
-                    //do something like displaying a message that he didn`t allow the app to access gallery and you wont be able to let him select from gallery
-                }
-                break;
+        if (requestCode != PICK_PHOTO_CODE){
+            return;
+        }
+        // If request is cancelled, the result arrays are empty.
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(galleryIntent, PICK_PHOTO_CODE);
+        } else {
+            Toast.makeText(getContext(), "Please allow Gallery access to add images", Toast.LENGTH_SHORT).show();
         }
     }
 

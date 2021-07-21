@@ -166,7 +166,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             public void done(ParseException e) {
                 if (e != null) {
                     Toast.makeText(context, "Friend action failed", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, String.valueOf(e));
+                    Log.e(TAG, String.valueOf(e));
                     return;
                 }
                 if (added) {

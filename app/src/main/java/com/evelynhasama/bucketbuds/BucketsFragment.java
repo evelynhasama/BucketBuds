@@ -99,7 +99,7 @@ public class BucketsFragment extends Fragment {
                     bucketLists.addAll(objects);
                     adapter.notifyDataSetChanged();
                 } else {
-                    Log.d(TAG, "error adding bucket lists", e);
+                    Log.e(TAG, "error adding bucket lists", e);
                 }
             }
         };

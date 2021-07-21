@@ -36,6 +36,9 @@ public class BucketFriendsAdapter extends RecyclerView.Adapter<RecyclerView.View
         RecyclerView.ViewHolder viewHolder;
         View view;
 
+        // two types of items in the list: friend and header.
+        // BucketFriendListItem.TYPE_FRIEND are items that hold users and display their info
+        // BucketFriendListItem.TYPE_HEADER are items that show section headers
         switch (viewType) {
             case BucketFriendListItem.TYPE_FRIEND:
                 view = LayoutInflater.from(context).inflate(R.layout.item_add_friend, parent, false);
@@ -74,11 +77,9 @@ public class BucketFriendsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 }
 
                 Boolean added = friendItem.getAdded();
-                if (added) {
-                    friendViewHolder.ivUpdateFriend.setImageResource(R.drawable.ic_person_remove);
-                } else {
-                    friendViewHolder.ivUpdateFriend.setImageResource(R.drawable.ic_person_add);
-                }
+                int imgDrawable = added ? R.drawable.ic_person_remove : R.drawable.ic_person_add;
+                friendViewHolder.ivUpdateFriend.setImageResource(imgDrawable);
+
                 View.OnClickListener updateFriendClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

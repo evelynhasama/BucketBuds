@@ -27,11 +27,7 @@ public class FriendsPageFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
     public static final String ARG_USER_PUB = "ARG_USER_PUB";
     public static final String TAG = "FriendsPageFragment";
-    public static final String KEY_OBJECT_ID = "objectId";
-    public static final String USER_CLASS = "_User";
-    public static final String KEY_USERNAME = "username";
     public static final int FRIENDS_PAGE = 0;
-    public static final String KEY_FRIENDS = "friends";
 
     private int mPage;
     private List<User> friends;
@@ -138,9 +134,9 @@ public class FriendsPageFragment extends Fragment {
                 for (int i = 0; i < objects.size(); i++) {
                     friendIds.add(objects.get(i).getObjectId());
                 }
-                ParseQuery<ParseUser> query = ParseQuery.getQuery(USER_CLASS);
-                query.whereNotEqualTo(KEY_OBJECT_ID, User.getCurrentUser().getObjectId());
-                query.whereStartsWith(KEY_USERNAME, queryPrefix);
+                ParseQuery<ParseUser> query = ParseQuery.getQuery(User.USER_CLASS);
+                query.whereNotEqualTo(User.KEY_OBJECT_ID, User.getCurrentUser().getObjectId());
+                query.whereStartsWith(User.KEY_USERNAME, queryPrefix);
                 query.include(User.KEY_USER_PUB);
                 query.findInBackground(getMyFindCallback(addFriendsAdapter, addFriends, false));
             }
