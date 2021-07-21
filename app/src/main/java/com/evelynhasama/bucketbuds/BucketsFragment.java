@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseQuery;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,18 +103,20 @@ public class BucketsFragment extends Fragment {
                 }
             }
         };
+        ParseQuery<BucketList> query = userPub.getBucketsRelation().getQuery();
         switch (selectedSortID) {
             case R.id.rbAlphabetical:
-                userPub.getBucketsRelation().getQuery().addAscendingOrder(BucketList.KEY_NAME).findInBackground(bucketListFindCallback);
+                query = query.addAscendingOrder(BucketList.KEY_NAME);
                 break;
             case R.id.rbCreated:
-                userPub.getBucketsRelation().getQuery().addDescendingOrder(BucketList.KEY_BUCKET_CREATED).findInBackground(bucketListFindCallback);
+                query = query.addDescendingOrder(BucketList.KEY_BUCKET_CREATED);
                 break;
             default:
             case R.id.rbModified:
-                userPub.getBucketsRelation().getQuery().addDescendingOrder(BucketList.KEY_BUCKET_UPDATED).findInBackground(bucketListFindCallback);
+                query = query.addDescendingOrder(BucketList.KEY_BUCKET_UPDATED);
                 break;
         }
+        query.findInBackground(bucketListFindCallback);
     }
 
     public void showSortFilterDialog() {
