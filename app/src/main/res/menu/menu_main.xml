@@ -2,6 +2,10 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/miCreate"
+        android:title="Create"
+        app:showAsAction="always"/>
+    <item
         android:id="@+id/logout"
         android:title="@string/log_out"
         app:showAsAction="never" />

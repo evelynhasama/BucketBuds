@@ -1,7 +1,5 @@
-package com.example.bucketbuds;
+package com.evelynhasama.bucketbuds;
 
-import android.content.Intent;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,7 +12,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Environment;
@@ -22,35 +19,27 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.google.android.material.shape.RoundedCornerTreatment;
 import com.google.android.material.tabs.TabLayout;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.bumptech.glide.Glide;
 import com.parse.SaveCallback;
 
-import org.jetbrains.annotations.Contract;
-import org.w3c.dom.Text;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 public class ProfileFragment extends Fragment {
 
@@ -85,6 +74,7 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
     }
 
@@ -95,7 +85,6 @@ public class ProfileFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         user = User.getCurrentUser();
-
         tvUsername = view.findViewById(R.id.tvUsernamePF);
         tvFirst = view.findViewById(R.id.tvFirstNamePF);
         tvLast = view.findViewById(R.id.tvLastNamePF);
@@ -229,7 +218,7 @@ public class ProfileFragment extends Fragment {
         // wrap File object into a content provider
         // required for API >= 24
         // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
-        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider.bucketbuds", photoFile);
+        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider.evelynhasama.bucketbuds", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
         // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
@@ -315,5 +304,25 @@ public class ProfileFragment extends Fragment {
         tvFriendCount.setText(String.valueOf(userPub.getFriendCount()));
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem miLogout = menu.findItem(R.id.logout);
+        MenuItem miCreate = menu.findItem(R.id.miCreate);
+        miCreate.setVisible(false);
+        miLogout.setVisible(true);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.logout) {
+            ParseUser.logOut();
+            Intent intent = new Intent(getContext(), LoginActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 }

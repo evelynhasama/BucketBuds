@@ -1,4 +1,4 @@
-package com.example.bucketbuds;
+package com.evelynhasama.bucketbuds;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.example.bucketbuds;
+package com.evelynhasama.bucketbuds;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -24,12 +23,10 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.Headers;
-
 public class FriendsPageFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
     public static final String ARG_USER_PUB = "ARG_USER_PUB";
-    public static final String TAG = "PageFragment";
+    public static final String TAG = "FriendsPageFragment";
     public static final int FRIENDS_PAGE = 0;
 
     private int mPage;
@@ -108,6 +105,7 @@ public class FriendsPageFragment extends Fragment {
                 searchView.clearFocus();
                 return true;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
@@ -166,6 +164,7 @@ public class FriendsPageFragment extends Fragment {
             }
         };
     }
+
 
     public void hideKeyboard() {
         Activity activity = getActivity();

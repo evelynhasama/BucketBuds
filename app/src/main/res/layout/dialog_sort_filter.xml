@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:gravity="center_horizontal"
+        android:text="@string/sort_filter_bucket_lists"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="5dp"
+        android:text="@string/sort_by"
+        android:textColor="@color/black" />
+
+    <RadioGroup
+        android:id="@+id/rgSort"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rbModified"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/last_modified"
+            android:textSize="10sp" />
+
+        <RadioButton
+            android:id="@+id/rbCreated"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/created_at"
+            android:textSize="10sp" />
+
+        <RadioButton
+            android:id="@+id/rbAlphabetical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/alphabetical"
+            android:textSize="10sp" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="5dp"
+        android:text="@string/filter_buckets"
+        android:textColor="@color/black" />
+
+    <RadioGroup
+        android:id="@+id/rgFilter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rbAll"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/all"
+            android:textSize="10sp" />
+
+        <RadioButton
+            android:id="@+id/rbCompleted"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/completed"
+            android:textSize="10sp" />
+
+        <RadioButton
+            android:id="@+id/rbActive"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/active"
+            android:textSize="10sp" />
+    </RadioGroup>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/btnCancelDSF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:backgroundTint="@color/grape"
+            android:text="@string/cancel" />
+
+        <Button
+            android:id="@+id/btnSaveDSF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="30dp"
+            android:backgroundTint="@color/cadet_blue"
+            android:text="@string/save" />
+    </RelativeLayout>
+
+</LinearLayout>

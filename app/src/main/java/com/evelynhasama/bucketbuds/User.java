@@ -1,15 +1,12 @@
-package com.example.bucketbuds;
+package com.evelynhasama.bucketbuds;
 
 import android.util.Log;
 
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
-import java.util.List;
 
 public class User{
 
