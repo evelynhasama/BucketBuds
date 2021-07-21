@@ -4,7 +4,7 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryVariant">@color/powder_blue</item>
-        <item name="colorOnPrimary">@color/white_blue</item>
+        <item name="colorOnPrimary">@color/grape</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/lavender</item>
         <item name="colorSecondaryVariant">@color/grape</item>
@@ -17,4 +17,13 @@
         <item name="android:textColorSecondary">@color/powder_blue</item>
         <item name="android:fontFamily">@font/lato</item>
     </style>
+
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/powder_blue</item>
+        <item name="android:textColorPrimary">@color/grape</item>
+        <item name="android:textColor">@color/cadet_blue</item>
+        <item name="colorOnPrimary">@color/grape</item>
+        <item name="android:fontFamily">@font/lato</item>
+    </style>
+
 </resources>

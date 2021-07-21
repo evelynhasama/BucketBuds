@@ -1,5 +1,6 @@
 package com.evelynhasama.bucketbuds;
 
+import android.app.Activity;
 import android.content.Context;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -24,14 +27,16 @@ import java.util.List;
 public class BucketActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private Context context;
+    FragmentActivity activity;
     List<BucketActivityItem> allItemsList;
     public static final String TAG = "BucketActivitiesAdapter";
     public static final int CHECKED = R.drawable.ic_checked_box;
     public static final int UNCHECKED = R.drawable.ic_unchecked_box;
 
-    public BucketActivitiesAdapter(Context context, List<BucketActivityItem> allItemsList) {
+    public BucketActivitiesAdapter(Context context, List<BucketActivityItem> allItemsList, FragmentActivity activity) {
         this.allItemsList = allItemsList;
         this.context = context;
+        this.activity = activity;
     }
 
     @NonNull
@@ -110,7 +115,9 @@ public class BucketActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.V
                 View.OnClickListener activityDetailsClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO: navigate to activity details screen
+                        // navigate to activity details screen
+                        Fragment myFragment = ActivityDetailsFragment.newInstance(activityObj);
+                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, myFragment).addToBackStack(null).commit();
                     }
                 };
                 activityObjViewHolder.view.setOnClickListener(activityDetailsClickListener);

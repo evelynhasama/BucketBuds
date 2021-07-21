@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingHorizontal="20dp"
+    android:paddingVertical="10dp"
+    tools:context=".ActivityDetailsFragment">
+
+
+    <TextView
+        android:id="@+id/tvTitleFAD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="10dp"
+        android:paddingTop="30dp"
+        android:paddingBottom="10dp"
+        android:textAlignment="center"
+        android:textColor="@color/grape"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:text="Snuggle with Fiona" />
+
+    <TextView
+        android:id="@+id/tvDescriptionFAD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="10dp"
+        android:text="@string/description"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tvLocationFAD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="10dp"
+        android:textColor="@color/black"
+        tools:text="@string/location" />
+
+    <TextView
+        android:id="@+id/tvWebsiteFAD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="web"
+        android:paddingVertical="10dp"
+        android:textColor="@color/black"
+        tools:text="@string/website" />
+
+    <TextView
+        android:id="@+id/tvDateFAD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:paddingVertical="10dp"
+        android:textColor="@color/black"
+        tools:text="date" />
+
+    <TextView
+        android:id="@+id/tvTimeFAD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:paddingVertical="10dp"
+        android:textColor="@color/black"
+        tools:text="time" />
+
+</LinearLayout>

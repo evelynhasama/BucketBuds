@@ -146,7 +146,7 @@ public class BucketActivitiesFragment extends Fragment {
         allActivityItemsList.add(header_completed);
         completedHeaderPosition = 1;
 
-        activitiesAdapter = new BucketActivitiesAdapter(getContext(), allActivityItemsList);
+        activitiesAdapter = new BucketActivitiesAdapter(getContext(), allActivityItemsList, getActivity());
         rvBucketActivities.setAdapter(activitiesAdapter);
         rvBucketActivities.setLayoutManager(new LinearLayoutManager(getContext()));
 
