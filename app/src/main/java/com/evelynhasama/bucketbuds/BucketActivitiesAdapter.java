@@ -32,11 +32,13 @@ public class BucketActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.V
     public static final String TAG = "BucketActivitiesAdapter";
     public static final int CHECKED = R.drawable.ic_checked_box;
     public static final int UNCHECKED = R.drawable.ic_unchecked_box;
+    BucketActivityHeaderItem completedHeader;
 
-    public BucketActivitiesAdapter(Context context, List<BucketActivityItem> allItemsList, FragmentActivity activity) {
+    public BucketActivitiesAdapter(Context context, List<BucketActivityItem> allItemsList, FragmentActivity activity, BucketActivityHeaderItem completedHeader) {
         this.allItemsList = allItemsList;
         this.context = context;
         this.activity = activity;
+        this.completedHeader = completedHeader;
     }
 
     @NonNull
@@ -83,11 +85,7 @@ public class BucketActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.V
                 View.OnClickListener updateCompletedClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        allItemsList.remove(position);
-                        int movePosition = 1;
-                        while (allItemsList.get(movePosition).getType() != BucketActivityItem.TYPE_HEADER) {
-                            movePosition ++;
-                        }
+                        int addPosition = allItemsList.indexOf(completedHeader);
                         // move item to active section
                         if (completed) {
                             activityObjViewHolder.ivCheckBox.setImageResource(UNCHECKED);
@@ -95,9 +93,9 @@ public class BucketActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.V
                         // move item to top of completed section
                         else {
                             activityObjViewHolder.ivCheckBox.setImageResource(CHECKED);
-                            movePosition ++;
                         }
-                        allItemsList.add(movePosition, activityItem);
+                        allItemsList.remove(position);
+                        allItemsList.add(addPosition, activityItem);
                         activityObj.setCompleted(!completed);
                         activityObj.saveInBackground(new SaveCallback() {
                             @Override
@@ -107,8 +105,10 @@ public class BucketActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.V
                                 }
                             }
                         });
-                        notifyItemMoved(position, movePosition);
-                        notifyItemChanged(movePosition, null);
+                        Log.d(TAG, "positions moved: " + position + " "  + addPosition);
+                        notifyItemMoved(position, addPosition);
+                        notifyItemChanged(position, null);
+                        notifyItemChanged(addPosition, null);
                     }
                 };
                 activityObjViewHolder.ivCheckBox.setOnClickListener(updateCompletedClickListener);
