@@ -16,10 +16,12 @@ public class TimePickerFragment extends DialogFragment {
 
     Context context;
     ActivityDetailsFragment activityDetailsFragment;
+    Boolean startTime;
 
-    public TimePickerFragment(Context context, ActivityDetailsFragment activityDetailsFragment) {
+    public TimePickerFragment(Context context, ActivityDetailsFragment activityDetailsFragment, Boolean startTime) {
         this.context = context;
         this.activityDetailsFragment = activityDetailsFragment;
+        this.startTime = startTime;
     }
 
     @Override
@@ -30,9 +32,12 @@ public class TimePickerFragment extends DialogFragment {
         int minute = c.get(Calendar.MINUTE);
 
         // Create a new instance of TimePickerDialog and return it
-        return new TimePickerDialog(context, R.style.DialogTheme, (TimePickerDialog.OnTimeSetListener)
+        TimePickerDialog timePickerDialog = new TimePickerDialog(context, R.style.DialogTheme, (TimePickerDialog.OnTimeSetListener)
                 activityDetailsFragment, hour, minute,
                 DateFormat.is24HourFormat(getActivity()));
+        String title = startTime? "Start Time" : "End Time";
+        timePickerDialog.setTitle(title);
+        return timePickerDialog;
     }
 
 }

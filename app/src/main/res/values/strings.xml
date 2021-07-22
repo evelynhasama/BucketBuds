@@ -36,4 +36,8 @@
     <string name="description">description</string>
     <string name="title">title</string>
     <string name="edit_bucket_info">Edit Bucket Info</string>
+    <string name="set_dates">Set Dates</string>
+    <string name="create_calendar_event">Create Calendar Event</string>
+    <string name="edit_activity_info">Edit Activity Info</string>
+    <string name="delete_activity">Delete Activity</string>
 </resources>

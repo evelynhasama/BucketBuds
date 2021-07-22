@@ -9,6 +9,7 @@ import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -22,10 +23,12 @@ public class ActivityObj extends ParseObject {
     public static final String KEY_DESCRIPTION = "description";
     public static final String KEY_COMPLETED = "completed";
     public static final String KEY_LOCATION = "location";
-    public static final String KEY_DATE = "date";
+    public static final String KEY_START_DATE = "startDate";
+    public static final String KEY_END_DATE = "endDate";
     public static final String KEY_WEB = "web";
     public static final String KEY_UPDATED = "updatedAt";
-    public static final String KEY_TIME = "time";
+    public static final String KEY_EVENT_CREATED = "eventCreated";
+    public static final String KEY_ALL_DAY = "allDay";
 
 
     public BucketList getBucket() {
@@ -68,45 +71,31 @@ public class ActivityObj extends ParseObject {
         put(KEY_LOCATION, location);
     }
 
-    public Date getDate(){
-        String strDate = getString(KEY_DATE);
-        if (strDate.isEmpty()) {
-            return null;
-        }
-        DateFormat df = DateFormat.getDateInstance(DateFormat.FULL);
-        Date date = null;
-        try {
-            date = df.parse(strDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return date;
+    public Boolean getAllDayBool() {
+        return getBoolean(KEY_ALL_DAY);
     }
 
-    public void setDate(Date date) {
-        String strDate = DateFormat.getDateInstance(DateFormat.FULL).format(date);
-        put(KEY_DATE, strDate);
+    public void setAllDayBool(Boolean allDay) {
+        put(KEY_ALL_DAY, allDay);
     }
 
-    public Date getTime(){
-        String strTime = getString(KEY_TIME);
-        if (strTime.isEmpty()) {
-            return null;
-        }
-        DateFormat df = DateFormat.getTimeInstance(DateFormat.FULL);
-        Date time = null;
-        try {
-            time = df.parse(strTime);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return time;
+
+    public void setStartDate(Date date) {
+        put(KEY_START_DATE, date);
     }
 
-    public void setTime(Date time) {
-        String strTime = DateFormat.getTimeInstance(DateFormat.FULL).format(time);
-        put(KEY_TIME, strTime);
+    public Date getStartDate() {
+        return getDate(KEY_START_DATE);
     }
+
+    public void setEndDate(Date date) {
+        put(KEY_END_DATE, date);
+    }
+
+    public Date getEndDate() {
+        return getDate(KEY_END_DATE);
+    }
+
 
     public String getWeb() {
         return getString(KEY_WEB);
@@ -114,6 +103,14 @@ public class ActivityObj extends ParseObject {
 
     public void setWeb(String web) {
         put(KEY_WEB, web);
+    }
+
+    public Boolean getEventCreated(){
+        return getBoolean(KEY_EVENT_CREATED);
+    }
+
+    public void setEventCreated(){
+       put(KEY_EVENT_CREATED, true);
     }
 
 }

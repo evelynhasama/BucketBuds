@@ -1,68 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingHorizontal="20dp"
-    android:paddingVertical="10dp"
     tools:context=".ActivityDetailsFragment">
 
-
-    <TextView
-        android:id="@+id/tvTitleFAD"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="10dp"
-        android:paddingTop="30dp"
-        android:paddingBottom="10dp"
-        android:textAlignment="center"
-        android:textColor="@color/grape"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        tools:text="Snuggle with Fiona" />
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp">
 
-    <TextView
-        android:id="@+id/tvDescriptionFAD"
+        <TextView
+            android:id="@+id/tvTitleFAD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="10dp"
+            android:paddingTop="30dp"
+            android:paddingBottom="10dp"
+            android:textAlignment="center"
+            android:textColor="@color/grape"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:text="Snuggle with Fiona" />
+
+        <Button
+            android:id="@+id/btnEditActivityFAD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/lavender"
+            android:text="@string/edit_activity_info"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/tvDescriptionFAD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            tools:text="@string/description" />
+
+        <TextView
+            android:id="@+id/tvLocationFAD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            tools:text="@string/location" />
+
+        <TextView
+            android:id="@+id/tvWebsiteFAD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:paddingVertical="10dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            tools:text="@string/website" />
+
+        <Button
+            android:id="@+id/btnSetDatesFAD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/lavender"
+            android:text="@string/set_dates"
+            android:textColor="@color/black" />
+
+        <Switch
+            android:id="@+id/swAllDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="All Day"
+            android:textSize="16sp"
+            android:thumbTint="@color/white"
+            android:trackTint="@color/cadet_blue" />
+
+        <TextView
+            android:id="@+id/tvStartDateFAD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:paddingVertical="10dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            tools:text="start date" />
+
+        <TextView
+            android:id="@+id/tvEndDateFAD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:paddingVertical="10dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            tools:text="end date" />
+
+        <Button
+            android:id="@+id/btnCalendarEventFAD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/create_calendar_event"
+            android:textColor="@color/grape" />
+
+        <TextView
+            android:id="@+id/tvCalStatusFAD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            tools:text="Event already created" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnDeleteActivityFAD"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="10dp"
-        android:text="@string/description"
+        android:layout_alignParentBottom="true"
+        android:layout_marginHorizontal="100dp"
+        android:layout_marginBottom="40dp"
+        android:backgroundTint="@color/powder_blue"
+        android:text="@string/delete_activity"
         android:textColor="@color/black" />
-
-    <TextView
-        android:id="@+id/tvLocationFAD"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingVertical="10dp"
-        android:textColor="@color/black"
-        tools:text="@string/location" />
-
-    <TextView
-        android:id="@+id/tvWebsiteFAD"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:autoLink="web"
-        android:paddingVertical="10dp"
-        android:textColor="@color/black"
-        tools:text="@string/website" />
-
-    <TextView
-        android:id="@+id/tvDateFAD"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:paddingVertical="10dp"
-        android:textColor="@color/black"
-        tools:text="date" />
-
-    <TextView
-        android:id="@+id/tvTimeFAD"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:paddingVertical="10dp"
-        android:textColor="@color/black"
-        tools:text="time" />
-
-</LinearLayout>
+</RelativeLayout>

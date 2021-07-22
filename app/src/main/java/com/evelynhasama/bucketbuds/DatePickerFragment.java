@@ -19,10 +19,12 @@ public class DatePickerFragment extends DialogFragment {
     public static final String TAG = "DatePickerFragment";
     Context context;
     ActivityDetailsFragment activityDetailsFragment;
+    Boolean startDate;
 
-    public DatePickerFragment(Context context, ActivityDetailsFragment activityDetailsFragment) {
+    public DatePickerFragment(Context context, ActivityDetailsFragment activityDetailsFragment, Boolean startDate) {
         this.context = context;
         this.activityDetailsFragment = activityDetailsFragment;
+        this.startDate = startDate;
     }
 
     @Override
@@ -36,6 +38,8 @@ public class DatePickerFragment extends DialogFragment {
         // Create a new instance of DatePickerDialog and return it
         DatePickerDialog datePickerDialog =  new DatePickerDialog(context, R.style.DialogTheme, (DatePickerDialog.OnDateSetListener)
         activityDetailsFragment , year, month, day);
+        String title = startDate? "Start Date" : "End Date";
+        datePickerDialog.setTitle(title);
         return  datePickerDialog;
     }
 

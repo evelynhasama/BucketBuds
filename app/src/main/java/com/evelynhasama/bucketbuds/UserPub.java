@@ -9,6 +9,7 @@ import com.parse.ParseUser;
 public class UserPub extends ParseObject {
     public static final String KEY_USER = "user";
     public static final String KEY_FRIENDS = "friends";
+    public static final String KEY_EMAIL = "email";
     public static final String KEY_FRIEND_COUNT = "friendCount";
     public static final String KEY_BUCKETS = "buckets";
     public static final String KEY_BUCKET_COUNT = "bucketCount";
@@ -57,6 +58,14 @@ public class UserPub extends ParseObject {
 
     public void setBucketCount(int bucketCount) {
         put(KEY_BUCKET_COUNT, bucketCount);
+    }
+
+    public String getEmail() {
+        return getString(KEY_EMAIL);
+    }
+
+    public void setEmail(String email) {
+        put(KEY_EMAIL, email);
     }
 
 }

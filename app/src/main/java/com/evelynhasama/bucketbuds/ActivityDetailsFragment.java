@@ -1,33 +1,42 @@
 package com.evelynhasama.bucketbuds;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
-
+import android.widget.Toast;
+import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
-
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class ActivityDetailsFragment extends Fragment implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
 
     private static final String ARG_ACTIVITY_OBJ = "activityObj";
     public static final String TAG = "ActivityDetailsFragment";
+    public static final SimpleDateFormat DATE_TIME_FORMATTER = new SimpleDateFormat("M/dd/yyyy hh:mm a", Locale.US);
+    public static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("M/dd/yyyy", Locale.US);
+    public static final int REQUEST_PERMISSION_CODE = 133;
 
     private ActivityObj activityObj;
     View view;
@@ -35,11 +44,16 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
     TextView tvDescription;
     TextView tvLocation;
     TextView tvWebsite;
-    TextView tvDate;
-    TextView tvTime;
-    Date activityDate;
-    Date activityTime;
-    Fragment fragment;
+    TextView tvStartDate;
+    TextView tvEndDate;
+    Button btnCalendarEvent;
+    Button btnSetDates;
+    Boolean allDay;
+    Switch swAllDay;
+    Boolean afterSetStart; // false when setting the start date/time and true after
+    TextView tvCalEventStatus;
+    Button btnEditActivity;
+    Button btnDeleteActivity;
 
     public ActivityDetailsFragment() {
         // Required empty public constructor
@@ -69,102 +83,289 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
 
         tvTitle = view.findViewById(R.id.tvTitleFAD);
         tvDescription = view.findViewById(R.id.tvDescriptionFAD);
-        tvDate = view.findViewById(R.id.tvDateFAD);
+        tvStartDate = view.findViewById(R.id.tvStartDateFAD);
         tvLocation = view.findViewById(R.id.tvLocationFAD);
         tvWebsite = view.findViewById(R.id.tvWebsiteFAD);
-        tvTime = view.findViewById(R.id.tvTimeFAD);
+        tvEndDate = view.findViewById(R.id.tvEndDateFAD);
+        btnCalendarEvent = view.findViewById(R.id.btnCalendarEventFAD);
+        btnSetDates = view.findViewById(R.id.btnSetDatesFAD);
+        swAllDay = view.findViewById(R.id.swAllDay);
+        tvCalEventStatus = view.findViewById(R.id.tvCalStatusFAD);
+        btnEditActivity = view.findViewById(R.id.btnEditActivityFAD);
+        btnDeleteActivity = view.findViewById(R.id.btnDeleteActivityFAD);
 
         tvTitle.setText(activityObj.getName());
         tvDescription.setText("Description: "+ activityObj.getDescription());
         tvWebsite.setText("Website: "+ activityObj.getWeb());
         tvLocation.setText("Location: "+ activityObj.getLocation());
-        if (activityObj.getDate() != null){
-           tvDate.setText(convertDateToString(activityObj.getDate()));
+        allDay = activityObj.getAllDayBool();
+        Boolean checked = allDay? true : false;
+        swAllDay.setChecked(checked);
+
+        if (activityObj.getStartDate() != null){
+           tvStartDate.setText(getDateText(true, activityObj.getStartDate()));
+           tvEndDate.setText(getDateText(false, activityObj.getEndDate()));
         } else {
-            tvDate.setText("Date: " );
+            tvStartDate.setText("Start: " );
+            tvEndDate.setText("End: " );
         }
 
-        if (activityObj.getTime() != null){
-            tvTime.setText(convertTimeToString(activityObj.getTime()));
+        if (activityObj.getEventCreated()){
+            eventAlreadyCreated();
         } else {
-            tvTime.setText("Time: " );
+            tvCalEventStatus.setText("Create the event after your dates are finalized");
         }
 
-        tvDate.setOnClickListener(new View.OnClickListener() {
+        swAllDay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                showDatePickerDialog(v);
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                allDay = isChecked;
+                activityObj.setAllDayBool(allDay);
+                saveActivityObj("saving all day ");
+                changeDatesAllDay();
             }
         });
 
-        tvTime.setOnClickListener(new View.OnClickListener() {
+        btnSetDates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTimePickerDialog(v);
+                afterSetStart = false;
+                showDatePickerDialog(v, true);
+            }
+        });
+
+        btnCalendarEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (activityObj.getStartDate() == null || activityObj.getEndDate() == null){
+                    Toast.makeText(getContext(), "Please set start and end dates", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR}, REQUEST_PERMISSION_CODE);
+                    return;
+                }
+                CalendarHelper.createEventIntent(getContext(), activityObj);
+                eventAlreadyCreated();
+            }
+        });
+
+        btnDeleteActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BucketList bucketList = activityObj.getBucket();
+                bucketList.removeActivity(activityObj);
+                activityObj.deleteInBackground(new DeleteCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        getActivity().getSupportFragmentManager().popBackStack();
+                    }
+                });
+            }
+        });
+
+        btnEditActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showEditActivityDialog();
             }
         });
 
         return view;
     }
 
-    public void showTimePickerDialog(View v) {
-        DialogFragment timeFragment = new TimePickerFragment(getContext(), this);
+    public void showDatePickerDialog(View v, Boolean startDate) {
+        DialogFragment dateFragment = new DatePickerFragment(getContext(), this, startDate);
+        dateFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+    }
+
+    public void showTimePickerDialog(View v, Boolean startTime) {
+        DialogFragment timeFragment = new TimePickerFragment(getContext(), this, startTime);
         timeFragment.show(getActivity().getSupportFragmentManager(), "timePicker");
 
     }
 
     @Override
-    public void onDateSet(DatePicker view, int year, int month, int day) {
+    public void onDateSet(DatePicker dpView, int year, int month, int day) {
         Date date = new GregorianCalendar(year, month, day).getTime();
-        tvDate.setText(convertDateToString(date));
-        activityObj.setDate(date);
+        // Start date
+        if (!afterSetStart) {
+            activityObj.setStartDate(date);
+            if (allDay) {
+                tvStartDate.setText(getDateText(true, date));
+                showDatePickerDialog(view, false);
+                afterSetStart = true;
+                return;
+            }
+            showTimePickerDialog(view, true);
+        }
+        // End date
+        else {
+            if (allDay) {
+                if (date.before(activityObj.getStartDate())) {
+                    Toast.makeText(getContext(), "End date must be after start date", Toast.LENGTH_SHORT).show();
+                } else {
+                    tvEndDate.setText(getDateText(false, date));
+                    activityObj.setEndDate(date);
+                }
+                saveActivityObj("error saving dates ");
+                return;
+            }
+            activityObj.setEndDate(date);
+            showTimePickerDialog(view, false);
+        }
+    }
+
+    @Override
+    public void onTimeSet(TimePicker tpView, int hourOfDay, int minute) {
+        // Start time
+        if (!afterSetStart){
+            Date date = activityObj.getStartDate();
+            Date datetime = new Date(date.getYear(), date.getMonth(), date.getDate(), hourOfDay, minute);
+            tvStartDate.setText(getDateText(true, datetime));
+            activityObj.setStartDate(datetime);
+            afterSetStart = true;
+            showDatePickerDialog(view, false);
+        }
+        // End time
+        else {
+            Date date = activityObj.getEndDate();
+            Date datetime = new Date(date.getYear(), date.getMonth(), date.getDate(), hourOfDay, minute);
+            if (datetime.before(activityObj.getStartDate())) {
+                Toast.makeText(getContext(), "End date must be after start date", Toast.LENGTH_SHORT).show();
+            } else {
+                tvEndDate.setText(getDateText(false, datetime));
+                activityObj.setEndDate(datetime);
+            }
+            saveActivityObj("error saving dates with times ");
+        }
+    }
+
+    public String getDateText(Boolean start, Date date){
+        String text = start ? "Start: " : "End: ";
+        SimpleDateFormat sdFormat = allDay ? DATE_FORMATTER : DATE_TIME_FORMATTER;
+        return text + (sdFormat.format(date));
+    }
+
+    public void saveActivityObj(String errorDescription){
         activityObj.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e != null){
-                    Log.d(TAG, String.valueOf(e));
-                    return;
+                    Log.e(TAG, errorDescription + e);
                 }
             }
         });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void changeDatesAllDay(){
+        if (activityObj.getStartDate() == null && activityObj.getEndDate() == null){
+            return;
+        }
+        Date startDate = activityObj.getStartDate();
+        Date endDate = activityObj.getEndDate();
+        if (allDay){
+            // change from date and time to just date
+            startDate.setHours(0);
+            startDate.setMinutes(0);
+            activityObj.setStartDate(startDate);
+            endDate.setHours(0);
+            endDate.setMinutes(0);
+            activityObj.setEndDate(endDate);
+            saveActivityObj("error saving all day dates ");
+        }
+        tvStartDate.setText(getDateText(true, startDate));
+        tvEndDate.setText(getDateText(false, endDate));
+
     }
 
-    public void showDatePickerDialog(View v) {
-        DialogFragment dateFragment = new DatePickerFragment(getContext(), this);
-        dateFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+    public void eventAlreadyCreated(){
+        btnSetDates.setVisibility(View.GONE);
+        btnCalendarEvent.setVisibility(View.GONE);
+        swAllDay.setClickable(false);
+        tvCalEventStatus.setText("This activity is already scheduled and a calendar invite has been sent");
     }
 
     @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        Date time = new Date(0, 1, 1, hourOfDay, minute);
-        tvTime.setText(convertTimeToString(time));
-        activityObj.setTime(time);
-        activityObj.saveInBackground(new SaveCallback() {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSION_CODE) {
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                CalendarHelper.createEventIntent(getContext(), activityObj);
+                eventAlreadyCreated();
+                return;
+            }
+            Toast.makeText(getContext(), "Please accept calendar permission requests to create events", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void showEditActivityDialog(){
+        View messageView = LayoutInflater.from(getContext()).
+                inflate(R.layout.dialog_add_activity, null);
+        // Create alert dialog builder
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+        alertDialogBuilder.setView(messageView);
+        // Create alert dialog
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        EditText etTitle = messageView.findViewById(R.id.etTitleDAA);
+        EditText etDescription = messageView.findViewById(R.id.etDescriptionDAA);
+        EditText etLocation = messageView.findViewById(R.id.etLocationDAA);
+        EditText etWebsite = messageView.findViewById(R.id.etWebsiteDAA);
+        Button btnSave = messageView.findViewById(R.id.btnSaveDAA);
+        Button btnCancel = messageView.findViewById(R.id.btnCancelDAA);
+        TextView tvTitle = messageView.findViewById(R.id.tvTitleDAA);
+
+        tvTitle.setText("Edit Activity Info");
+        etTitle.setText(activityObj.getName(), TextView.BufferType.EDITABLE);
+        etDescription.setText(activityObj.getDescription(), TextView.BufferType.EDITABLE);
+        etLocation.setText(activityObj.getLocation(), TextView.BufferType.EDITABLE);
+        etWebsite.setText(activityObj.getWeb(), TextView.BufferType.EDITABLE);
+
+        // Configure dialog buttons
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void done(ParseException e) {
-                if (e != null){
-                    Log.d(TAG, String.valueOf(e));
+            public void onClick(View v) {
+
+                String title = etTitle.getText().toString();
+                String description = etDescription.getText().toString();
+                String location = etLocation.getText().toString();
+                String web = etWebsite.getText().toString();
+
+                if (title.isEmpty()) {
+                    Toast.makeText(getContext(), "Title is required", Toast.LENGTH_SHORT);
                     return;
                 }
+                activityObj.setName(title);
+                activityObj.setDescription(description);
+                activityObj.setLocation(location);
+                activityObj.setWeb(web);
+                SaveCallback saveCallback = new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null) {
+                            Log.d(TAG, "error saving edited activity", e);
+                            return;
+                        }
+                        tvTitle.setText(title);
+                        tvDescription.setText("Description: "+ description);
+                        tvLocation.setText("Location: " + location);
+                        tvWebsite.setText("Website: "+ web);
+                        alertDialog.dismiss();
+                    }
+                };
+                activityObj.saveInBackground(saveCallback);
             }
         });
-    }
 
-    public String convertDateToString(Date date){
-        activityDate = date;
-        String strDate = DateFormat.getDateInstance(DateFormat.FULL).format(date);
-        return ("Date: " + strDate);
-    }
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.cancel();
+            }
+        });
 
-    public String convertTimeToString(Date time){
-        activityTime = time;
-        String strTime = DateFormat.getTimeInstance(DateFormat.DEFAULT).format(time);
-        return ("Time: " + strTime);
+        alertDialog.show();
     }
 
 }
