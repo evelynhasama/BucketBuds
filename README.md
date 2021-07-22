@@ -38,7 +38,7 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
 * User can view all of their bucket lists
 * User can add activities with details (name, description, location, date/time) to a bucket list 
 * User can reorder or delete items in the bucket list
-* User can schedule events with the group using the [G Calendar API](https://developers.google.com/calendar/api/v3/reference) and/or [G Calendar Service](https://developers.google.com/apps-script/reference/calendar)
+* User can schedule events with the group using the Calendar Provider
 * User can see sort/filter list by completed/active bucket status, alphabetical order
 * User can get inspiration for activities they may be interested in through the APIs
 * User can find helpful resources on the web
@@ -80,7 +80,7 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
     * User can reorder or delete items in the bucket list
     * User can add activities with details (name, description, location) to a bucket list
 * Activity Details screen
-    * User can schedule events with the group using the [G Calendar API](https://developers.google.com/calendar/api/v3/reference) and/or [G Calendar Service](https://developers.google.com/apps-script/reference/calendar)
+    * User can schedule events with the group using the the Calendar Provider
 * Inspiration screen
     * User can get inspiration for activities they may be interested in through some of the following APIs:
       * [Bored API](https://www.boredapi.com/)
@@ -159,6 +159,7 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    | buckets       | Relation(BucketList) | relation to user's buckets |
    | friendCount   | Int             | user's number of friends |
    | friends       | Relation(User)  | relation to user's friends |
+   | email         | String          | user's email address|
   
 #### BucketList
 
@@ -182,11 +183,12 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    | description   | String   | description of activity |
    | completed     | Boolean  | false (active), true (completed) |
    | location      | String   | location name |
-   | date          | DateTime | when event is occuring |
-   | eventId       | String   | eventId for Google Calender API |
+   | allDay        | Boolean  | true if the event is an all day event | 
+   | startDate     | Date     | event Start Date | 
+   | endDate       | Date     | event End Date |
    | bucket        | Pointer  | points to bucket list |
-   | emails        | Array    | list of user's gmails |
    | web           | String   | link to the activity web page |
+   | eventCreated  | Boolean  | true when calender is event created |
 
 
 ### Networking
@@ -214,10 +216,6 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
     * None
 
 #### OPTIONAL: API Endpoints
-* [Google Calendar API](https://developers.google.com/calendar/api/v3/reference) ([Java Docs](https://googleapis.dev/java/google-api-services-calendar/latest/index.html)):
-   * Create event: POST https://www.googleapis.com/calendar/v3/calendars/calendarId/events
-   * Delete event: DELETE https://www.googleapis.com/calendar/v3/calendars/calendarId/events/eventId
-   * Update event: PUT https://www.googleapis.com/calendar/v3/calendars/calendarId/events/eventId
 * [Bored API](https://www.boredapi.com/documentation)
    * Get a random event: GET http://www.boredapi.com/api/activity/
 * [Ticketmaster Dsicovery API](https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/)
