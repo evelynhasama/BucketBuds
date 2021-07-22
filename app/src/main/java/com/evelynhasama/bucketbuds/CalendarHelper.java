@@ -58,7 +58,8 @@ public class CalendarHelper {
                         .putExtra(Intent.EXTRA_EMAIL, emailString);
 
                 if (activityObj.getAllDayBool()) {
-                    intent.putExtra(CalendarContract.Events.ALL_DAY, "1");
+                    Log.d(TAG, "allDay");
+                    intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
                 }
                 context.startActivity(intent);
                 activityObj.setEventCreated();

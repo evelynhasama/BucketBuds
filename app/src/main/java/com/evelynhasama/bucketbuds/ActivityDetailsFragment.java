@@ -244,6 +244,9 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
     public String getDateText(Boolean start, Date date){
         String text = start ? "Start: " : "End: ";
         SimpleDateFormat sdFormat = allDay ? DATE_FORMATTER : DATE_TIME_FORMATTER;
+        if (date == null) {
+            return text;
+        }
         return text + (sdFormat.format(date));
     }
 
@@ -266,16 +269,20 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
         Date endDate = activityObj.getEndDate();
         if (allDay){
             // change from date and time to just date
-            startDate.setHours(0);
-            startDate.setMinutes(0);
-            activityObj.setStartDate(startDate);
-            endDate.setHours(0);
-            endDate.setMinutes(0);
-            activityObj.setEndDate(endDate);
+            if (startDate != null) {
+                startDate.setHours(0);
+                startDate.setMinutes(0);
+                activityObj.setStartDate(startDate);
+            }
+            if (endDate != null){
+                endDate.setHours(0);
+                endDate.setMinutes(0);
+                activityObj.setEndDate(endDate);
+            }
             saveActivityObj("error saving all day dates ");
         }
-        tvStartDate.setText(getDateText(true, startDate));
         tvEndDate.setText(getDateText(false, endDate));
+        tvStartDate.setText(getDateText(true, startDate));
 
     }
 
@@ -314,9 +321,9 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
         EditText etWebsite = messageView.findViewById(R.id.etWebsiteDAA);
         Button btnSave = messageView.findViewById(R.id.btnSaveDAA);
         Button btnCancel = messageView.findViewById(R.id.btnCancelDAA);
-        TextView tvTitle = messageView.findViewById(R.id.tvTitleDAA);
+        TextView tvDialogTitle = messageView.findViewById(R.id.tvTitleDAA);
 
-        tvTitle.setText("Edit Activity Info");
+        tvDialogTitle.setText("Edit Activity Info");
         etTitle.setText(activityObj.getName(), TextView.BufferType.EDITABLE);
         etDescription.setText(activityObj.getDescription(), TextView.BufferType.EDITABLE);
         etLocation.setText(activityObj.getLocation(), TextView.BufferType.EDITABLE);
