@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -62,6 +63,7 @@ public class BucketActivitiesFragment extends Fragment {
     TextView tvBucketDescription;
     List<BucketActivityItem> allActivityItemsList;
     int completedHeaderPosition;
+    Switch swCompleted;
     BucketActivityHeaderItem header_completed;
 
     public BucketActivitiesFragment() {
@@ -89,7 +91,7 @@ public class BucketActivitiesFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_bucket_activities, container, false);
 
-        Switch swCompleted = view.findViewById(R.id.swCompletedFBA);
+        swCompleted = view.findViewById(R.id.swCompletedFBA);
         tvBucketName = view.findViewById(R.id.tvBucketNameFBA);
         tvBucketDescription = view.findViewById(R.id.tvBucketDescriptionFBA);
         ivBucketImage = view.findViewById(R.id.ivBucketImageFBA);
@@ -103,6 +105,21 @@ public class BucketActivitiesFragment extends Fragment {
         tvBucketName.setText(bucketList.getName());
         tvBucketDescription.setText(bucketList.getDescription());
         swCompleted.setChecked(bucketList.getCompleted() ? true : false);
+
+        swCompleted.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                bucketList.setCompleted(isChecked);
+                bucketList.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null){
+                            Log.e(TAG, "saving switch completed", e);
+                        }
+                    }
+                });
+            }
+        });
 
         btnAddActivity.setOnClickListener(new View.OnClickListener() {
             @Override
