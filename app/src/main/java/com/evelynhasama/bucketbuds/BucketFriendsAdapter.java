@@ -82,13 +82,13 @@ public class BucketFriendsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 View.OnClickListener updateFriendClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        allItemsList.remove(position);
+                        int temp_position = holder.getAdapterPosition();
+                        allItemsList.remove(temp_position);
                         int movePosition;
                         // move item to suggested section
                         if (added) {
                             movePosition = allItemsList.size();
                             friendViewHolder.ivUpdateFriend.setImageResource(R.drawable.ic_person_remove);
-                            Log.d(TAG, "from added to suggested " + movePosition);
                         }
                         // move item to added section
                         else {
@@ -100,7 +100,7 @@ public class BucketFriendsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         }
                         allItemsList.add(movePosition, friendItem);
                         friendItem.setAdded(!added);
-                        notifyItemMoved(position, movePosition);
+                        notifyItemMoved(temp_position, movePosition);
                         notifyItemChanged(movePosition, null);
                     }
                 };

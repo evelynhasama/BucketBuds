@@ -77,23 +77,14 @@ public class BucketActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.V
                 View.OnClickListener updateCompletedClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        int temp_position = holder.getAdapterPosition();
                         int addPosition = allItemsList.indexOf(completedHeader);
-                        // move item to active section
-                        if (completed) {
-                            activityObjViewHolder.ivCheckBox.setImageResource(UNCHECKED);
-                        }
-                        // move item to top of completed section
-                        else {
-                            activityObjViewHolder.ivCheckBox.setImageResource(CHECKED);
-                        }
-                        allItemsList.remove(position);
+                        int checkId = completed ? UNCHECKED : CHECKED;
+                        activityObjViewHolder.ivCheckBox.setImageResource(checkId);
+                        allItemsList.remove(temp_position);
                         allItemsList.add(addPosition, activityItem);
                         activityObj.setCompleted(!completed);
-                        activityObj.saveInBackground(getActivitySaveCallback());
-                        // Log.d(TAG, "positions moved: " + position + " "  + addPosition);
-                        notifyItemMoved(position, addPosition);
-                        notifyItemChanged(position, null);
-                        notifyItemChanged(addPosition, null);
+                        activityObj.saveInBackground(getActivitySaveCallback(temp_position, addPosition));
                     }
                 };
                 activityObjViewHolder.ivCheckBox.setOnClickListener(updateCompletedClickListener);
@@ -154,13 +145,16 @@ public class BucketActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
-    public SaveCallback getActivitySaveCallback(){
+    public SaveCallback getActivitySaveCallback(int temp_position, int addPosition){
         return new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e != null){
                     Log.e(TAG, "saving activity", e);
+                    return;
                 }
+                notifyItemMoved(temp_position, addPosition);
+                notifyItemChanged(addPosition, null);
             }
         };
     }
