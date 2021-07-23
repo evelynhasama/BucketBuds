@@ -18,6 +18,7 @@ public class BucketList extends ParseObject {
     public static final String KEY_IMAGE = "image";
     public static final String KEY_BUCKET_UPDATED = "updatedAt";
     public static final String KEY_BUCKET_CREATED = "createdAt";
+    public static final String KEY_ACTIVITIES = "activities";
     public static final String TAG = "BucketListClass";
 
     public BucketList(){}
@@ -64,6 +65,20 @@ public class BucketList extends ParseObject {
 
     public ParseFile getImage(){
         return getParseFile(KEY_IMAGE);
+    }
+
+    public ParseRelation<ActivityObj> getActivitiesRelation() {
+        return getRelation(KEY_ACTIVITIES);
+    }
+
+    public void addActivity(ActivityObj activityObj) {
+        ParseRelation<ActivityObj> relation = getActivitiesRelation();
+        relation.add(activityObj);
+    }
+
+    public void removeActivity(ActivityObj activityObj) {
+        ParseRelation<ActivityObj> relation = getActivitiesRelation();
+        relation.remove(activityObj);
     }
 
 }

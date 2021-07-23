@@ -19,7 +19,6 @@
     <string name="bio">bio...</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="bucket_list_name">bucket list name</string>
     <string name="describe_your_bucket_list">describe your bucket list</string>
@@ -32,4 +31,13 @@
     <string name="completed">Completed</string>
     <string name="active">Active</string>
     <string name="sort_by">Sort By:</string>
+    <string name="website">website</string>
+    <string name="location">location</string>
+    <string name="description">description</string>
+    <string name="title">title</string>
+    <string name="edit_bucket_info">Edit Bucket Info</string>
+    <string name="set_dates">Set Dates</string>
+    <string name="create_calendar_event">Create Calendar Event</string>
+    <string name="edit_activity_info">Edit Activity Info</string>
+    <string name="delete_activity">Delete Activity</string>
 </resources>

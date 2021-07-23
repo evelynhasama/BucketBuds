@@ -79,7 +79,7 @@ public class BucketsFragment extends Fragment {
         rvBuckets.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
         bucketLists = new ArrayList<>();
-        adapter = new BucketListAdapter(getContext(), bucketLists, selectedFilterID);
+        adapter = new BucketListAdapter(getContext(), bucketLists, selectedFilterID, getActivity());
         rvBuckets.setAdapter(adapter);
 
         getBuckets();

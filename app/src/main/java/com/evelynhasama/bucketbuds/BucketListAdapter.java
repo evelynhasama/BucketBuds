@@ -6,15 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
-
 import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
 
@@ -22,14 +19,16 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
 
     public static final String TAG = "BucketListAdapter";
     Context context;
+    FragmentActivity activity;
     List<BucketList> buckets;
     View view;
     int selectedFilterId;
 
-    public BucketListAdapter(Context context, List<BucketList> buckets, int selectedFilterId){
+    public BucketListAdapter(Context context, List<BucketList> buckets, int selectedFilterId, FragmentActivity activity){
         this.context = context;
         this.buckets = buckets;
         this.selectedFilterId = selectedFilterId;
+        this.activity = activity;
     }
 
     @NonNull
@@ -76,8 +75,8 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
-                    // TODO: navigate to Bucket List Activities screen
+                    Fragment myFragment = BucketActivitiesFragment.newInstance(bucket);
+                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, myFragment).addToBackStack(null).commit();
                 }
             });
 

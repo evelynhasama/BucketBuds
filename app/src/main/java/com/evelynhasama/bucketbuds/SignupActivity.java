@@ -78,6 +78,7 @@ public class SignupActivity extends AppCompatActivity {
                 }
                 UserPub userPub = new UserPub();
                 userPub.setUser(user);
+                userPub.setEmail(email);
                 userPub.saveInBackground(userPubSaveCallback(user, userPub));
             }
         };
