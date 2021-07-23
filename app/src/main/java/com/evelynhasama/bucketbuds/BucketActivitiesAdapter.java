@@ -61,52 +61,11 @@ public class BucketActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(@NonNull @NotNull RecyclerView.ViewHolder holder, int position) {
 
-        switch (holder.getItemViewType()) {
-
-            case BucketActivityItem.TYPE_ACTIVITY:
-
-                BucketActivityObjItem activityItem = (BucketActivityObjItem) allItemsList.get(position);
-                BucketActivitiesAdapter.ActivityObjViewHolder activityObjViewHolder= (BucketActivitiesAdapter.ActivityObjViewHolder) holder;
-                ActivityObj activityObj = activityItem.getActivityObj();
-                activityObjViewHolder.tvTitle.setText(activityObj.getName());
-
-                Boolean completed = activityObj.getCompleted();
-                int checkBox = completed ? CHECKED : UNCHECKED;
-                activityObjViewHolder.ivCheckBox.setImageResource(checkBox);
-
-                View.OnClickListener updateCompletedClickListener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int temp_position = holder.getAdapterPosition();
-                        int addPosition = allItemsList.indexOf(completedHeader);
-                        int checkId = completed ? UNCHECKED : CHECKED;
-                        activityObjViewHolder.ivCheckBox.setImageResource(checkId);
-                        allItemsList.remove(temp_position);
-                        allItemsList.add(addPosition, activityItem);
-                        activityObj.setCompleted(!completed);
-                        activityObj.saveInBackground(getActivitySaveCallback(temp_position, addPosition));
-                    }
-                };
-                activityObjViewHolder.ivCheckBox.setOnClickListener(updateCompletedClickListener);
-
-                View.OnClickListener activityDetailsClickListener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // navigate to activity details screen
-                        Fragment myFragment = ActivityDetailsFragment.newInstance(activityObj);
-                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, myFragment).addToBackStack(null).commit();
-                    }
-                };
-                activityObjViewHolder.view.setOnClickListener(activityDetailsClickListener);
-                break;
-
-            case  BucketActivityItem.TYPE_HEADER:
-
-                BucketActivityHeaderItem headerItem = (BucketActivityHeaderItem) allItemsList.get(position);
-                BucketActivitiesAdapter.HeaderViewHolder headerViewHolder = (BucketActivitiesAdapter.HeaderViewHolder) holder;
-                headerViewHolder.tvHeader.setText(headerItem.getSection());
-                break;
+        if (holder.getItemViewType() == BucketActivityItem.TYPE_ACTIVITY){
+            onBindActivityViewHolder(holder, position);
+            return;
         }
+        onBindHeaderViewHolder(holder, position);
     }
 
     @Override
@@ -157,6 +116,49 @@ public class BucketActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.V
                 notifyItemChanged(addPosition, null);
             }
         };
+    }
+
+    private void onBindActivityViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+        BucketActivityObjItem activityItem = (BucketActivityObjItem) allItemsList.get(position);
+        BucketActivitiesAdapter.ActivityObjViewHolder activityObjViewHolder= (BucketActivitiesAdapter.ActivityObjViewHolder) holder;
+        ActivityObj activityObj = activityItem.getActivityObj();
+        activityObjViewHolder.tvTitle.setText(activityObj.getName());
+
+        Boolean completed = activityObj.getCompleted();
+        int checkBox = completed ? CHECKED : UNCHECKED;
+        activityObjViewHolder.ivCheckBox.setImageResource(checkBox);
+
+        View.OnClickListener updateCompletedClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int temp_position = holder.getAdapterPosition();
+                int addPosition = allItemsList.indexOf(completedHeader);
+                int checkId = completed ? UNCHECKED : CHECKED;
+                activityObjViewHolder.ivCheckBox.setImageResource(checkId);
+                allItemsList.remove(temp_position);
+                allItemsList.add(addPosition, activityItem);
+                activityObj.setCompleted(!completed);
+                activityObj.saveInBackground(getActivitySaveCallback(temp_position, addPosition));
+            }
+        };
+        activityObjViewHolder.ivCheckBox.setOnClickListener(updateCompletedClickListener);
+
+        View.OnClickListener activityDetailsClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // navigate to activity details screen
+                Fragment myFragment = ActivityDetailsFragment.newInstance(activityObj);
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, myFragment).addToBackStack(null).commit();
+            }
+        };
+        activityObjViewHolder.view.setOnClickListener(activityDetailsClickListener);
+    }
+
+    private void onBindHeaderViewHolder(RecyclerView.ViewHolder holder, int position) {
+        BucketActivityHeaderItem headerItem = (BucketActivityHeaderItem) allItemsList.get(position);
+        BucketActivitiesAdapter.HeaderViewHolder headerViewHolder = (BucketActivitiesAdapter.HeaderViewHolder) holder;
+        headerViewHolder.tvHeader.setText(headerItem.getSection());
     }
 
 }
