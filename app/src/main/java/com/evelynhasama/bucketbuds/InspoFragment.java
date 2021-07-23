@@ -82,6 +82,7 @@ public class InspoFragment extends Fragment {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
                 TicketMasterHelper.getEvents(getContext(), latitude, longitude, mAdapter);
+                SeatGeekHelper.getEvents(getContext(), latitude, longitude, mAdapter);
             }
         }
     }
