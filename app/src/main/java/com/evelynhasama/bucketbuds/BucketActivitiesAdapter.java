@@ -1,27 +1,19 @@
 package com.evelynhasama.bucketbuds;
 
-import android.app.Activity;
 import android.content.Context;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
-
 import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
 public class BucketActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
@@ -73,7 +65,7 @@ public class BucketActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             case BucketActivityItem.TYPE_ACTIVITY:
 
-                BucketActivityObjItem activityItem   = (BucketActivityObjItem) allItemsList.get(position);
+                BucketActivityObjItem activityItem = (BucketActivityObjItem) allItemsList.get(position);
                 BucketActivitiesAdapter.ActivityObjViewHolder activityObjViewHolder= (BucketActivitiesAdapter.ActivityObjViewHolder) holder;
                 ActivityObj activityObj = activityItem.getActivityObj();
                 activityObjViewHolder.tvTitle.setText(activityObj.getName());
@@ -97,21 +89,15 @@ public class BucketActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.V
                         allItemsList.remove(position);
                         allItemsList.add(addPosition, activityItem);
                         activityObj.setCompleted(!completed);
-                        activityObj.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                if (e != null){
-                                    Log.d(TAG, "saving completed status", e);
-                                }
-                            }
-                        });
-                        Log.d(TAG, "positions moved: " + position + " "  + addPosition);
+                        activityObj.saveInBackground(getActivitySaveCallback());
+                        // Log.d(TAG, "positions moved: " + position + " "  + addPosition);
                         notifyItemMoved(position, addPosition);
                         notifyItemChanged(position, null);
                         notifyItemChanged(addPosition, null);
                     }
                 };
                 activityObjViewHolder.ivCheckBox.setOnClickListener(updateCompletedClickListener);
+
                 View.OnClickListener activityDetailsClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -125,7 +111,7 @@ public class BucketActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             case  BucketActivityItem.TYPE_HEADER:
 
-                BucketActivityHeaderItem headerItem   = (BucketActivityHeaderItem) allItemsList.get(position);
+                BucketActivityHeaderItem headerItem = (BucketActivityHeaderItem) allItemsList.get(position);
                 BucketActivitiesAdapter.HeaderViewHolder headerViewHolder = (BucketActivitiesAdapter.HeaderViewHolder) holder;
                 headerViewHolder.tvHeader.setText(headerItem.getSection());
                 break;
@@ -166,6 +152,17 @@ public class BucketActivitiesAdapter extends RecyclerView.Adapter<RecyclerView.V
             super(v);
             tvHeader = v.findViewById(R.id.tvHeaderIBFH);
         }
+    }
+
+    public SaveCallback getActivitySaveCallback(){
+        return new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null){
+                    Log.e(TAG, "saving activity", e);
+                }
+            }
+        };
     }
 
 }

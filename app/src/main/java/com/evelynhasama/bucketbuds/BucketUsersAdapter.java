@@ -36,7 +36,6 @@ public class BucketUsersAdapter extends RecyclerView.Adapter<BucketUsersAdapter.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d(TAG, "onCreateViewHolder");
         View view = LayoutInflater.from(context).inflate(R.layout.item_bucket_friend_circle, parent, false);
         return new ViewHolder(view);
     }
@@ -64,12 +63,13 @@ public class BucketUsersAdapter extends RecyclerView.Adapter<BucketUsersAdapter.
         }
 
         public void bind(User user) {
+            tvFirstName.setText(user.getFirstName());
             if (user.getImage() != null) {
                 Glide.with(context).load(user.getImage().getUrl()).circleCrop().into(ivProfileImage);
-            } else {
-                Glide.with(context).load(R.drawable.profile_placeholder).circleCrop().into(ivProfileImage);
+                return;
             }
-            tvFirstName.setText(user.getFirstName());
+            Glide.with(context).load(R.drawable.profile_placeholder).circleCrop().into(ivProfileImage);
+
         }
     }
 

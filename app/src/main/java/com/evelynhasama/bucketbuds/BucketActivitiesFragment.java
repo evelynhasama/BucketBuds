@@ -125,15 +125,21 @@ public class BucketActivitiesFragment extends Fragment {
         rvBucketUsers.setLayoutManager(new LinearLayoutManager(getContext(),
                 RecyclerView.HORIZONTAL, false));
 
-        bucketList.getUsersRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
+        FindCallback<ParseUser> bucketUsersFindCallback = new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
+                if (e != null){
+                    Log.e(TAG, "Error bucket users find callback", e);
+                    return;
+                }
                 for (ParseUser user: objects){
                     users.add(new User(user));
                     bucketUsersAdapter.notifyDataSetChanged();
                 }
             }
-        });
+        };
+
+        bucketList.getUsersRelation().getQuery().findInBackground(bucketUsersFindCallback);
 
         allActivityItemsList = new ArrayList<>();
 
@@ -150,11 +156,17 @@ public class BucketActivitiesFragment extends Fragment {
         rvBucketActivities.setAdapter(activitiesAdapter);
         rvBucketActivities.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        bucketList.getActivitiesRelation().getQuery().addDescendingOrder(ActivityObj.KEY_UPDATED).findInBackground(new FindCallback<ActivityObj>() {
+        bucketList.getActivitiesRelation().getQuery().addDescendingOrder(ActivityObj.KEY_UPDATED).findInBackground(getActivitiesFindCallback());
+
+        return view;
+    }
+
+    private FindCallback<ActivityObj> getActivitiesFindCallback() {
+        return new FindCallback<ActivityObj>() {
             @Override
             public void done(List<ActivityObj> objects, ParseException e) {
                 if (e != null){
-                    Log.d(TAG, "adding activities", e);
+                    Log.e(TAG, "adding activities", e);
                     return;
                 }
                 for (ActivityObj activityObj:objects) {
@@ -169,11 +181,9 @@ public class BucketActivitiesFragment extends Fragment {
                         completedHeaderPosition ++;
                     }
                 }
-               activitiesAdapter.notifyDataSetChanged();
+                activitiesAdapter.notifyDataSetChanged();
             }
-        });
-
-        return view;
+        };
     }
 
     public void showAddActivityDialog(){
@@ -230,7 +240,7 @@ public class BucketActivitiesFragment extends Fragment {
             @Override
             public void done(ParseException e) {
                 if (e != null) {
-                    Log.d(TAG, String.valueOf(e));
+                    Log.e(TAG, String.valueOf(e));
                     return;
                 }
                 bucketList.addActivity(activityObj);
@@ -238,7 +248,7 @@ public class BucketActivitiesFragment extends Fragment {
                     @Override
                     public void done(ParseException e) {
                         if (e != null) {
-                            Log.d(TAG, String.valueOf(e));
+                            Log.e(TAG, String.valueOf(e));
                             return;
                         }
                         BucketActivityObjItem activityObjItem = new BucketActivityObjItem();
@@ -296,7 +306,7 @@ public class BucketActivitiesFragment extends Fragment {
                     @Override
                     public void done(ParseException e) {
                         if (e != null){
-                            Log.d(TAG, String.valueOf(e));
+                            Log.e(TAG, String.valueOf(e));
                             return;
                         }
                         tvBucketDescription.setText(description);

@@ -1,30 +1,23 @@
 package com.evelynhasama.bucketbuds;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
-
 import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
 
 public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.ViewHolder> {
 
     public static final String TAG = "BucketListAdapter";
-    private static final String ARG_BUCKET_LIST = "bucketList";
     Context context;
     FragmentActivity activity;
     List<BucketList> buckets;

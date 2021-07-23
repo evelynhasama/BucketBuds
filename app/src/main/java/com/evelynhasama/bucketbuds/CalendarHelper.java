@@ -36,7 +36,6 @@ public class CalendarHelper {
         FindCallback<ParseUser> userFindCallback = new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
-                Log.d(TAG, "adding attendees "+ objects.size());
                 for (ParseUser parseUser: objects){
                     User user = new User(parseUser);
                     UserPub userPub = user.getUserPubQuery();
@@ -58,7 +57,6 @@ public class CalendarHelper {
                         .putExtra(Intent.EXTRA_EMAIL, emailString);
 
                 if (activityObj.getAllDayBool()) {
-                    Log.d(TAG, "allDay");
                     intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
                 }
                 context.startActivity(intent);
@@ -81,4 +79,5 @@ public class CalendarHelper {
                 .findInBackground(userFindCallback);
 
     }
+
 }
