@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Build;
@@ -42,6 +43,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.dionsegijn.konfetti.KonfettiView;
+import nl.dionsegijn.konfetti.models.Shape;
+
 public class BucketActivitiesFragment extends Fragment {
 
     private static final String ARG_BUCKET_LIST = "bucketList";
@@ -64,6 +68,7 @@ public class BucketActivitiesFragment extends Fragment {
     BucketActivityHeaderItem header_completed;
     ImageView ivEditBucket;
     ImageView ivAddActivity;
+    KonfettiView konfettiView;
 
     public BucketActivitiesFragment() {
     }
@@ -98,6 +103,7 @@ public class BucketActivitiesFragment extends Fragment {
         ivAddActivity = view.findViewById(R.id.ivAddActivityFBA);
         RecyclerView rvBucketUsers = view.findViewById(R.id.rvBucketFriendsFBA);
         RecyclerView rvBucketActivities = view.findViewById(R.id.rvActivitiesFBA);
+        konfettiView = view.findViewById(R.id.vKonfettiFBA);
 
         Glide.with(getContext()).load(bucketList.getImage().getUrl()).centerCrop()
                 .transform(new RoundedCorners(10)).into(ivBucketImage);
@@ -109,6 +115,17 @@ public class BucketActivitiesFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 bucketList.setCompleted(isChecked);
+                if (isChecked){
+                    konfettiView.build()
+                            .addColors(getResources().getColor(R.color.cadet_blue), getResources().getColor(R.color.grape), getResources().getColor(R.color.lavender))
+                            .setDirection(0.0, 359.0)
+                            .setSpeed(1f, 5f)
+                            .setFadeOutEnabled(true)
+                            .setTimeToLive(2000L)
+                            .addShapes(Shape.Square.INSTANCE, Shape.Circle.INSTANCE)
+                            .setPosition(-50f, konfettiView.getWidth() + 50f, -50f, -50f)
+                            .streamFor(200, 2000L);
+                    }
                 bucketList.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
