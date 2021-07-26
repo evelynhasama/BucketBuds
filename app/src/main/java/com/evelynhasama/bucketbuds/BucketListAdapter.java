@@ -80,7 +80,7 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
             }
             itemView.setVisibility(View.VISIBLE);
 
-            Glide.with(context).load(bucket.getImage().getUrl()).centerCrop().into(ivBucketImage);
+            Glide.with(context).load(bucket.getImage().getUrl()).placeholder(R.drawable.photo_placeholder).centerCrop().into(ivBucketImage);
             tvBucketName.setText(bucket.getName());
 
             view.setOnClickListener(new View.OnClickListener() {
