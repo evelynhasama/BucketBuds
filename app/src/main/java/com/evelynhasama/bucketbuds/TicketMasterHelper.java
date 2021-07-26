@@ -12,25 +12,24 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 public class TicketMasterHelper {
 
     public static final String TAG = "TicketMasterHelper";
     public static final String BASE_URL = "https://app.ticketmaster.com/discovery/v2/events.json?";
     public static final String PARAM_LATLONG = "latlong=";
-    public static final String PARAM_RADIUS_UNIT = "&radius=50&unit=miles";
+    public static final String PARAM_RADIUS = "&radius=";
+    public static final String PARAM_UNIT = "&unit=miles";
     public static final String PARAM_SORT = "&sort=distance,date,asc";
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT_TIME = new SimpleDateFormat("HH:mm:ss");
 
-    public static void getEvents(Context context, Double latitude, Double longitude, InspoActivitiesAdapter adapter) {
+    public static void getEvents(Context context, Double latitude, Double longitude, InspoActivitiesAdapter adapter, String radiusFilter) {
 
-        List<ActivityObj> tmActivities = new ArrayList<>();
 
         String latlong = latitude + "," + longitude;
         String apiKey = "&apikey=" + context.getString(R.string.ticket_master_api_key);
-        String url = BASE_URL + PARAM_LATLONG + latlong + PARAM_RADIUS_UNIT + PARAM_SORT + apiKey;
+        String url = BASE_URL + PARAM_LATLONG + latlong + PARAM_RADIUS + radiusFilter + PARAM_UNIT + PARAM_SORT + apiKey;
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
@@ -41,13 +40,13 @@ public class TicketMasterHelper {
                     for (int i = 0; i < events.length(); i++) {
                         JSONObject event = events.getJSONObject(i);
                         ActivityObj activityObj = parseEvent(event);
-                        tmActivities.add(activityObj);
+                        adapter.addData(activityObj);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Log.d(TAG, "done parsing " + tmActivities.size());
-                adapter.addData(tmActivities);
+                Log.d(TAG, "done parsing at radius " + radiusFilter);
+                adapter.notifyDataSetChanged();
             }
         };
 

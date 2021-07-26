@@ -36,9 +36,8 @@ public class InspoActivitiesAdapter extends RecyclerView.Adapter<InspoActivities
         notifyDataSetChanged();
     }
 
-    public void addData(List<ActivityObj> activityObjs) {
-        mActivities.addAll(activityObjs);
-        notifyDataSetChanged();
+    public void addData(ActivityObj activityObj) {
+        mActivities.add(activityObj);
     }
 
     @NonNull

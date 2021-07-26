@@ -21,8 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.android.volley.Response;
 import com.bumptech.glide.Glide;
+import com.google.android.material.chip.ChipGroup;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 
@@ -39,6 +39,8 @@ public class InspoFragment extends Fragment {
     ActivityObj mRandomActivity;
     TextView mTvRandomTitle;
     ImageView mIvRandomize;
+    ChipGroup cgFilter;
+    String radiusFilter;
 
     public static InspoFragment newInstance() {
         InspoFragment fragment = new InspoFragment();
@@ -61,6 +63,7 @@ public class InspoFragment extends Fragment {
         mView = inflater.inflate(R.layout.fragment_inspo, container, false);
         mRvActivities = mView.findViewById(R.id.rvActivitiesFI);
         LinearLayout linearLayout = mView.findViewById(R.id.llRandomFI);
+        cgFilter = mView.findViewById(R.id.cgFilters);
 
         mRandomView = new View(getContext());
         mRandomView = inflater.inflate(R.layout.item_activity, linearLayout);
@@ -71,7 +74,26 @@ public class InspoFragment extends Fragment {
         mActivites = new ArrayList<>();
         mAdapter = new InspoActivitiesAdapter(getContext(), mActivites, getActivity());
         mRvActivities.setAdapter(mAdapter);
+        // default mi radius is 20
+        radiusFilter = "20";
         getData();
+
+        cgFilter.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.c10miles:
+                       radiusFilter = "10";
+                       break;
+                    case R.id.c20miles:
+                        radiusFilter = "20";
+                        break;
+                    case R.id.c50miles:
+                        radiusFilter = "50";
+                }
+                getData();
+            }
+        });
 
         return mView;
     }
@@ -98,9 +120,10 @@ public class InspoFragment extends Fragment {
             if (location != null) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
-                TicketMasterHelper.getEvents(getContext(), latitude, longitude, mAdapter);
-                SeatGeekHelper.getEvents(getContext(), latitude, longitude, mAdapter);
-                MusementHelper.getEvents(getContext(), latitude, longitude, mAdapter);
+                mAdapter.clear();
+                TicketMasterHelper.getEvents(getContext(), latitude, longitude, mAdapter, radiusFilter);
+                SeatGeekHelper.getEvents(getContext(), latitude, longitude, mAdapter, radiusFilter);
+                MusementHelper.getEvents(getContext(), latitude, longitude, mAdapter, radiusFilter);
             }
         }
     }

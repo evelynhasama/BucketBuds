@@ -2,14 +2,21 @@ package com.evelynhasama.bucketbuds;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class InspoActivityDetailsFragment extends Fragment {
@@ -27,6 +34,7 @@ public class InspoActivityDetailsFragment extends Fragment {
     TextView tvStartDate;
     TextView tvEndDate;
     Spinner spAddBucket;
+    Button btnAddBucket;
 
     private ActivityObj mActivityObj;
 
@@ -63,6 +71,7 @@ public class InspoActivityDetailsFragment extends Fragment {
         tvWebsite = view.findViewById(R.id.tvWebsiteFIAD);
         tvEndDate = view.findViewById(R.id.tvEndDateFIAD);
         spAddBucket = view.findViewById(R.id.spAddBucketFIAD);
+        btnAddBucket = view.findViewById(R.id.btnAddActivityFIAD);
 
         tvTitle.setText(mActivityObj.getName());
         tvDescription.setText("Description: "+ mActivityObj.getDescription());
@@ -70,6 +79,34 @@ public class InspoActivityDetailsFragment extends Fragment {
         tvLocation.setText("Location: "+ mActivityObj.getLocation());
         tvStartDate.setText(getDateText(true, mActivityObj.getStartDate()));
         tvEndDate.setText(getDateText(false, mActivityObj.getEndDate()));
+
+        List<BucketList> buckets =  new ArrayList<>();
+        List<String> bucketNames = new ArrayList<>();
+
+        User.getCurrentUser().getUserPubQuery().getBucketsRelation().getQuery().findInBackground(new FindCallback<BucketList>() {
+            @Override
+            public void done(List<BucketList> objects, ParseException e) {
+                if (e != null){
+                    Log.e(TAG, String.valueOf(e));
+                    return;
+                }
+                for (BucketList bucketList: objects) {
+                    bucketNames.add(bucketList.getName());
+                }
+                buckets.addAll(objects);
+            }
+        });
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item , bucketNames);
+        spAddBucket.setAdapter(adapter);
+
+        btnAddBucket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = spAddBucket.getSelectedItemPosition();
+                // TODO: add to bucketlist at position
+            }
+        });
 
         return view;
     }

@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingHorizontal="20dp"
-    android:paddingVertical="10dp"
     tools:context=".InspoActivityDetailsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp">
 
     <TextView
         android:id="@+id/tvTitleFIAD"
@@ -73,9 +77,27 @@
         android:textSize="16sp"
         tools:text="end date" />
 
-    <Spinner
-        android:id="@+id/spAddBucketFIAD"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <Spinner
+            android:id="@+id/spAddBucketFIAD"
+            style="@android:style/Widget.Holo.Spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/cadet_blue"
+            android:prompt="@string/select_bucket_list"
+            android:spinnerMode="dialog"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black" />
 
-</LinearLayout>
+    </LinearLayout>
+    <Button
+        android:id="@+id/btnAddActivityFIAD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginHorizontal="100dp"
+        android:layout_marginBottom="40dp"
+        android:backgroundTint="@color/powder_blue"
+        android:text="@string/add_to_bucket"
+        android:textColor="@color/black" />
+
+</RelativeLayout>

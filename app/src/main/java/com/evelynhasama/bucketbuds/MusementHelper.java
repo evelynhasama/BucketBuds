@@ -8,21 +8,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MusementHelper {
     public static final String TAG = "MusementHelper";
     public static final String BASE_URL = "https://sandbox.musement.com/api/v3/activities?";
     public static final String PARAM_COORDS = "coordinates=";
-    public static final String PARAM_DISTANCE = "&distance=50M";
+    public static final String PARAM_DISTANCE = "&distance=";
+    public static final String UNIT="M";
 
-    public static void getEvents(Context context, Double latitude, Double longitude, InspoActivitiesAdapter adapter) {
-
-        List<ActivityObj> muActivities = new ArrayList<>();
+    public static void getEvents(Context context, Double latitude, Double longitude, InspoActivitiesAdapter adapter, String radiusFilter) {
 
         String coords = latitude + "," + longitude;
-        String url = BASE_URL + PARAM_COORDS + coords + PARAM_DISTANCE;
+        String url = BASE_URL + PARAM_COORDS + coords + PARAM_DISTANCE + radiusFilter + UNIT;
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
@@ -33,13 +30,13 @@ public class MusementHelper {
                     for (int i = 0; i < events.length(); i++) {
                         JSONObject event = events.getJSONObject(i);
                         ActivityObj activityObj = parseEvent(event);
-                        muActivities.add(activityObj);
+                        adapter.addData(activityObj);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Log.d(TAG, "done parsing " + muActivities.size());
-                adapter.addData(muActivities);
+                Log.d(TAG, "done parsing at radius " + radiusFilter);
+                adapter.notifyDataSetChanged();
             }
         };
 
