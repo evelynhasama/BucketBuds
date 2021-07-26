@@ -21,6 +21,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
@@ -76,7 +77,6 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
         public void bind(BucketList bucket) {
 
             tvBucketName.setText(bucket.getName());
-            tvBucketName.measure(0, 0);
             Glide.with(context).load(bucket.getImage().getUrl()).centerCrop().into(ivBucketImage);
             tvUserCount.setText(String.valueOf(bucket.getUserCount()));
             tvActivityCount.setText(String.valueOf(bucket.getActivityCount()));
