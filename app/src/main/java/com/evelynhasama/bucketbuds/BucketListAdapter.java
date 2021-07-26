@@ -1,11 +1,6 @@
 package com.evelynhasama.bucketbuds;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -23,9 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
-import com.parse.GetDataCallback;
 import com.parse.ParseException;
-import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +32,6 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
     FragmentActivity activity;
     List<BucketList> buckets;
     View view;
-    int ivWidth;
 
     public BucketListAdapter(Context context, List<BucketList> buckets, FragmentActivity activity){
         this.context = context;
@@ -85,19 +77,9 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
 
             tvBucketName.setText(bucket.getName());
             tvBucketName.measure(0, 0);
-            ivWidth = tvBucketName.getMeasuredWidth();
-            loadImage(bucket.getImage(), ivBucketImage);
+            Glide.with(context).load(bucket.getImage().getUrl()).centerCrop().into(ivBucketImage);
             tvUserCount.setText(String.valueOf(bucket.getUserCount()));
             tvActivityCount.setText(String.valueOf(bucket.getActivityCount()));
-
-            view.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                    showDeleteBucketDialog(bucket, getAdapterPosition());
-                    return true;
-                }
-            });
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -106,6 +88,16 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
                     activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, myFragment).addToBackStack(null).commit();
                 }
             });
+
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                    showDeleteBucketDialog(bucket, getAdapterPosition());
+                    return false;
+                }
+            });
+
         }
     }
 
@@ -115,7 +107,6 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setView(messageView);
         final AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         TextView tvBucketName = messageView.findViewById(R.id.tvBucketNameDDB);
         Button btnSave = messageView.findViewById(R.id.btnSaveDDB);
         Button btnCancel = messageView.findViewById(R.id.btnCancelDDB);
@@ -219,23 +210,5 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
         Log.d(TAG, "addBuckets "+ buckets.size());
         notifyDataSetChanged();
     }
-
-    private void loadImage(ParseFile parseFile, ImageView imageView) {
-        parseFile.getDataInBackground(new GetDataCallback() {
-            @Override
-            public void done(byte[] data, ParseException e) {
-                if (e != null) {
-                    Log.d(TAG,"failure loading image " + e);
-                    return;
-                }
-                // resizes image keeping aspect ratio
-                Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-                int width = bmp.getWidth();
-                int height = bmp.getHeight();
-                Glide.with(context).load(parseFile.getUrl()).placeholder(R.drawable.white_placeholder).override(ivWidth, (height * (width/ivWidth))).into(imageView);
-            }
-        });
-    }
-
 
 }
