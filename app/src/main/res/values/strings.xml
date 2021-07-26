@@ -43,4 +43,6 @@
     <string name="get_random_idea">Get Random Idea</string>
     <string name="find_local_activities">Find Local Activities</string>
     <string name="add_to_bucket">Add to Bucket</string>
+    <string name="delete_bucket">Delete Bucket</string>
+    <string name="delete">delete</string>
 </resources>

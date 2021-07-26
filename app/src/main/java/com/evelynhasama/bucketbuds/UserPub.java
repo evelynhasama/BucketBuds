@@ -52,6 +52,11 @@ public class UserPub extends ParseObject {
         setBucketCount(getBucketCount() + 1);
     }
 
+    public void removeBucket(BucketList bucketList) {
+        getBucketsRelation().remove(bucketList);
+        setBucketCount(getBucketCount() - 1);
+    }
+
     public int getBucketCount() {
         return getInt(KEY_BUCKET_COUNT);
     }
