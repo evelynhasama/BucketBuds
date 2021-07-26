@@ -62,6 +62,7 @@ public class ProfileFragment extends Fragment {
     TextView tvFriendCount;
     TextView tvBucketCount;
     ImageView ivProfileImage;
+    ImageView ivEditProfile;
     TabLayout tabLayout;
     ViewPager viewPager;
     User user;
@@ -100,7 +101,6 @@ public class ProfileFragment extends Fragment {
         tabLayout = view.findViewById(R.id.sliding_tabsPF);
         viewPager = view.findViewById(R.id.viewpagerPF);
         progressBar = view.findViewById(R.id.pbLoadingPF);
-
         progressBar.setVisibility(ProgressBar.INVISIBLE);
 
         ParseFile image = user.getImage();
@@ -146,10 +146,8 @@ public class ProfileFragment extends Fragment {
         alertDialogBuilder.setView(messageView);
         // Create alert dialog
         final AlertDialog alertDialog = alertDialogBuilder.create();
-
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationCorner;
-
         EditText etUsername = messageView.findViewById(R.id.etUsernameDE);
         EditText etBio = messageView.findViewById(R.id.etBioDE);
         EditText etFirstName = messageView.findViewById(R.id.etFirstNameDE);

@@ -45,7 +45,6 @@ public class BucketsFragment extends Fragment {
         return fragment;
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setHasOptionsMenu(true);

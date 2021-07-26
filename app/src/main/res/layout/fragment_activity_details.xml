@@ -111,5 +111,4 @@
         android:backgroundTint="@color/powder_blue"
         android:text="@string/delete_activity"
         android:textColor="@color/black" />
-
 </RelativeLayout>

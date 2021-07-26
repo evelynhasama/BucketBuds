@@ -88,14 +88,4 @@
         android:textSize="10sp"
         android:thumbTint="@color/white_blue"
         android:trackTint="@color/powder_blue" />
-
-    <nl.dionsegijn.konfetti.KonfettiView
-        android:id="@+id/vKonfettiFBA"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="-15dp"
-        android:layout_marginTop="161dp" />
-
 </RelativeLayout>

@@ -10,14 +10,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,7 +32,6 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.parse.FindCallback;
@@ -42,14 +39,10 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import nl.dionsegijn.konfetti.KonfettiView;
-import nl.dionsegijn.konfetti.models.Shape;
 
 public class BucketActivitiesFragment extends Fragment {
 
@@ -63,6 +56,7 @@ public class BucketActivitiesFragment extends Fragment {
     List<User> users;
     BucketUsersAdapter bucketUsersAdapter;
     BucketActivitiesAdapter activitiesAdapter;
+    ImageView ivBucketImageDEB;
     ImageView ivBucketImage;
     TextView tvBucketName;
     TextView tvBucketDescription;
@@ -70,7 +64,6 @@ public class BucketActivitiesFragment extends Fragment {
     int completedHeaderPosition;
     Switch swCompleted;
     BucketActivityHeaderItem header_completed;
-    KonfettiView konfettiView;
     ProgressBar progressBar;
 
     public BucketActivitiesFragment() {
@@ -105,7 +98,6 @@ public class BucketActivitiesFragment extends Fragment {
         ivBucketImage = view.findViewById(R.id.ivBucketImageFBA);
         RecyclerView rvBucketUsers = view.findViewById(R.id.rvBucketFriendsFBA);
         RecyclerView rvBucketActivities = view.findViewById(R.id.rvActivitiesFBA);
-        konfettiView = view.findViewById(R.id.vKonfettiFBA);
         progressBar = view.findViewById(R.id.pbLoadingFBA);
 
         progressBar.setVisibility(ProgressBar.INVISIBLE);
@@ -127,17 +119,6 @@ public class BucketActivitiesFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 bucketList.setCompleted(isChecked);
-                if (isChecked){
-                    konfettiView.build()
-                            .addColors(getResources().getColor(R.color.cadet_blue), getResources().getColor(R.color.grape), getResources().getColor(R.color.lavender))
-                            .setDirection(0.0, 359.0)
-                            .setSpeed(1f, 5f)
-                            .setFadeOutEnabled(true)
-                            .setTimeToLive(2000L)
-                            .addShapes(Shape.Square.INSTANCE, Shape.Circle.INSTANCE)
-                            .setPosition(-50f, konfettiView.getWidth() + 50f, -50f, -50f)
-                            .streamFor(200, 2000L);
-                    }
                 bucketList.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
@@ -226,7 +207,6 @@ public class BucketActivitiesFragment extends Fragment {
         final AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationCorner;
-
         EditText etTitle = messageView.findViewById(R.id.etTitleDAA);
         EditText etDescription = messageView.findViewById(R.id.etDescriptionDAA);
         EditText etLocation = messageView.findViewById(R.id.etLocationDAA);
@@ -306,7 +286,6 @@ public class BucketActivitiesFragment extends Fragment {
         final AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationCorner;
-
         EditText etName = messageView.findViewById(R.id.etBucketNameDEB);
         EditText etDescription = messageView.findViewById(R.id.etDescriptionDEB);
         Button btnSave = messageView.findViewById(R.id.btnSaveDEB);
@@ -314,6 +293,7 @@ public class BucketActivitiesFragment extends Fragment {
 
         etDescription.setText(bucketList.getDescription(), TextView.BufferType.EDITABLE);
         etName.setText(bucketList.getName(), TextView.BufferType.EDITABLE);
+        Glide.with(getContext()).load(bucketList.getImage().getUrl()).centerCrop().into(ivBucketImageDEB);
 
         // Configure dialog buttons
         btnSave.setOnClickListener(new View.OnClickListener() {
