@@ -11,10 +11,18 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+import com.android.volley.Response;
+import com.bumptech.glide.Glide;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 
@@ -27,6 +35,10 @@ public class InspoFragment extends Fragment {
     RecyclerView mRvActivities;
     ArrayList<ActivityObj> mActivites;
     InspoActivitiesAdapter mAdapter;
+    View mRandomView;
+    ActivityObj mRandomActivity;
+    TextView mTvRandomTitle;
+    ImageView mIvRandomize;
 
     public static InspoFragment newInstance() {
         InspoFragment fragment = new InspoFragment();
@@ -48,6 +60,11 @@ public class InspoFragment extends Fragment {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_inspo, container, false);
         mRvActivities = mView.findViewById(R.id.rvActivitiesFI);
+        LinearLayout linearLayout = mView.findViewById(R.id.llRandomFI);
+
+        mRandomView = new View(getContext());
+        mRandomView = inflater.inflate(R.layout.item_activity, linearLayout);
+        setRandomView();
 
         mRvActivities.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -86,6 +103,48 @@ public class InspoFragment extends Fragment {
                 MusementHelper.getEvents(getContext(), latitude, longitude, mAdapter);
             }
         }
+    }
+
+    private void setRandomView(){
+
+        mRandomView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment myFragment = InspoActivityDetailsFragment.newInstance(mRandomActivity);
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, myFragment).addToBackStack(null).commit();
+            }
+        });
+
+        mTvRandomTitle = mRandomView.findViewById(R.id.tvTitleIA);
+        mIvRandomize = mRandomView.findViewById(R.id.ivCheckBoxIA);
+
+        mIvRandomize.setBackgroundColor(getResources().getColor(R.color.cadet_blue));
+        Glide.with(getContext()).load(R.drawable.ic_replay).into(mIvRandomize);
+
+        mIvRandomize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getRandomActivity();
+            }
+        });
+        getRandomActivity();
+    }
+
+    public void getRandomActivity(){
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject responseObject = new JSONObject(response);
+                    mRandomActivity = BoredHelper.parseActivity(responseObject);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.d(TAG, "Bored API done parsing");
+                mTvRandomTitle.setText(mRandomActivity.getName());
+            }
+        };
+        BoredHelper.getActivity(getContext(), responseListener);
     }
 
     @Override

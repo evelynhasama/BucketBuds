@@ -5,10 +5,55 @@
     android:layout_height="match_parent"
     tools:context=".InspoFragment">
 
+    <LinearLayout
+        android:id="@+id/llRandomFI"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_below="@+id/textView4"
+        android:layout_alignParentStart="true"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="0dp"
+        android:orientation="vertical" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvActivitiesFI"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/textView6"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="10dp"
+        android:paddingHorizontal="20dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="100dp" />
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="15dp"
+        android:paddingVertical="10dp"
+        android:text="@string/get_random_idea"
+        android:textAlignment="center"
+        android:textColor="@color/grape"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llRandomFI"
+        android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="0dp"
+        android:paddingVertical="10dp"
+        android:text="@string/find_local_activities"
+        android:textAlignment="center"
+        android:textColor="@color/grape"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
 </RelativeLayout>
