@@ -10,12 +10,14 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +34,7 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.parse.FindCallback;
@@ -39,6 +42,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -99,7 +103,6 @@ public class BucketActivitiesFragment extends Fragment {
         RecyclerView rvBucketUsers = view.findViewById(R.id.rvBucketFriendsFBA);
         RecyclerView rvBucketActivities = view.findViewById(R.id.rvActivitiesFBA);
         progressBar = view.findViewById(R.id.pbLoadingFBA);
-
         progressBar.setVisibility(ProgressBar.INVISIBLE);
 
         Glide.with(getContext()).load(bucketList.getImage().getUrl()).into(ivBucketImage);
@@ -109,8 +112,6 @@ public class BucketActivitiesFragment extends Fragment {
                 onPickPhoto(v);
             }
         });
-
-
         tvBucketName.setText(bucketList.getName());
         tvBucketDescription.setText(bucketList.getDescription());
         swCompleted.setChecked(bucketList.getCompleted() ? true : false);
@@ -370,11 +371,11 @@ public class BucketActivitiesFragment extends Fragment {
 
             // Load the image located at photoUri into selectedImage
             Bitmap selectedImage = loadFromUri(photoUri);
-            progressBar.bringToFront();
-            progressBar.setVisibility(ProgressBar.VISIBLE);
+            ivBucketImageDEB.setImageBitmap(selectedImage);
+
             // convert to ParseFile and set to BucketList
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            selectedImage.compress(Bitmap.CompressFormat.PNG,70,stream);
+            selectedImage.compress(Bitmap.CompressFormat.PNG,100,stream);
             byte[] byteArray = stream.toByteArray();
 
             ParseFile file = new ParseFile(PHOTO_FILE_NAME, byteArray);
