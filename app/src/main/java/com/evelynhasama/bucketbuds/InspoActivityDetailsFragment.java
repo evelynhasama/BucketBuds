@@ -2,7 +2,6 @@ package com.evelynhasama.bucketbuds;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +10,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.SaveCallback;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,6 +36,8 @@ public class InspoActivityDetailsFragment extends Fragment {
     TextView tvEndDate;
     Spinner spAddBucket;
     Button btnAddBucket;
+    List<BucketList> buckets;
+    List<String> bucketNames;
 
     private ActivityObj mActivityObj;
 
@@ -80,8 +83,12 @@ public class InspoActivityDetailsFragment extends Fragment {
         tvStartDate.setText(getDateText(true, mActivityObj.getStartDate()));
         tvEndDate.setText(getDateText(false, mActivityObj.getEndDate()));
 
-        List<BucketList> buckets =  new ArrayList<>();
-        List<String> bucketNames = new ArrayList<>();
+        buckets =  new ArrayList<>();
+        bucketNames = new ArrayList<>();
+        bucketNames.add("Select a bucket list");
+
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item , bucketNames);
+        spAddBucket.setAdapter(spinnerAdapter);
 
         User.getCurrentUser().getUserPubQuery().getBucketsRelation().getQuery().findInBackground(new FindCallback<BucketList>() {
             @Override
@@ -94,21 +101,55 @@ public class InspoActivityDetailsFragment extends Fragment {
                     bucketNames.add(bucketList.getName());
                 }
                 buckets.addAll(objects);
+                spinnerAdapter.notifyDataSetChanged();
             }
         });
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item , bucketNames);
-        spAddBucket.setAdapter(adapter);
+        btnAddBucket.setOnClickListener(getAddBucketClickListener());
 
-        btnAddBucket.setOnClickListener(new View.OnClickListener() {
+        return view;
+    }
+
+    private View.OnClickListener getAddBucketClickListener() {
+        return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = spAddBucket.getSelectedItemPosition();
-                // TODO: add to bucketlist at position
-            }
-        });
+                if (position == 0) {
+                    Toast.makeText(getContext(), "Please select a bucket list", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                // position - 1 since the 1st item in bucket names is the prompt
+                BucketList bucketList = buckets.get(position-1);
+                mActivityObj.setBucket(bucketList);
 
-        return view;
+                SaveCallback bucketListSaveCallback = new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null){
+                            Log.e(TAG, String.valueOf(e));
+                            return;
+                        }
+                        Toast.makeText(getContext(), "Added activity to "+ bucketNames.get(position), Toast.LENGTH_SHORT).show();
+                        getActivity().getSupportFragmentManager().popBackStack();
+                    }
+                };
+
+                SaveCallback activitySaveCallback = new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null){
+                            Log.e(TAG, String.valueOf(e));
+                            return;
+                        }
+                        bucketList.addActivity(mActivityObj);
+                        bucketList.saveInBackground(bucketListSaveCallback);
+                    }
+                };
+
+                mActivityObj.saveInBackground(activitySaveCallback);
+            }
+        };
     }
 
     public String getDateText(Boolean start, Date date){

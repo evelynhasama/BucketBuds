@@ -79,14 +79,11 @@
 
         <Spinner
             android:id="@+id/spAddBucketFIAD"
-            style="@android:style/Widget.Holo.Spinner"
+            style="@android:style/Widget.Holo.Light.Spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/cadet_blue"
-            android:prompt="@string/select_bucket_list"
-            android:spinnerMode="dialog"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black" />
+            android:spinnerMode="dialog" />
 
     </LinearLayout>
     <Button
