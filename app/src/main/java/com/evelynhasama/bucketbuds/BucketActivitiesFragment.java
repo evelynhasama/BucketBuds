@@ -25,16 +25,13 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.parse.FindCallback;
-import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -65,6 +62,8 @@ public class BucketActivitiesFragment extends Fragment {
     int completedHeaderPosition;
     Switch swCompleted;
     BucketActivityHeaderItem header_completed;
+    ImageView ivEditBucket;
+    ImageView ivAddActivity;
 
     public BucketActivitiesFragment() {
     }
@@ -95,8 +94,8 @@ public class BucketActivitiesFragment extends Fragment {
         tvBucketName = view.findViewById(R.id.tvBucketNameFBA);
         tvBucketDescription = view.findViewById(R.id.tvBucketDescriptionFBA);
         ivBucketImage = view.findViewById(R.id.ivBucketImageFBA);
-        Button btnEditBucket = view.findViewById(R.id.btnEditBucketFBA);
-        Button btnAddActivity = view.findViewById(R.id.btnAddActivityFBA);
+        ivEditBucket = view.findViewById(R.id.ivEditBucketFBA);
+        ivAddActivity = view.findViewById(R.id.ivAddActivityFBA);
         RecyclerView rvBucketUsers = view.findViewById(R.id.rvBucketFriendsFBA);
         RecyclerView rvBucketActivities = view.findViewById(R.id.rvActivitiesFBA);
 
@@ -121,7 +120,7 @@ public class BucketActivitiesFragment extends Fragment {
             }
         });
 
-        btnAddActivity.setOnClickListener(new View.OnClickListener() {
+        ivAddActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "btnAddActivity clicked");
@@ -129,7 +128,7 @@ public class BucketActivitiesFragment extends Fragment {
             }
         });
 
-        btnEditBucket.setOnClickListener(new View.OnClickListener() {
+        ivEditBucket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showEditBucketDialog();
@@ -329,8 +328,7 @@ public class BucketActivitiesFragment extends Fragment {
                         tvBucketDescription.setText(description);
                         tvBucketName.setText(name);
                         alertDialog.dismiss();
-                        Glide.with(getContext()).load(bucketList.getImage().getUrl()).centerCrop()
-                                .transform(new RoundedCorners(10)).into(ivBucketImage);
+                        Glide.with(getContext()).load(bucketList.getImage().getUrl()).centerCrop().into(ivBucketImage);
                     }
                 });
             }

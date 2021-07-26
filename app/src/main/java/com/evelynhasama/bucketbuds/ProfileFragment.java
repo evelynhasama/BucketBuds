@@ -57,7 +57,7 @@ public class ProfileFragment extends Fragment {
     TextView tvFriendCount;
     TextView tvBucketCount;
     ImageView ivProfileImage;
-    Button btnEditProfile;
+    ImageView ivEditProfile;
     TabLayout tabLayout;
     ViewPager viewPager;
     User user;
@@ -92,7 +92,7 @@ public class ProfileFragment extends Fragment {
         tvFriendCount = view.findViewById(R.id.tvFriendCountPF);
         tvBucketCount = view.findViewById(R.id.tvBucketCountPF);
         ivProfileImage = view.findViewById(R.id.ivProfileImagePF);
-        btnEditProfile = view.findViewById(R.id.btnEditProfile);
+        ivEditProfile = view.findViewById(R.id.ivEditProfile);
         tabLayout = view.findViewById(R.id.sliding_tabsPF);
         viewPager = view.findViewById(R.id.viewpagerPF);
 
@@ -116,7 +116,7 @@ public class ProfileFragment extends Fragment {
             tvBio.setText(bio);
         }
 
-        btnEditProfile.setOnClickListener(new View.OnClickListener() {
+        ivEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showEditProfileDialog();

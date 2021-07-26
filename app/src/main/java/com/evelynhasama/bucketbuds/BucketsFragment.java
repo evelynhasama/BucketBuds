@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -24,8 +25,8 @@ public class BucketsFragment extends Fragment {
     public static final String TAG = "BucketsFragment";
     View view;
     RecyclerView rvBuckets;
-    Button btnAddBucket;
-    Button btnSortFilter;
+    ImageView ivAddBucket;
+    ImageView ivSortFilter;
     BucketListAdapter adapter;
     UserPub userPub;
     List<BucketList> bucketLists;
@@ -53,14 +54,14 @@ public class BucketsFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_buckets, container, false);
         rvBuckets = view.findViewById(R.id.rvBucketsFB);
-        btnAddBucket = view.findViewById(R.id.btnAddBucketFB);
-        btnSortFilter = view.findViewById(R.id.btnSortFB);
+        ivAddBucket = view.findViewById(R.id.ivAddBucketFB);
+        ivSortFilter = view.findViewById(R.id.ivSortFB);
 
         // set default sorting/filtering
         selectedFilterID = R.id.rbAll;
         selectedSortID = R.id.rbModified;
 
-        btnAddBucket.setOnClickListener(new View.OnClickListener() {
+        ivAddBucket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentActivity activity = getActivity();
@@ -69,7 +70,7 @@ public class BucketsFragment extends Fragment {
             }
         });
 
-        btnSortFilter.setOnClickListener(new View.OnClickListener() {
+        ivSortFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showSortFilterDialog();

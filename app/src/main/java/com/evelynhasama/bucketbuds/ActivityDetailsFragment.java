@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -47,12 +48,12 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
     TextView tvStartDate;
     TextView tvEndDate;
     Button btnCalendarEvent;
-    Button btnSetDates;
+    ImageView ivSetDates;
     Boolean allDay;
     Switch swAllDay;
     Boolean afterSetStart; // false when setting the start date/time and true after
     TextView tvCalEventStatus;
-    Button btnEditActivity;
+    ImageView ivEditActivity;
     Button btnDeleteActivity;
 
     public ActivityDetailsFragment() {
@@ -88,10 +89,10 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
         tvWebsite = view.findViewById(R.id.tvWebsiteFAD);
         tvEndDate = view.findViewById(R.id.tvEndDateFAD);
         btnCalendarEvent = view.findViewById(R.id.btnCalendarEventFAD);
-        btnSetDates = view.findViewById(R.id.btnSetDatesFAD);
+        ivSetDates = view.findViewById(R.id.ivSetDatesFAD);
         swAllDay = view.findViewById(R.id.swAllDay);
         tvCalEventStatus = view.findViewById(R.id.tvCalStatusFAD);
-        btnEditActivity = view.findViewById(R.id.btnEditActivityFAD);
+        ivEditActivity = view.findViewById(R.id.ivEditActivityFAD);
         btnDeleteActivity = view.findViewById(R.id.btnDeleteActivityFAD);
 
         tvTitle.setText(activityObj.getName());
@@ -126,7 +127,7 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
             }
         });
 
-        btnSetDates.setOnClickListener(new View.OnClickListener() {
+        ivSetDates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 afterSetStart = false;
@@ -164,7 +165,7 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
             }
         });
 
-        btnEditActivity.setOnClickListener(new View.OnClickListener() {
+        ivEditActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showEditActivityDialog();
@@ -287,7 +288,7 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
     }
 
     public void eventAlreadyCreated(){
-        btnSetDates.setVisibility(View.GONE);
+        ivSetDates.setVisibility(View.GONE);
         btnCalendarEvent.setVisibility(View.GONE);
         swAllDay.setClickable(false);
         tvCalEventStatus.setText("This activity is already scheduled and a calendar invite has been sent");

@@ -10,38 +10,31 @@
         android:id="@+id/rvBucketsFB"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/btnSortFB"
+        android:layout_below="@+id/ivSortFB"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_marginHorizontal="10dp"
         android:layout_marginVertical="5dp"
         android:layout_marginBottom="0dp" />
 
-    <Button
-        android:id="@+id/btnSortFB"
-        android:layout_width="170dp"
+    <ImageView
+        android:id="@+id/ivSortFB"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
-        android:backgroundTint="@color/lavender"
-        android:text="Sort/Filter"
-        android:textColor="@color/black"
-        android:textSize="12sp" />
+        app:srcCompat="@android:drawable/ic_menu_manage" />
 
-    <Button
-        android:id="@+id/btnAddBucketFB"
-        android:layout_width="170dp"
+    <ImageView
+        android:id="@+id/ivAddBucketFB"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="0dp"
-        android:backgroundTint="@color/powder_blue"
-        android:text="Create"
-        android:textColor="@color/black"
-        android:textSize="12sp"
-        app:icon="@drawable/ic_add"
-        app:iconTint="@color/black" />
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toStartOf="@+id/ivSortFB"
+        app:srcCompat="@android:drawable/ic_menu_add" />
 
 </RelativeLayout>
