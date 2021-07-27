@@ -40,6 +40,8 @@ import com.parse.SaveCallback;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProfileFragment extends Fragment {
 
@@ -57,7 +59,6 @@ public class ProfileFragment extends Fragment {
     TextView tvFriendCount;
     TextView tvBucketCount;
     ImageView ivProfileImage;
-    ImageView ivEditProfile;
     TabLayout tabLayout;
     ViewPager viewPager;
     User user;
@@ -92,7 +93,6 @@ public class ProfileFragment extends Fragment {
         tvFriendCount = view.findViewById(R.id.tvFriendCountPF);
         tvBucketCount = view.findViewById(R.id.tvBucketCountPF);
         ivProfileImage = view.findViewById(R.id.ivProfileImagePF);
-        ivEditProfile = view.findViewById(R.id.ivEditProfile);
         tabLayout = view.findViewById(R.id.sliding_tabsPF);
         viewPager = view.findViewById(R.id.viewpagerPF);
 
@@ -116,12 +116,6 @@ public class ProfileFragment extends Fragment {
             tvBio.setText(bio);
         }
 
-        ivEditProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showEditProfileDialog();
-            }
-        });
 
         ivProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -306,21 +300,24 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
-        MenuItem miLogout = menu.findItem(R.id.logout);
-        MenuItem miCreate = menu.findItem(R.id.miCreate);
-        miCreate.setVisible(false);
-        miLogout.setVisible(true);
+        inflater.inflate(R.menu.menu_main, menu);
+        List<Integer> visibles = new ArrayList<>();
+        visibles.add(MenuHelper.LOGOUT);
+        visibles.add(MenuHelper.EDIT);
+        MenuHelper.onCreateOptionsMenu(menu, visibles);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.logout) {
+        if (item.getItemId() == MenuHelper.LOGOUT) {
             ParseUser.logOut();
             Intent intent = new Intent(getContext(), LoginActivity.class);
             startActivity(intent);
             getActivity().finish();
+        }
+        else if (item.getItemId() == MenuHelper.EDIT){
+            showEditProfileDialog();
         }
         return super.onOptionsItemSelected(item);
     }

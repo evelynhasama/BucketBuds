@@ -130,16 +130,15 @@ public class CreateBucketFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
-        MenuItem miLogout = menu.findItem(R.id.logout);
-        MenuItem miCreate = menu.findItem(R.id.miCreate);
-        miLogout.setVisible(false);
-        miCreate.setVisible(true);
+        List<Integer> visibles = new ArrayList<>();
+        visibles.add(MenuHelper.CREATE);
+        MenuHelper.onCreateOptionsMenu(menu, visibles);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.miCreate) {
+        if (item.getItemId() == MenuHelper.CREATE) {
             // find index of Suggested header
             int headerPosition = allItemsList.indexOf(header_suggest);
             List<User> bucketFriends = new ArrayList<>();

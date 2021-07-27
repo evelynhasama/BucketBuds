@@ -45,4 +45,9 @@
     <string name="add_to_bucket">Add to Bucket</string>
     <string name="delete_bucket">Delete Bucket</string>
     <string name="delete">delete</string>
+    <string name="edit">Edit</string>
+    <string name="calendar">Calendar</string>
+    <string name="create">Create</string>
+    <string name="add">Add</string>
+    <string name="sort_filter">Sort/Filter</string>
 </resources>

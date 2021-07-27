@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,8 +18,8 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseUser;
 import com.parse.ParseQuery;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +28,6 @@ public class BucketsFragment extends Fragment {
     public static final String TAG = "BucketsFragment";
     View view;
     RecyclerView rvBuckets;
-    ImageView ivAddBucket;
-    ImageView ivSortFilter;
     BucketListAdapter adapter;
     UserPub userPub;
     List<BucketList> bucketLists;
@@ -54,28 +55,10 @@ public class BucketsFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_buckets, container, false);
         rvBuckets = view.findViewById(R.id.rvBucketsFB);
-        ivAddBucket = view.findViewById(R.id.ivAddBucketFB);
-        ivSortFilter = view.findViewById(R.id.ivSortFB);
 
         // set default sorting/filtering
         selectedFilterID = R.id.rbAll;
         selectedSortID = R.id.rbModified;
-
-        ivAddBucket.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentActivity activity = getActivity();
-                Fragment myFragment = new CreateBucketFragment();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, myFragment).addToBackStack(null).commit();
-            }
-        });
-
-        ivSortFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSortFilterDialog();
-            }
-        });
 
         rvBuckets.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
@@ -160,5 +143,29 @@ public class BucketsFragment extends Fragment {
         // Display the dialog
         alertDialog.show();
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+        List<Integer> visibles = new ArrayList<>();
+        visibles.add(MenuHelper.ADD);
+        visibles.add(MenuHelper.TOOL);
+        MenuHelper.onCreateOptionsMenu(menu, visibles);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == MenuHelper.ADD) {
+            FragmentActivity activity = getActivity();
+            Fragment myFragment = new CreateBucketFragment();
+            activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, myFragment).addToBackStack(null).commit();
+        }
+        else if (item.getItemId() == MenuHelper.TOOL){
+            showSortFilterDialog();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }

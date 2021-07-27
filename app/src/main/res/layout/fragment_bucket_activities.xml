@@ -50,30 +50,6 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <ImageView
-        android:id="@+id/ivEditBucketFBA"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:clickable="true"
-        android:textSize="12sp"
-        app:srcCompat="@android:drawable/ic_menu_edit" />
-
-    <ImageView
-        android:id="@+id/ivAddActivityFBA"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ivEditBucketFBA"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
-        android:clickable="true"
-        android:textSize="12sp"
-        app:srcCompat="@android:drawable/ic_menu_add" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvBucketFriendsFBA"
         android:layout_width="match_parent"
@@ -106,6 +82,8 @@
     <nl.dionsegijn.konfetti.KonfettiView
         android:id="@+id/vKonfettiFBA"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
 
 </RelativeLayout>

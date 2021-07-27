@@ -2,8 +2,28 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/miTool"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="@string/sort_filter"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/miCalendar"
+        android:icon="@android:drawable/ic_menu_my_calendar"
+        android:title="@string/calendar"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/miEdit"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="@string/edit"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/miAdd"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="@string/add"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/miCreate"
-        android:title="Create"
+        android:title="@string/create"
         app:showAsAction="always"/>
     <item
         android:id="@+id/logout"

@@ -20,6 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -66,8 +69,6 @@ public class BucketActivitiesFragment extends Fragment {
     int completedHeaderPosition;
     Switch swCompleted;
     BucketActivityHeaderItem header_completed;
-    ImageView ivEditBucket;
-    ImageView ivAddActivity;
     KonfettiView konfettiView;
 
     public BucketActivitiesFragment() {
@@ -84,6 +85,7 @@ public class BucketActivitiesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             bucketList = getArguments().getParcelable(ARG_BUCKET_LIST);
         }
@@ -99,8 +101,6 @@ public class BucketActivitiesFragment extends Fragment {
         tvBucketName = view.findViewById(R.id.tvBucketNameFBA);
         tvBucketDescription = view.findViewById(R.id.tvBucketDescriptionFBA);
         ivBucketImage = view.findViewById(R.id.ivBucketImageFBA);
-        ivEditBucket = view.findViewById(R.id.ivEditBucketFBA);
-        ivAddActivity = view.findViewById(R.id.ivAddActivityFBA);
         RecyclerView rvBucketUsers = view.findViewById(R.id.rvBucketFriendsFBA);
         RecyclerView rvBucketActivities = view.findViewById(R.id.rvActivitiesFBA);
         konfettiView = view.findViewById(R.id.vKonfettiFBA);
@@ -134,21 +134,6 @@ public class BucketActivitiesFragment extends Fragment {
                         }
                     }
                 });
-            }
-        });
-
-        ivAddActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "btnAddActivity clicked");
-                showAddActivityDialog();
-            }
-        });
-
-        ivEditBucket.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showEditBucketDialog();
             }
         });
 
@@ -423,5 +408,27 @@ public class BucketActivitiesFragment extends Fragment {
                 break;
         }
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+        List<Integer> visibles = new ArrayList<>();
+        visibles.add(MenuHelper.ADD);
+        visibles.add(MenuHelper.EDIT);
+        MenuHelper.onCreateOptionsMenu(menu, visibles);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == MenuHelper.EDIT) {
+            showEditBucketDialog();
+        }
+        else if (item.getItemId() == MenuHelper.ADD){
+            showAddActivityDialog();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }

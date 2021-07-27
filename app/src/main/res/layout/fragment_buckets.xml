@@ -10,31 +10,10 @@
         android:id="@+id/rvBucketsFB"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/ivSortFB"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_marginHorizontal="10dp"
         android:layout_marginVertical="5dp"
         android:layout_marginBottom="0dp" />
-
-    <ImageView
-        android:id="@+id/ivSortFB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
-        app:srcCompat="@android:drawable/ic_menu_manage" />
-
-    <ImageView
-        android:id="@+id/ivAddBucketFB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_toStartOf="@+id/ivSortFB"
-        app:srcCompat="@android:drawable/ic_menu_add" />
 
 </RelativeLayout>
