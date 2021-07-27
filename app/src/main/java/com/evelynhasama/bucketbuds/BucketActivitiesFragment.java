@@ -48,6 +48,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.dionsegijn.konfetti.KonfettiView;
+import nl.dionsegijn.konfetti.models.Shape;
+
 public class BucketActivitiesFragment extends Fragment {
 
     private static final String ARG_BUCKET_LIST = "bucketList";
@@ -69,6 +72,7 @@ public class BucketActivitiesFragment extends Fragment {
     Switch swCompleted;
     BucketActivityHeaderItem header_completed;
     ProgressBar progressBar;
+    KonfettiView konfettiView;
 
     public BucketActivitiesFragment() {
     }
@@ -120,6 +124,17 @@ public class BucketActivitiesFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 bucketList.setCompleted(isChecked);
+                if (isChecked){
+                    konfettiView.build()
+                            .addColors(getResources().getColor(R.color.cadet_blue), getResources().getColor(R.color.grape), getResources().getColor(R.color.lavender))
+                            .setDirection(0.0, 359.0)
+                            .setSpeed(1f, 5f)
+                            .setFadeOutEnabled(true)
+                            .setTimeToLive(2000L)
+                            .addShapes(Shape.Square.INSTANCE, Shape.Circle.INSTANCE)
+                            .setPosition(-50f, konfettiView.getWidth() + 50f, -50f, -50f)
+                            .streamFor(200, 2000L);
+                    }
                 bucketList.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {

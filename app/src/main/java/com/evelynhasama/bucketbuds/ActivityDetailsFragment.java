@@ -1,8 +1,10 @@
 package com.evelynhasama.bucketbuds;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;

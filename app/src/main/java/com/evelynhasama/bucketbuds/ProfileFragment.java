@@ -62,7 +62,6 @@ public class ProfileFragment extends Fragment {
     TextView tvFriendCount;
     TextView tvBucketCount;
     ImageView ivProfileImage;
-    ImageView ivEditProfile;
     TabLayout tabLayout;
     ViewPager viewPager;
     User user;
