@@ -142,7 +142,7 @@ public class InspoFragment extends Fragment {
         mTvRandomTitle = mRandomView.findViewById(R.id.tvTitleIA);
         mIvRandomize = mRandomView.findViewById(R.id.ivCheckBoxIA);
 
-        mIvRandomize.setImageResource(android.R.drawable.ic_menu_rotate);
+        mIvRandomize.setImageResource(R.drawable.ic_replay);
 
         mIvRandomize.setOnClickListener(new View.OnClickListener() {
             @Override
