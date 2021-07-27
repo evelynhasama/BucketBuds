@@ -7,7 +7,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;import android.util.Log;
+import androidx.recyclerview.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -86,14 +87,14 @@ public class BucketsFragment extends Fragment {
         ParseQuery query = userPub.getBucketsRelation().getQuery();
         switch (selectedSortID) {
             case R.id.rbAlphabetical:
-                userPub.getBucketsRelation().getQuery().addAscendingOrder(BucketList.KEY_NAME).findInBackground(bucketListFindCallback);
+                query = query.addAscendingOrder(BucketList.KEY_NAME);
                 break;
             case R.id.rbCreated:
-                userPub.getBucketsRelation().getQuery().addDescendingOrder(BucketList.KEY_BUCKET_CREATED).findInBackground(bucketListFindCallback);
+                query = query.addDescendingOrder(BucketList.KEY_BUCKET_CREATED);
                 break;
             default:
             case R.id.rbModified:
-                userPub.getBucketsRelation().getQuery().addDescendingOrder(BucketList.KEY_BUCKET_UPDATED).findInBackground(bucketListFindCallback);
+                query = query.addDescendingOrder(BucketList.KEY_BUCKET_UPDATED);
                 break;
         }
         if (selectedFilterID == R.id.rbCompleted){
@@ -116,7 +117,6 @@ public class BucketsFragment extends Fragment {
 
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationCorner;
-
         Button btnSave = messageView.findViewById(R.id.btnSaveDSF);
         Button btnCancel = messageView.findViewById(R.id.btnCancelDSF);
 
