@@ -10,14 +10,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,20 +32,16 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import nl.dionsegijn.konfetti.KonfettiView;
 import nl.dionsegijn.konfetti.models.Shape;
 
@@ -63,7 +57,6 @@ public class BucketActivitiesFragment extends Fragment {
     List<User> users;
     BucketUsersAdapter bucketUsersAdapter;
     BucketActivitiesAdapter activitiesAdapter;
-    ImageView ivBucketImageDEB;
     ImageView ivBucketImage;
     TextView tvBucketName;
     TextView tvBucketDescription;
@@ -71,8 +64,8 @@ public class BucketActivitiesFragment extends Fragment {
     int completedHeaderPosition;
     Switch swCompleted;
     BucketActivityHeaderItem header_completed;
-    ProgressBar progressBar;
     KonfettiView konfettiView;
+    ProgressBar progressBar;
 
     public BucketActivitiesFragment() {
     }
@@ -106,7 +99,8 @@ public class BucketActivitiesFragment extends Fragment {
         ivBucketImage = view.findViewById(R.id.ivBucketImageFBA);
         RecyclerView rvBucketUsers = view.findViewById(R.id.rvBucketFriendsFBA);
         RecyclerView rvBucketActivities = view.findViewById(R.id.rvActivitiesFBA);
-        progressBar = view.findViewById(R.id.pbLoadingFBA);
+        konfettiView = view.findViewById(R.id.vKonfettiFBA);
+        progressBar = view.findViewById(R.id.pbLoadingFBA)
         progressBar.setVisibility(ProgressBar.INVISIBLE);
 
         Glide.with(getContext()).load(bucketList.getImage().getUrl()).into(ivBucketImage);
@@ -386,11 +380,11 @@ public class BucketActivitiesFragment extends Fragment {
 
             // Load the image located at photoUri into selectedImage
             Bitmap selectedImage = loadFromUri(photoUri);
-            ivBucketImageDEB.setImageBitmap(selectedImage);
-
+            progressBar.bringToFront();
+            progressBar.setVisibility(ProgressBar.VISIBLE);
             // convert to ParseFile and set to BucketList
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            selectedImage.compress(Bitmap.CompressFormat.PNG,100,stream);
+            selectedImage.compress(Bitmap.CompressFormat.PNG,70,stream);
             byte[] byteArray = stream.toByteArray();
 
             ParseFile file = new ParseFile(PHOTO_FILE_NAME, byteArray);
