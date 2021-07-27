@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
@@ -17,16 +18,17 @@
         card_view:cardUseCompatPadding="false">
 
         <RelativeLayout
+            android:id="@+id/rlBucketIBL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/imageView7"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_below="@+id/ivBucketImageIBL"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="2dp"
                 android:layout_toEndOf="@+id/tvActivityCountIBL"
                 card_view:srcCompat="@drawable/activity_icon"
                 card_view:tint="@color/cadet_blue" />
@@ -39,16 +41,19 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="4dp"
                 android:layout_toEndOf="@+id/imageView6"
-                android:textSize="10sp"
+                android:adjustViewBounds="true"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="normal"
                 tools:text="2" />
 
             <ImageView
                 android:id="@+id/imageView6"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_below="@+id/ivBucketImageIBL"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="2dp"
                 android:layout_marginBottom="5dp"
                 android:layout_toEndOf="@+id/tvUserCountIBL"
                 card_view:srcCompat="@drawable/person_icon"
@@ -56,32 +61,36 @@
 
             <ImageView
                 android:id="@+id/ivTrashIBL"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_below="@+id/ivBucketImageIBL"
                 android:layout_alignEnd="@+id/ivBucketImageIBL"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
                 android:layout_marginEnd="10dp"
                 android:scaleType="centerCrop"
+                app:tint="@color/grape"
                 card_view:srcCompat="@android:drawable/ic_menu_delete" />
 
             <ImageView
                 android:id="@+id/ivBucketImageIBL"
                 android:layout_width="180dp"
-                android:layout_height="180dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/tvBucketNameIBL"
                 android:layout_centerHorizontal="true"
                 android:layout_marginVertical="5dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
                 tools:srcCompat="@tools:sample/avatars" />
 
             <TextView
                 android:id="@+id/tvBucketNameIBL"
-                android:layout_width="160dp"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginHorizontal="0dp"
+                android:layout_marginTop="7dp"
                 android:ellipsize="end"
+                android:paddingHorizontal="10dp"
                 android:singleLine="true"
                 android:textAlignment="center"
                 android:textColor="@color/grape"
@@ -97,7 +106,9 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="4dp"
-                android:textSize="10sp"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="normal"
                 tools:text="2" />
 
         </RelativeLayout>

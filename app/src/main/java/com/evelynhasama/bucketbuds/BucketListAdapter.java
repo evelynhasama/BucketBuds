@@ -1,6 +1,9 @@
 package com.evelynhasama.bucketbuds;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -18,10 +21,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
+import com.parse.GetDataCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
@@ -33,6 +37,7 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
     FragmentActivity activity;
     List<BucketList> buckets;
     View view;
+    int ivWidth;
 
     public BucketListAdapter(Context context, List<BucketList> buckets, FragmentActivity activity){
         this.context = context;
@@ -78,8 +83,10 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
 
         public void bind(BucketList bucket) {
 
-            Glide.with(context).load(bucket.getImage().getUrl()).placeholder(R.drawable.photo_placeholder).centerCrop().into(ivBucketImage);
             tvBucketName.setText(bucket.getName());
+            tvBucketName.measure(0, 0);
+            ivWidth = tvBucketName.getMeasuredWidth();
+            loadImage(bucket.getImage(), ivBucketImage);
             tvUserCount.setText(String.valueOf(bucket.getUserCount()));
             tvActivityCount.setText(String.valueOf(bucket.getActivityCount()));
 
@@ -94,7 +101,7 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Fragment myFragment = BucketActivitiesFragment.newInstance(bucket);
+                    Fragment myFragment = BucketActivitiesFragment.newInstance(buckets.get(getAdapterPosition()));
                     activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, myFragment).addToBackStack(null).commit();
                 }
             });
@@ -204,8 +211,29 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
 
     }
 
-    public void clear(){
+    public void changeBuckets(List<BucketList> bucketLists){
         buckets.clear();
+        buckets.addAll(bucketLists);
+        Log.d(TAG, "addBuckets "+ buckets.size());
+        notifyDataSetChanged();
     }
+
+    private void loadImage(ParseFile parseFile, ImageView imageView) {
+        parseFile.getDataInBackground(new GetDataCallback() {
+            @Override
+            public void done(byte[] data, ParseException e) {
+                if (e != null) {
+                    Log.d(TAG,"failure loading image " + e);
+                    return;
+                }
+                // resizes image keeping aspect ratio
+                Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+                int width = bmp.getWidth();
+                int height = bmp.getHeight();
+                Glide.with(context).load(parseFile.getUrl()).override(ivWidth, (height * (width/ivWidth))).into(imageView);
+            }
+        });
+    }
+
 
 }

@@ -4,8 +4,9 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,12 +15,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
+
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public class BucketsFragment extends Fragment {
     BucketListAdapter adapter;
     UserPub userPub;
     List<BucketList> bucketLists;
+    StaggeredGridLayoutManager staggeredGridLayoutManager;
     int selectedFilterID;
     int selectedSortID;
 
@@ -43,6 +45,7 @@ public class BucketsFragment extends Fragment {
         BucketsFragment fragment = new BucketsFragment();
         return fragment;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +64,8 @@ public class BucketsFragment extends Fragment {
         selectedFilterID = R.id.rbAll;
         selectedSortID = R.id.rbModified;
 
-        rvBuckets.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
+        rvBuckets.setLayoutManager(staggeredGridLayoutManager);
 
         bucketLists = new ArrayList<>();
         adapter = new BucketListAdapter(getContext(), bucketLists, getActivity());
@@ -79,10 +83,9 @@ public class BucketsFragment extends Fragment {
             @Override
             public void done(List<BucketList> objects, ParseException e) {
                 if (e == null) {
-                    adapter.clear();
-                    bucketLists.clear();
-                    bucketLists.addAll(objects);
-                    adapter.notifyDataSetChanged();
+                    adapter.changeBuckets(objects);
+                    staggeredGridLayoutManager.onItemsChanged(rvBuckets);
+                    Log.d(TAG, "adding buckets " + objects.size());
                 } else {
                     Log.e(TAG, "error adding bucket lists", e);
                 }
