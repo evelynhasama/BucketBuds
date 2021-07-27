@@ -60,18 +60,6 @@
                 card_view:tint="@color/cadet_blue" />
 
             <ImageView
-                android:id="@+id/ivTrashIBL"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_below="@+id/ivBucketImageIBL"
-                android:layout_alignEnd="@+id/ivBucketImageIBL"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="10dp"
-                android:scaleType="centerCrop"
-                app:tint="@color/grape"
-                card_view:srcCompat="@android:drawable/ic_menu_delete" />
-
-            <ImageView
                 android:id="@+id/ivBucketImageIBL"
                 android:layout_width="180dp"
                 android:layout_height="wrap_content"

@@ -70,7 +70,6 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
         TextView tvBucketName;
         TextView tvUserCount;
         TextView tvActivityCount;
-        ImageView ivTrash;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -78,7 +77,6 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
             tvBucketName = itemView.findViewById(R.id.tvBucketNameIBL);
             tvUserCount = itemView.findViewById(R.id.tvUserCountIBL);
             tvActivityCount = itemView.findViewById(R.id.tvActivityCountIBL);
-            ivTrash = itemView.findViewById(R.id.ivTrashIBL);
         }
 
         public void bind(BucketList bucket) {
@@ -90,11 +88,12 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
             tvUserCount.setText(String.valueOf(bucket.getUserCount()));
             tvActivityCount.setText(String.valueOf(bucket.getActivityCount()));
 
-            ivTrash.setOnClickListener(new View.OnClickListener() {
+            view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public void onClick(View v) {
+                public boolean onLongClick(View v) {
                     v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                     showDeleteBucketDialog(bucket, getAdapterPosition());
+                    return true;
                 }
             });
 
