@@ -154,6 +154,7 @@ public class CreateBucketFragment extends Fragment {
             } else {
                 bucketList.setName(etBucketName.getText().toString());
                 bucketList.setDescription(etBucketDescription.getText().toString());
+                bucketList.setUserCount(bucketFriends.size()+1);
                 bucketList.saveInBackground(getBucketSaveCallback(bucketFriends));
             }
         }

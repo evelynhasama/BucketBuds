@@ -19,6 +19,8 @@ public class BucketList extends ParseObject {
     public static final String KEY_BUCKET_UPDATED = "updatedAt";
     public static final String KEY_BUCKET_CREATED = "createdAt";
     public static final String KEY_ACTIVITIES = "activities";
+    public static final String KEY_ACTIVITY_COUNT = "activityCount";
+    public static final String KEY_USER_COUNT = "userCount";
     public static final String TAG = "BucketListClass";
 
     public BucketList(){}
@@ -74,11 +76,29 @@ public class BucketList extends ParseObject {
     public void addActivity(ActivityObj activityObj) {
         ParseRelation<ActivityObj> relation = getActivitiesRelation();
         relation.add(activityObj);
+        setActivityCount(getActivityCount()+1);
     }
 
     public void removeActivity(ActivityObj activityObj) {
         ParseRelation<ActivityObj> relation = getActivitiesRelation();
         relation.remove(activityObj);
+        setActivityCount(getActivityCount()-1);
+    }
+
+    public int getUserCount() {
+        return getInt(KEY_USER_COUNT);
+    }
+
+    public void setUserCount(int userCount) {
+        put(KEY_USER_COUNT, userCount);
+    }
+
+    public int getActivityCount() {
+        return getInt(KEY_ACTIVITY_COUNT);
+    }
+
+    public void setActivityCount(int activityCount) {
+        put(KEY_ACTIVITY_COUNT, activityCount);
     }
 
 }

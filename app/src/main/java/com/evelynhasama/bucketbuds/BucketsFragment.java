@@ -18,8 +18,9 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseUser;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,10 +61,10 @@ public class BucketsFragment extends Fragment {
         selectedFilterID = R.id.rbAll;
         selectedSortID = R.id.rbModified;
 
-        rvBuckets.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        rvBuckets.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         bucketLists = new ArrayList<>();
-        adapter = new BucketListAdapter(getContext(), bucketLists, selectedFilterID, getActivity());
+        adapter = new BucketListAdapter(getContext(), bucketLists, getActivity());
         rvBuckets.setAdapter(adapter);
 
         getBuckets();
@@ -100,6 +101,12 @@ public class BucketsFragment extends Fragment {
                 query = query.addDescendingOrder(BucketList.KEY_BUCKET_UPDATED);
                 break;
         }
+        if (selectedFilterID == R.id.rbCompleted){
+            query = query.whereEqualTo(BucketList.KEY_COMPLETED, true);
+        }
+        if (selectedFilterID == R.id.rbActive){
+            query = query.whereEqualTo(BucketList.KEY_COMPLETED, false);
+        }
         query.findInBackground(bucketListFindCallback);
     }
 
@@ -127,7 +134,6 @@ public class BucketsFragment extends Fragment {
             public void onClick(View v) {
                 selectedFilterID = rgFilter.getCheckedRadioButtonId();
                 selectedSortID = rgSort.getCheckedRadioButtonId();
-                adapter.filter(selectedFilterID);
                 getBuckets();
                 alertDialog.dismiss();
             }

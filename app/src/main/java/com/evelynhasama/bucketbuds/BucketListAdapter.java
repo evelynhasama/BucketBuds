@@ -33,12 +33,10 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
     FragmentActivity activity;
     List<BucketList> buckets;
     View view;
-    int selectedFilterId;
 
-    public BucketListAdapter(Context context, List<BucketList> buckets, int selectedFilterId, FragmentActivity activity){
+    public BucketListAdapter(Context context, List<BucketList> buckets, FragmentActivity activity){
         this.context = context;
         this.buckets = buckets;
-        this.selectedFilterId = selectedFilterId;
         this.activity = activity;
     }
 
@@ -65,23 +63,33 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
 
         ImageView ivBucketImage;
         TextView tvBucketName;
+        TextView tvUserCount;
+        TextView tvActivityCount;
+        ImageView ivTrash;
 
         public ViewHolder(View itemView) {
             super(itemView);
             ivBucketImage = itemView.findViewById(R.id.ivBucketImageIBL);
             tvBucketName = itemView.findViewById(R.id.tvBucketNameIBL);
+            tvUserCount = itemView.findViewById(R.id.tvUserCountIBL);
+            tvActivityCount = itemView.findViewById(R.id.tvActivityCountIBL);
+            ivTrash = itemView.findViewById(R.id.ivTrashIBL);
         }
 
         public void bind(BucketList bucket) {
-            Boolean bucketCompleted = bucket.getCompleted();
-            if ((selectedFilterId == R.id.rbCompleted && !bucketCompleted) || (selectedFilterId == R.id.rbActive && bucketCompleted)) {
-                itemView.setVisibility(View.GONE);
-                return;
-            }
-            itemView.setVisibility(View.VISIBLE);
 
             Glide.with(context).load(bucket.getImage().getUrl()).placeholder(R.drawable.photo_placeholder).centerCrop().into(ivBucketImage);
             tvBucketName.setText(bucket.getName());
+            tvUserCount.setText(String.valueOf(bucket.getUserCount()));
+            tvActivityCount.setText(String.valueOf(bucket.getActivityCount()));
+
+            ivTrash.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                    showDeleteBucketDialog(bucket, getAdapterPosition());
+                }
+            });
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -90,16 +98,6 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
                     activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, myFragment).addToBackStack(null).commit();
                 }
             });
-
-            view.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                    showDeleteBucketDialog(bucket, getAdapterPosition());
-                    return false;
-                }
-            });
-
         }
     }
 
@@ -208,11 +206,6 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
 
     public void clear(){
         buckets.clear();
-    }
-
-    public void filter(int id){
-        selectedFilterId = id;
-        notifyDataSetChanged();
     }
 
 }
