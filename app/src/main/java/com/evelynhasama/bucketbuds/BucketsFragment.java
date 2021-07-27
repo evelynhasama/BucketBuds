@@ -6,10 +6,8 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import android.util.Log;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,7 +30,6 @@ public class BucketsFragment extends Fragment {
     BucketListAdapter adapter;
     UserPub userPub;
     List<BucketList> bucketLists;
-    StaggeredGridLayoutManager staggeredGridLayoutManager;
     int selectedFilterID;
     int selectedSortID;
 
@@ -62,9 +59,7 @@ public class BucketsFragment extends Fragment {
         selectedFilterID = R.id.rbAll;
         selectedSortID = R.id.rbModified;
 
-        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
-        staggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
-        rvBuckets.setLayoutManager(staggeredGridLayoutManager);
+        rvBuckets.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         bucketLists = new ArrayList<>();
         adapter = new BucketListAdapter(getContext(), bucketLists, getActivity());
@@ -83,24 +78,22 @@ public class BucketsFragment extends Fragment {
             public void done(List<BucketList> objects, ParseException e) {
                 if (e == null) {
                     adapter.changeBuckets(objects);
-                    staggeredGridLayoutManager.onItemsChanged(rvBuckets);
-                    Log.d(TAG, "adding buckets " + objects.size());
                 } else {
                     Log.e(TAG, "error adding bucket lists", e);
                 }
             }
         };
-        ParseQuery<BucketList> query = userPub.getBucketsRelation().getQuery();
+        ParseQuery query = userPub.getBucketsRelation().getQuery();
         switch (selectedSortID) {
             case R.id.rbAlphabetical:
-                query = query.addAscendingOrder(BucketList.KEY_NAME);
+                userPub.getBucketsRelation().getQuery().addAscendingOrder(BucketList.KEY_NAME).findInBackground(bucketListFindCallback);
                 break;
             case R.id.rbCreated:
-                query = query.addDescendingOrder(BucketList.KEY_BUCKET_CREATED);
+                userPub.getBucketsRelation().getQuery().addDescendingOrder(BucketList.KEY_BUCKET_CREATED).findInBackground(bucketListFindCallback);
                 break;
             default:
             case R.id.rbModified:
-                query = query.addDescendingOrder(BucketList.KEY_BUCKET_UPDATED);
+                userPub.getBucketsRelation().getQuery().addDescendingOrder(BucketList.KEY_BUCKET_UPDATED).findInBackground(bucketListFindCallback);
                 break;
         }
         if (selectedFilterID == R.id.rbCompleted){
