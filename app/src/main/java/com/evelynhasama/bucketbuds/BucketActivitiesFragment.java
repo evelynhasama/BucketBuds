@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,7 +62,6 @@ public class BucketActivitiesFragment extends Fragment {
     List<User> users;
     BucketUsersAdapter bucketUsersAdapter;
     BucketActivitiesAdapter activitiesAdapter;
-    ImageView ivBucketImageDEB;
     ImageView ivBucketImage;
     TextView tvBucketName;
     TextView tvBucketDescription;
@@ -70,6 +70,7 @@ public class BucketActivitiesFragment extends Fragment {
     Switch swCompleted;
     BucketActivityHeaderItem header_completed;
     KonfettiView konfettiView;
+    ProgressBar progressBar;
 
     public BucketActivitiesFragment() {
     }
@@ -104,9 +105,19 @@ public class BucketActivitiesFragment extends Fragment {
         RecyclerView rvBucketUsers = view.findViewById(R.id.rvBucketFriendsFBA);
         RecyclerView rvBucketActivities = view.findViewById(R.id.rvActivitiesFBA);
         konfettiView = view.findViewById(R.id.vKonfettiFBA);
+        progressBar = view.findViewById(R.id.pbLoadingFBA);
 
-        Glide.with(getContext()).load(bucketList.getImage().getUrl()).centerCrop()
-                .transform(new RoundedCorners(10)).into(ivBucketImage);
+        progressBar.setVisibility(ProgressBar.INVISIBLE);
+
+        Glide.with(getContext()).load(bucketList.getImage().getUrl()).into(ivBucketImage);
+        ivBucketImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onPickPhoto(v);
+            }
+        });
+
+
         tvBucketName.setText(bucketList.getName());
         tvBucketDescription.setText(bucketList.getDescription());
         swCompleted.setChecked(bucketList.getCompleted() ? true : false);
@@ -291,20 +302,11 @@ public class BucketActivitiesFragment extends Fragment {
         final AlertDialog alertDialog = alertDialogBuilder.create();
         EditText etName = messageView.findViewById(R.id.etBucketNameDEB);
         EditText etDescription = messageView.findViewById(R.id.etDescriptionDEB);
-        ivBucketImageDEB = messageView.findViewById(R.id.ivBucketImageDEB);
         Button btnSave = messageView.findViewById(R.id.btnSaveDEB);
         Button btnCancel = messageView.findViewById(R.id.btnCancelDEB);
 
         etDescription.setText(bucketList.getDescription(), TextView.BufferType.EDITABLE);
         etName.setText(bucketList.getName(), TextView.BufferType.EDITABLE);
-        Glide.with(getContext()).load(bucketList.getImage().getUrl()).centerCrop().into(ivBucketImageDEB);
-
-        ivBucketImageDEB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onPickPhoto(v);
-            }
-        });
 
         // Configure dialog buttons
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -381,15 +383,27 @@ public class BucketActivitiesFragment extends Fragment {
 
             // Load the image located at photoUri into selectedImage
             Bitmap selectedImage = loadFromUri(photoUri);
-            ivBucketImageDEB.setImageBitmap(selectedImage);
-
+            progressBar.bringToFront();
+            progressBar.setVisibility(ProgressBar.VISIBLE);
             // convert to ParseFile and set to BucketList
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            selectedImage.compress(Bitmap.CompressFormat.PNG,100,stream);
+            selectedImage.compress(Bitmap.CompressFormat.PNG,70,stream);
             byte[] byteArray = stream.toByteArray();
 
             ParseFile file = new ParseFile(PHOTO_FILE_NAME, byteArray);
             bucketList.setImage(file);
+            bucketList.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e != null) {
+                        Log.e(TAG, "error saving image" + e);
+                        return;
+                    }
+                    ivBucketImage.setImageBitmap(selectedImage);
+                    progressBar.setVisibility(ProgressBar.INVISIBLE);
+                    Log.d(TAG, "done saving bucket image");
+                }
+            });
         }
     }
 

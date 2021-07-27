@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,6 +64,7 @@ public class ProfileFragment extends Fragment {
     ViewPager viewPager;
     User user;
     UserPub userPub;
+    ProgressBar progressBar;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -95,6 +97,9 @@ public class ProfileFragment extends Fragment {
         ivProfileImage = view.findViewById(R.id.ivProfileImagePF);
         tabLayout = view.findViewById(R.id.sliding_tabsPF);
         viewPager = view.findViewById(R.id.viewpagerPF);
+        progressBar = view.findViewById(R.id.pbLoadingPF);
+
+        progressBar.setVisibility(ProgressBar.INVISIBLE);
 
         ParseFile image = user.getImage();
         if (image == null){
@@ -246,6 +251,7 @@ public class ProfileFragment extends Fragment {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == getActivity().RESULT_OK) {
                 // Load the taken image into a preview
+                progressBar.setVisibility(ProgressBar.VISIBLE);
                 user.setImage(new ParseFile(photoFile));
                 user.saveInBackground(new SaveCallback() {
                     @Override
@@ -253,6 +259,7 @@ public class ProfileFragment extends Fragment {
                         if (e == null) {
                             Bitmap takenImage = rotateBitmapOrientation(photoFile.getAbsolutePath());
                             Glide.with(view).load(takenImage).transform(new CenterCrop(), new RoundedCorners(20)).into(ivProfileImage);
+                            progressBar.setVisibility(ProgressBar.INVISIBLE);
                         } else {
                             Toast.makeText(getContext(), "Image failed to save", Toast.LENGTH_SHORT).show();
                         }
