@@ -16,6 +16,7 @@ public class SeatGeekHelper implements IEventAPI{
     public static final String PARAM_LON = "&lon=";
     public static final String PARAM_RANGE = "&range=";
     public static final String UNIT = "mi";
+    public static final String PARAM_PER_PAGE = "&per_page=10";
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     private static SeatGeekHelper mInstance;
 
@@ -33,7 +34,7 @@ public class SeatGeekHelper implements IEventAPI{
 
         String latlong = PARAM_LAT + latitude + PARAM_LON + longitude;
         String apiKey = "&client_id=" + context.getString(R.string.seat_geek_client_id);
-        String url = BASE_URL + latlong + PARAM_RANGE + radiusFilter + UNIT +  apiKey;
+        String url = BASE_URL + latlong + PARAM_RANGE + radiusFilter + UNIT + PARAM_PER_PAGE + apiKey;
 
         Response.Listener<String> responseListener = ApiHelper.buildResponseListener(
             (responseObject -> {
@@ -72,7 +73,7 @@ public class SeatGeekHelper implements IEventAPI{
         activityObj.setLocation(event.getJSONObject("venue").getString("name"));
         // set description
         activityObj.setDescription(event.getString("type"));
-        // set company to Ticketmaster
+        // set company to SeatGeek
         activityObj.setCompany(ActivityObj.SEATGEEK);
         return activityObj;
     }

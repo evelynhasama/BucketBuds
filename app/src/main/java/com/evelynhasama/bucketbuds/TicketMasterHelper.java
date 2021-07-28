@@ -19,7 +19,7 @@ public class TicketMasterHelper implements IEventAPI{
     public static final String PARAM_LATLONG = "latlong=";
     public static final String PARAM_RADIUS = "&radius=";
     public static final String PARAM_UNIT = "&unit=miles";
-    public static final String PARAM_SORT = "&sort=distance,date,asc";
+    public static final String PARAM_SIZE = "&size=10";
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT_TIME = new SimpleDateFormat("HH:mm:ss");
     private static TicketMasterHelper mInstance;
@@ -39,7 +39,7 @@ public class TicketMasterHelper implements IEventAPI{
 
         String latlong = latitude + "," + longitude;
         String apiKey = "&apikey=" + context.getString(R.string.ticket_master_api_key);
-        String url = BASE_URL + PARAM_LATLONG + latlong + PARAM_RADIUS + radiusFilter + PARAM_UNIT + PARAM_SORT + apiKey;
+        String url = BASE_URL + PARAM_LATLONG + latlong + PARAM_RADIUS + radiusFilter + PARAM_UNIT + PARAM_SIZE + apiKey;
 
 
         Response.Listener<String> responseListener = ApiHelper.buildResponseListener(

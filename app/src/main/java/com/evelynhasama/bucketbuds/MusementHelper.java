@@ -12,6 +12,7 @@ public class MusementHelper implements IEventAPI {
     public static final String BASE_URL = "https://sandbox.musement.com/api/v3/activities?";
     public static final String PARAM_COORDS = "coordinates=";
     public static final String PARAM_DISTANCE = "&distance=";
+    public static final String PARAM_LIMIT="&limit=10";
     public static final String UNIT="M";
     private static MusementHelper mInstance;
 
@@ -28,7 +29,7 @@ public class MusementHelper implements IEventAPI {
     public void getEvents(Context context, Double latitude, Double longitude, InspoActivitiesAdapter adapter, String radiusFilter) {
 
         String coords = latitude + "," + longitude;
-        String url = BASE_URL + PARAM_COORDS + coords + PARAM_DISTANCE + radiusFilter + UNIT;
+        String url = BASE_URL + PARAM_COORDS + coords + PARAM_LIMIT + PARAM_DISTANCE + radiusFilter + UNIT;
 
         Response.Listener<String> responseListener = ApiHelper.buildResponseListener(
             (responseObject -> {
@@ -57,12 +58,14 @@ public class MusementHelper implements IEventAPI {
         // set name
         activityObj.setName(event.getString("title"));
         // set web
-        activityObj.setWeb(event.getString("url"));
+        activityObj.setWeb(event.getString("cover_image_url"));
         // set all day boolean
         activityObj.setAllDayBool(false);
         // set location
         if (event.has("meeting_point")){
             activityObj.setLocation(event.getString("meeting_point"));
+        } else {
+            activityObj.setLocation("");
         }
         // set description
         activityObj.setDescription(event.getString("about"));
