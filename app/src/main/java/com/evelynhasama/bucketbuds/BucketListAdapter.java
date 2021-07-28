@@ -1,6 +1,8 @@
 package com.evelynhasama.bucketbuds;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -21,7 +23,6 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
     FragmentActivity activity;
     List<BucketList> buckets;
     View view;
+    int ivWidth;
 
     public BucketListAdapter(Context context, List<BucketList> buckets, FragmentActivity activity){
         this.context = context;
@@ -107,6 +109,7 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setView(messageView);
         final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         TextView tvBucketName = messageView.findViewById(R.id.tvBucketNameDDB);
         Button btnSave = messageView.findViewById(R.id.btnSaveDDB);
         Button btnCancel = messageView.findViewById(R.id.btnCancelDDB);

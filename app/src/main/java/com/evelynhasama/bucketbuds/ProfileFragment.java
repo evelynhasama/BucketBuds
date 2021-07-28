@@ -100,6 +100,7 @@ public class ProfileFragment extends Fragment {
         tabLayout = view.findViewById(R.id.sliding_tabsPF);
         viewPager = view.findViewById(R.id.viewpagerPF);
         progressBar = view.findViewById(R.id.pbLoadingPF);
+
         progressBar.setVisibility(ProgressBar.INVISIBLE);
 
         ParseFile image = user.getImage();

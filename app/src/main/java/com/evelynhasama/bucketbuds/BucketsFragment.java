@@ -60,8 +60,6 @@ public class BucketsFragment extends Fragment {
         selectedFilterID = R.id.rbAll;
         selectedSortID = R.id.rbModified;
 
-        rvBuckets.setLayoutManager(new GridLayoutManager(getContext(), 2));
-
         bucketLists = new ArrayList<>();
         adapter = new BucketListAdapter(getContext(), bucketLists, getActivity());
         rvBuckets.setAdapter(adapter);

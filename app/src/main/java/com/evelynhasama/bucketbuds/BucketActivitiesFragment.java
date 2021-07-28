@@ -303,7 +303,6 @@ public class BucketActivitiesFragment extends Fragment {
 
         etDescription.setText(bucketList.getDescription(), TextView.BufferType.EDITABLE);
         etName.setText(bucketList.getName(), TextView.BufferType.EDITABLE);
-        Glide.with(getContext()).load(bucketList.getImage().getUrl()).centerCrop().into(ivBucketImageDEB);
 
         // Configure dialog buttons
         btnSave.setOnClickListener(new View.OnClickListener() {
