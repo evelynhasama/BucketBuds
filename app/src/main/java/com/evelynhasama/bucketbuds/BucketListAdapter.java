@@ -232,7 +232,7 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
                 Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
                 int width = bmp.getWidth();
                 int height = bmp.getHeight();
-                Glide.with(context).load(parseFile.getUrl()).override(ivWidth, (height * (width/ivWidth))).into(imageView);
+                Glide.with(context).load(parseFile.getUrl()).placeholder(R.drawable.white_placeholder).override(ivWidth, (height * (width/ivWidth))).into(imageView);
             }
         });
     }
