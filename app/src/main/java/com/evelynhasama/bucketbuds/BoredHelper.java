@@ -2,13 +2,9 @@ package com.evelynhasama.bucketbuds;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.text.ParseException;
 
 public class BoredHelper {
 
@@ -19,17 +15,11 @@ public class BoredHelper {
 
         String url = BASE_URL;
 
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, String.valueOf(error));
-            }
-        };
         Log.d(TAG, "Calling api: " + url);
-        ApiHelper.callApi(context, url, responseListener, errorListener);
+        ApiHelper.callApi(context, url, responseListener);
     }
 
-    public static ActivityObj parseActivity(JSONObject activity) throws JSONException, ParseException {
+    public static ActivityObj parseActivity(JSONObject activity) throws JSONException {
 
         ActivityObj activityObj = new ActivityObj();
         // set name

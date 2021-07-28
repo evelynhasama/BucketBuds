@@ -121,9 +121,10 @@ public class InspoFragment extends Fragment {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
                 mAdapter.clear();
-                TicketMasterHelper.getEvents(getContext(), latitude, longitude, mAdapter, radiusFilter);
-                SeatGeekHelper.getEvents(getContext(), latitude, longitude, mAdapter, radiusFilter);
-                MusementHelper.getEvents(getContext(), latitude, longitude, mAdapter, radiusFilter);
+                IEventAPI[] apis = {SeatGeekHelper.getInstance(), MusementHelper.getInstance(), TicketMasterHelper.getInstance()};
+                for (IEventAPI api: apis) {
+                    api.getEvents(getContext(), latitude, longitude, mAdapter, radiusFilter);
+                }
             }
         }
     }

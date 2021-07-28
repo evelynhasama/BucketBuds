@@ -3,7 +3,6 @@ package com.evelynhasama.bucketbuds;
 import android.content.Context;
 import android.util.Log;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-public class TicketMasterHelper {
+public class TicketMasterHelper implements IEventAPI{
 
     public static final String TAG = "TicketMasterHelper";
     public static final String BASE_URL = "https://app.ticketmaster.com/discovery/v2/events.json?";
@@ -23,41 +22,45 @@ public class TicketMasterHelper {
     public static final String PARAM_SORT = "&sort=distance,date,asc";
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT_TIME = new SimpleDateFormat("HH:mm:ss");
+    private static TicketMasterHelper mInstance;
 
-    public static void getEvents(Context context, Double latitude, Double longitude, InspoActivitiesAdapter adapter, String radiusFilter) {
+    private TicketMasterHelper(){
+    }
+
+    public static synchronized TicketMasterHelper getInstance() {
+        if (mInstance == null) {
+            mInstance = new TicketMasterHelper();
+        }
+        return mInstance;
+    }
+
+    public void getEvents(Context context, Double latitude, Double longitude, InspoActivitiesAdapter adapter, String radiusFilter) {
 
 
         String latlong = latitude + "," + longitude;
         String apiKey = "&apikey=" + context.getString(R.string.ticket_master_api_key);
         String url = BASE_URL + PARAM_LATLONG + latlong + PARAM_RADIUS + radiusFilter + PARAM_UNIT + PARAM_SORT + apiKey;
 
-        Response.Listener<String> responseListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
+
+        Response.Listener<String> responseListener = ApiHelper.buildResponseListener(
+            (responseObject -> {
                 try {
-                    JSONObject responseObject = new JSONObject(response);
-                    JSONArray events = responseObject.getJSONObject("_embedded").getJSONArray("events");
-                    for (int i = 0; i < events.length(); i++) {
-                        JSONObject event = events.getJSONObject(i);
-                        ActivityObj activityObj = parseEvent(event);
-                        adapter.addData(activityObj);
-                    }
-                } catch (Exception e) {
+                    return responseObject.getJSONObject("_embedded").getJSONArray("events");
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.d(TAG, "done parsing at radius " + radiusFilter);
-                adapter.notifyDataSetChanged();
-            }
-        };
+                return null; }),
+            (jsonObject -> {
+                try {
+                    return parseEvent(jsonObject);
+                } catch (JSONException | ParseException e) {
+                    e.printStackTrace();
+                }
+                return null; }),
+            adapter);
 
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, String.valueOf(error));
-            }
-        };
         Log.d(TAG, "Calling api: " + url);
-        ApiHelper.callApi(context, url, responseListener, errorListener);
+        ApiHelper.callApi(context, url, responseListener);
     }
 
     public static ActivityObj parseEvent(JSONObject event) throws JSONException, ParseException {
