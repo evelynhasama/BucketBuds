@@ -37,11 +37,10 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
 * User can create lists shared amongst friends with list descriptions and ideal finish date
 * User can view all of their bucket lists
 * User can add activities with details (name, description, location, date/time) to a bucket list 
-* User can reorder or delete items in the bucket list
+* User can delete items in the bucket list
 * User can schedule events with the group using the Calendar Provider
 * User can see sort/filter list by completed/active bucket status, alphabetical order
 * User can get inspiration for activities they may be interested in through the APIs
-* User can find helpful resources on the web
  
 
 **Optional Nice-to-have Stories**
@@ -77,7 +76,7 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
 * Create Bucket List screen
     * User can create bucket lists shared amongst friends with list descriptions and ideal finish date
 * Bucket List screen
-    * User can reorder or delete items in the bucket list
+    * User can delete items in the bucket list
     * User can add activities with details (name, description, location) to a bucket list
 * Activity Details screen
     * User can schedule events with the group using the the Calendar Provider
@@ -87,7 +86,6 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
       * [Ticketmaster Dsicovery API](https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/)
       * [SeatGeek API](https://platform.seatgeek.com/#events)
       * [Musement API (actvities search)](https://api-docs.musement.com/docs/activities)
-    * User can find helpful resources on the web
 
 ### 3. Navigation
 
@@ -173,6 +171,9 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    | createdAt     | DateTime        | date when bucket is created (default field) |
    | updatedAt     | DateTime        | date when bucket is last updated (default field) |
    | users         | Relation(User)  | relation to users who own the bucket list |
+   | activities    | Relation(Activity)| relation to activities in the bucket |
+   | userCount     | Number          | number of users who own the bucket |
+   | activityCount | Number          | number of activities in the bucket |
    
 #### Activity
 
