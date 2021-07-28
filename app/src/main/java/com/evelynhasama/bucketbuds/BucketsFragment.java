@@ -1,5 +1,7 @@
 package com.evelynhasama.bucketbuds;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -119,6 +121,9 @@ public class BucketsFragment extends Fragment {
         alertDialogBuilder.setView(messageView);
         // Create alert dialog
         final AlertDialog alertDialog = alertDialogBuilder.create();
+
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationCorner;
 
         Button btnSave = messageView.findViewById(R.id.btnSaveDSF);
         Button btnCancel = messageView.findViewById(R.id.btnCancelDSF);

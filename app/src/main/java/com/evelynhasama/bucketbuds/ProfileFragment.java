@@ -3,7 +3,9 @@ package com.evelynhasama.bucketbuds;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.ColorDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -144,6 +146,10 @@ public class ProfileFragment extends Fragment {
         alertDialogBuilder.setView(messageView);
         // Create alert dialog
         final AlertDialog alertDialog = alertDialogBuilder.create();
+
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationCorner;
+
         EditText etUsername = messageView.findViewById(R.id.etUsernameDE);
         EditText etBio = messageView.findViewById(R.id.etBioDE);
         EditText etFirstName = messageView.findViewById(R.id.etFirstNameDE);

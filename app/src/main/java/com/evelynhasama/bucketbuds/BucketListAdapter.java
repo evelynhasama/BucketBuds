@@ -3,7 +3,9 @@ package com.evelynhasama.bucketbuds;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -113,6 +115,7 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setView(messageView);
         final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         TextView tvBucketName = messageView.findViewById(R.id.tvBucketNameDDB);
         Button btnSave = messageView.findViewById(R.id.btnSaveDDB);
         Button btnCancel = messageView.findViewById(R.id.btnCancelDDB);
