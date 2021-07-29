@@ -40,7 +40,7 @@ public class ApiHelper {
         return mRequestQueue;
     }
 
-    public <T> void addToRequestQueue(Request<T> req) {
+    private void addToRequestQueue(Request<String> req) {
         getRequestQueue().add(req);
     }
 

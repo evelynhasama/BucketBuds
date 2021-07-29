@@ -63,7 +63,7 @@ public class TicketMasterHelper implements IEventAPI{
         ApiHelper.callApi(context, url, responseListener);
     }
 
-    public static ActivityObj parseEvent(JSONObject event) throws JSONException, ParseException {
+    private static ActivityObj parseEvent(JSONObject event) throws JSONException, ParseException {
 
         ActivityObj activityObj = new ActivityObj();
         // set name

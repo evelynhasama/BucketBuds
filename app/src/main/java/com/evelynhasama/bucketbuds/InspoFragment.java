@@ -41,6 +41,7 @@ public class InspoFragment extends Fragment {
     ImageView mIvRandomize;
     ChipGroup cgFilter;
     String radiusFilter;
+    IEventAPI[] mApis = {SeatGeekHelper.getInstance(), MusementHelper.getInstance(), TicketMasterHelper.getInstance()};
 
     public static InspoFragment newInstance() {
         InspoFragment fragment = new InspoFragment();
@@ -121,8 +122,7 @@ public class InspoFragment extends Fragment {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
                 mAdapter.clear();
-                IEventAPI[] apis = {SeatGeekHelper.getInstance(), MusementHelper.getInstance(), TicketMasterHelper.getInstance()};
-                for (IEventAPI api: apis) {
+                for (IEventAPI api: mApis) {
                     api.getEvents(getContext(), latitude, longitude, mAdapter, radiusFilter);
                 }
             }
