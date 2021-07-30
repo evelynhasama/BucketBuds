@@ -40,4 +40,7 @@
     <string name="create_calendar_event">Create Calendar Event</string>
     <string name="edit_activity_info">Edit Activity Info</string>
     <string name="delete_activity">Delete Activity</string>
+    <string name="get_random_idea">Get Random Idea</string>
+    <string name="find_local_activities">Find Local Activities</string>
+    <string name="add_to_bucket">Add to Bucket</string>
 </resources>

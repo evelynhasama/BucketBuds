@@ -30,6 +30,11 @@ public class ActivityObj extends ParseObject {
     public static final String KEY_EVENT_CREATED = "eventCreated";
     public static final String KEY_ALL_DAY = "allDay";
 
+    public static final int TICKETMASTER = 1;
+    public static final int SEATGEEK = 2;
+    public static final int MUSEMENT = 3;
+
+    int mCompany;
 
     public BucketList getBucket() {
         return (BucketList) getParseObject(KEY_BUCKET);
@@ -111,6 +116,14 @@ public class ActivityObj extends ParseObject {
 
     public void setEventCreated(){
        put(KEY_EVENT_CREATED, true);
+    }
+
+    public void setCompany(int company) {
+        mCompany = company;
+    }
+
+    public int getCompany() {
+        return mCompany;
     }
 
 }

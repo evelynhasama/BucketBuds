@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".InspoActivityDetailsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp">
+
+    <TextView
+        android:id="@+id/tvTitleFIAD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="10dp"
+        android:paddingTop="30dp"
+        android:paddingBottom="10dp"
+        android:textAlignment="center"
+        android:textColor="@color/grape"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:text="Snuggle with Fiona" />
+
+    <TextView
+        android:id="@+id/tvDescriptionFIAD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="5"
+        android:paddingVertical="10dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        tools:text="@string/description" />
+
+    <TextView
+        android:id="@+id/tvLocationFIAD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="5"
+        android:paddingVertical="10dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        tools:text="@string/location" />
+
+    <TextView
+        android:id="@+id/tvWebsiteFIAD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="web"
+        android:paddingVertical="10dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        tools:text="@string/website" />
+
+    <TextView
+        android:id="@+id/tvStartDateFIAD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:paddingVertical="10dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        tools:text="start date" />
+
+    <TextView
+        android:id="@+id/tvEndDateFIAD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:paddingVertical="10dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        tools:text="end date" />
+
+        <Spinner
+            android:id="@+id/spAddBucketFIAD"
+            style="@android:style/Widget.Holo.Light.Spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/cadet_blue"
+            android:spinnerMode="dialog" />
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/btnAddActivityFIAD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginHorizontal="100dp"
+        android:layout_marginBottom="40dp"
+        android:backgroundTint="@color/powder_blue"
+        android:text="@string/add_to_bucket"
+        android:textColor="@color/black" />
+
+</RelativeLayout>
