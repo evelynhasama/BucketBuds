@@ -12,10 +12,9 @@ public class ApiTestHelper implements IEventAPI{
     private static ApiTestHelper mInstance;
 
     private ApiTestHelper() {
-
     }
 
-    public static synchronized ApiTestHelper getInstance() throws IOException {
+    public static synchronized ApiTestHelper getInstance(){
         if (mInstance == null) {
             mInstance = new ApiTestHelper();
         }
