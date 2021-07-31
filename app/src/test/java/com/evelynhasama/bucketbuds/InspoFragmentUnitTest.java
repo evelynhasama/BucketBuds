@@ -41,7 +41,6 @@ public class InspoFragmentUnitTest{
         inspoFragment.mApis = new IEventAPI[]{ApiTestHelper.getInstance()};
         inspoFragment.mAdapter = new InspoActivitiesAdapter(mContext, activityObjs, null);
         inspoFragment.getAPIData(mContext);
-        Thread.sleep(5000);
         assertEquals(2, inspoFragment.mAdapter.getItemCount());
         assertEquals(2, activityObjs.size());
         assertEquals("Activity Named 1", activityObjs.get(0).getName());
