@@ -100,7 +100,7 @@ public class BucketActivitiesFragment extends Fragment {
         RecyclerView rvBucketUsers = view.findViewById(R.id.rvBucketFriendsFBA);
         RecyclerView rvBucketActivities = view.findViewById(R.id.rvActivitiesFBA);
         konfettiView = view.findViewById(R.id.vKonfettiFBA);
-        progressBar = view.findViewById(R.id.pbLoadingFBA)
+        progressBar = view.findViewById(R.id.pbLoadingFBA);
         progressBar.setVisibility(ProgressBar.INVISIBLE);
 
         Glide.with(getContext()).load(bucketList.getImage().getUrl()).into(ivBucketImage);
