@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -42,6 +43,7 @@ public class BucketsFragment extends Fragment {
         BucketsFragment fragment = new BucketsFragment();
         return fragment;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,8 +114,10 @@ public class BucketsFragment extends Fragment {
         alertDialogBuilder.setView(messageView);
         // Create alert dialog
         final AlertDialog alertDialog = alertDialogBuilder.create();
+
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationCorner;
+
         Button btnSave = messageView.findViewById(R.id.btnSaveDSF);
         Button btnCancel = messageView.findViewById(R.id.btnCancelDSF);
 
