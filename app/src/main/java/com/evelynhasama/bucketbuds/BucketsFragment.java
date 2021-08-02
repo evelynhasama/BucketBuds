@@ -1,5 +1,6 @@
 package com.evelynhasama.bucketbuds;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -8,7 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,13 +28,17 @@ import java.util.List;
 public class BucketsFragment extends Fragment {
 
     public static final String TAG = "BucketsFragment";
+    public static final String SORT_KEY = "sort";
+    public static final String FILTER_KEY = "filter";
     View view;
     RecyclerView rvBuckets;
     BucketListAdapter adapter;
     UserPub userPub;
     List<BucketList> bucketLists;
+    GridLayoutManager gridLayoutManager;
     int selectedFilterID;
     int selectedSortID;
+    SharedPreferences pref;
 
     public BucketsFragment() {
         // Required empty public constructor
@@ -58,9 +63,11 @@ public class BucketsFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_buckets, container, false);
         rvBuckets = view.findViewById(R.id.rvBucketsFB);
 
-        // set default sorting/filtering
-        selectedFilterID = R.id.rbAll;
-        selectedSortID = R.id.rbModified;
+        pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        getSortFilterSavings();
+
+        gridLayoutManager = new GridLayoutManager(getContext(), 2);
+        rvBuckets.setLayoutManager(gridLayoutManager);
 
         bucketLists = new ArrayList<>();
         adapter = new BucketListAdapter(getContext(), bucketLists, getActivity());
@@ -79,8 +86,9 @@ public class BucketsFragment extends Fragment {
             public void done(List<BucketList> objects, ParseException e) {
                 if (e == null) {
                     adapter.changeBuckets(objects);
+                    Log.d(TAG, "adding buckets " + objects.size());
                 } else {
-                    Log.e(TAG, "error adding bucket lists", e);
+                    Log.d(TAG, "error adding bucket lists", e);
                 }
             }
         };
@@ -133,6 +141,7 @@ public class BucketsFragment extends Fragment {
             public void onClick(View v) {
                 selectedFilterID = rgFilter.getCheckedRadioButtonId();
                 selectedSortID = rgSort.getCheckedRadioButtonId();
+                updateSortFilterSavings();
                 getBuckets();
                 alertDialog.dismiss();
             }
@@ -170,6 +179,31 @@ public class BucketsFragment extends Fragment {
             showSortFilterDialog();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateSortFilterSavings(){
+        SharedPreferences.Editor edit = pref.edit();
+        edit.putInt(SORT_KEY, selectedSortID);
+        edit.putInt(FILTER_KEY, selectedFilterID);
+        edit.apply();
+    }
+
+    private void getSortFilterSavings(){
+        selectedSortID = pref.getInt(SORT_KEY, 0);
+        selectedFilterID = pref.getInt(FILTER_KEY, 0);
+        SharedPreferences.Editor edit = pref.edit();
+        if (selectedSortID == 0){
+            // default sort
+            edit.putInt(SORT_KEY, R.id.rbModified);
+            edit.apply();
+            selectedSortID = R.id.rbModified;
+        }
+        if (selectedFilterID == 0){
+            // default filter
+            edit.putInt(SORT_KEY, R.id.rbAll);
+            edit.apply();
+            selectedFilterID = R.id.rbAll;
+        }
     }
 
 
