@@ -4,10 +4,13 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -26,17 +29,25 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -49,6 +60,8 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
     public static final SimpleDateFormat DATE_TIME_FORMATTER = new SimpleDateFormat("M/dd/yyyy hh:mm a", Locale.US);
     public static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("M/dd/yyyy", Locale.US);
     public static final int REQUEST_PERMISSION_CODE = 133;
+    private static int AUTOCOMPLETE_REQUEST_CODE = 21;
+    public static final int LOCATION_REQUEST_PERMISSION_CODE = 133;
 
     private ActivityObj activityObj;
     View view;
@@ -65,6 +78,10 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
     TextView tvCalEventStatus;
     Button btnDeleteActivity;
     Menu mMenu;
+    EditText etLocation;
+    String address;
+    Autocomplete.IntentBuilder intentBuilder;
+    List<Place.Field> fields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS);
 
     public ActivityDetailsFragment() {
         // Required empty public constructor
@@ -302,6 +319,15 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
             }
             Toast.makeText(getContext(), "Please accept calendar permission requests to create events", Toast.LENGTH_LONG).show();
         }
+        if (requestCode == LOCATION_REQUEST_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getLocation();
+            } else {
+                // start intent without location bias
+                Intent intent = intentBuilder.build(getContext());
+                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+            }
+        }
     }
 
     public void showEditActivityDialog(){
@@ -316,11 +342,20 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
         alertDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationCorner;
         EditText etTitle = messageView.findViewById(R.id.etTitleDAA);
         EditText etDescription = messageView.findViewById(R.id.etDescriptionDAA);
-        EditText etLocation = messageView.findViewById(R.id.etLocationDAA);
+        etLocation = messageView.findViewById(R.id.etLocationDAA);
         EditText etWebsite = messageView.findViewById(R.id.etWebsiteDAA);
         Button btnSave = messageView.findViewById(R.id.btnSaveDAA);
         Button btnCancel = messageView.findViewById(R.id.btnCancelDAA);
         TextView tvDialogTitle = messageView.findViewById(R.id.tvTitleDAA);
+        ImageButton ibSearchPlaces = messageView.findViewById(R.id.ibSearchPlaces);
+
+        ibSearchPlaces.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intentBuilder = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields);
+                getLocation();
+            }
+        });
 
         tvDialogTitle.setText("Edit Activity Info");
         etTitle.setText(activityObj.getName(), TextView.BufferType.EDITABLE);
@@ -346,6 +381,9 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
                 activityObj.setDescription(description);
                 activityObj.setLocation(location);
                 activityObj.setWeb(web);
+                if (address != null){
+                    activityObj.setAddress(address);
+                }
                 SaveCallback saveCallback = new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
@@ -357,6 +395,11 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
                         tvDescription.setText("Description: "+ description);
                         tvLocation.setText("Location: " + location);
                         tvWebsite.setText("Website: "+ web);
+                        if (address != null){
+                            MenuHelper.setVisible(mMenu, MenuHelper.MAP);
+                        } else {
+                            MenuHelper.setInvisible(mMenu, MenuHelper.MAP);
+                        }
                         alertDialog.dismiss();
                     }
                 };
@@ -406,6 +449,49 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
             startActivity(mapIntent);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void getLocation() {
+
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager != null) {
+            // check permissions
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_REQUEST_PERMISSION_CODE);
+                return;
+            }
+            // getting GPS status
+            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                Toast.makeText(getContext(), "Enable GPS", Toast.LENGTH_SHORT).show();
+                return;
+            };
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            Double latitude;
+            Double longitude;
+            if (location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+                LatLng northEast = new LatLng(latitude + 0.5, longitude + 0.5);
+                LatLng southWest = new LatLng(latitude - 0.5, longitude - 0.5);
+                Intent intent = intentBuilder.setLocationBias(RectangularBounds.newInstance(southWest, northEast)).build(getContext());
+                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Log.e(TAG, status.getStatusMessage());
+                return;
+            }
+            Place place = Autocomplete.getPlaceFromIntent(data);
+            Log.d(TAG, "Place: " + place.getName());
+            etLocation.setText(place.getName(), TextView.BufferType.EDITABLE);
+            address = "geo:0,0?q=" + place.getAddress();
+        }
     }
 
 }
