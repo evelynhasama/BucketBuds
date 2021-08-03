@@ -56,6 +56,7 @@ import java.util.Arrays;
 import java.util.List;
 import nl.dionsegijn.konfetti.KonfettiView;
 import nl.dionsegijn.konfetti.models.Shape;
+import static android.app.Activity.RESULT_OK;
 
 public class BucketActivitiesFragment extends Fragment {
 
@@ -410,11 +411,12 @@ public class BucketActivitiesFragment extends Fragment {
                 Log.e(TAG, status.getStatusMessage());
                 return;
             }
-            Place place = Autocomplete.getPlaceFromIntent(data);
-            Log.d(TAG, "Place: " + place.getName());
-            etLocation.setText(place.getName(), TextView.BufferType.EDITABLE);
-            address = "geo:0,0?q=" + place.getAddress();
-            return;
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                Log.d(TAG, "Place: " + place.getName());
+                etLocation.setText(place.getName(), TextView.BufferType.EDITABLE);
+                address = "geo:0,0?q=" + place.getAddress();
+            }
         }
 
         if ((data != null) && requestCode == PICK_PHOTO_CODE) {
@@ -511,8 +513,8 @@ public class BucketActivitiesFragment extends Fragment {
             if (location != null) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
-                LatLng northEast = new LatLng(latitude + 0.5, longitude + 0.5);
-                LatLng southWest = new LatLng(latitude - 0.5, longitude - 0.5);
+                LatLng northEast = new LatLng(latitude + 0.2, longitude + 0.2);
+                LatLng southWest = new LatLng(latitude - 0.2, longitude - 0.2);
                 Intent intent = intentBuilder.setLocationBias(RectangularBounds.newInstance(southWest, northEast)).build(getContext());
                 startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
             }

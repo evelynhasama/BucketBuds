@@ -53,6 +53,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
+import static android.app.Activity.RESULT_OK;
+
 public class ActivityDetailsFragment extends Fragment implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
 
     private static final String ARG_ACTIVITY_OBJ = "activityObj";
@@ -471,8 +473,8 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
             if (location != null) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
-                LatLng northEast = new LatLng(latitude + 0.5, longitude + 0.5);
-                LatLng southWest = new LatLng(latitude - 0.5, longitude - 0.5);
+                LatLng northEast = new LatLng(latitude + 0.2, longitude + 0.2);
+                LatLng southWest = new LatLng(latitude - 0.2, longitude - 0.2);
                 Intent intent = intentBuilder.setLocationBias(RectangularBounds.newInstance(southWest, northEast)).build(getContext());
                 startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
             }
@@ -482,15 +484,18 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            Log.d(TAG, "result code:" + resultCode);
             if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 Status status = Autocomplete.getStatusFromIntent(data);
                 Log.e(TAG, status.getStatusMessage());
                 return;
             }
-            Place place = Autocomplete.getPlaceFromIntent(data);
-            Log.d(TAG, "Place: " + place.getName());
-            etLocation.setText(place.getName(), TextView.BufferType.EDITABLE);
-            address = "geo:0,0?q=" + place.getAddress();
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                Log.d(TAG, "Place: " + place.getName());
+                etLocation.setText(place.getName(), TextView.BufferType.EDITABLE);
+                address = "geo:0,0?q=" + place.getAddress();
+            }
         }
     }
 
