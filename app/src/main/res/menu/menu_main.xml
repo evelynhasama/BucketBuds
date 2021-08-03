@@ -2,6 +2,11 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/miMap"
+        android:icon="@android:drawable/ic_menu_mapmode"
+        android:title="@string/map"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/miTool"
         android:icon="@android:drawable/ic_menu_manage"
         android:title="@string/sort_filter"

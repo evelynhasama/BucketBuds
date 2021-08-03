@@ -1,18 +1,9 @@
 package com.evelynhasama.bucketbuds;
 
-import android.util.Log;
-
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
-import java.sql.Time;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
 
 @ParseClassName("Activity")
 public class ActivityObj extends ParseObject {
@@ -29,6 +20,7 @@ public class ActivityObj extends ParseObject {
     public static final String KEY_UPDATED = "updatedAt";
     public static final String KEY_EVENT_CREATED = "eventCreated";
     public static final String KEY_ALL_DAY = "allDay";
+    public static final String KEY_ADDRESS = "address";
 
     public static final int TICKETMASTER = 1;
     public static final int SEATGEEK = 2;
@@ -124,6 +116,14 @@ public class ActivityObj extends ParseObject {
 
     public int getCompany() {
         return mCompany;
+    }
+
+    public String getAddress(){
+        return getString(KEY_ADDRESS);
+    }
+
+    public void setAddress(String address){
+        put(KEY_ADDRESS, address);
     }
 
 }

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -381,6 +382,9 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
         if (!activityObj.getEventCreated()) {
             visibles.add(MenuHelper.CALENDAR);
         }
+        if (activityObj.getAddress() != null && !activityObj.getAddress().isEmpty()){
+            visibles.add(MenuHelper.MAP);
+        }
         visibles.add(MenuHelper.EDIT);
         MenuHelper.onCreateOptionsMenu(menu, visibles);
         super.onCreateOptionsMenu(menu, inflater);
@@ -395,9 +399,13 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
             afterSetStart = false;
             showDatePickerDialog(view, true);
         }
+        else if (item.getItemId() == MenuHelper.MAP){
+            Uri gmmIntentUri = Uri.parse(activityObj.getAddress());
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            startActivity(mapIntent);
+        }
         return super.onOptionsItemSelected(item);
     }
-
-
 
 }

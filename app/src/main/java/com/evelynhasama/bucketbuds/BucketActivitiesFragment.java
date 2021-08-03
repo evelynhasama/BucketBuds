@@ -1,12 +1,15 @@
 package com.evelynhasama.bucketbuds;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.ImageDecoder;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,12 +30,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -41,6 +52,7 @@ import com.parse.SaveCallback;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import nl.dionsegijn.konfetti.KonfettiView;
 import nl.dionsegijn.konfetti.models.Shape;
@@ -51,7 +63,10 @@ public class BucketActivitiesFragment extends Fragment {
     public static final String TAG = "BucketActivitiesFragment";
     public static final String PHOTO_FILE_NAME = "bucket_image.jpg";
     public final static int PICK_PHOTO_CODE = 111;
+    private static int AUTOCOMPLETE_REQUEST_CODE = 21;
+    public static final int LOCATION_REQUEST_PERMISSION_CODE = 133;
 
+    Autocomplete.IntentBuilder intentBuilder;
     BucketList bucketList;
     View view;
     List<User> users;
@@ -66,6 +81,9 @@ public class BucketActivitiesFragment extends Fragment {
     BucketActivityHeaderItem header_completed;
     KonfettiView konfettiView;
     ProgressBar progressBar;
+    EditText etLocation;
+    List<Place.Field> fields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS);
+    String address;
 
     public BucketActivitiesFragment() {
     }
@@ -219,10 +237,19 @@ public class BucketActivitiesFragment extends Fragment {
         alertDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationCorner;
         EditText etTitle = messageView.findViewById(R.id.etTitleDAA);
         EditText etDescription = messageView.findViewById(R.id.etDescriptionDAA);
-        EditText etLocation = messageView.findViewById(R.id.etLocationDAA);
+        etLocation = messageView.findViewById(R.id.etLocationDAA);
         EditText etWebsite = messageView.findViewById(R.id.etWebsiteDAA);
         Button btnSave = messageView.findViewById(R.id.btnSaveDAA);
         Button btnCancel = messageView.findViewById(R.id.btnCancelDAA);
+        ImageButton ibSearchPlaces = messageView.findViewById(R.id.ibSearchPlaces);
+
+        ibSearchPlaces.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intentBuilder = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields);
+                getLocation();
+            }
+        });
 
         // Configure dialog buttons
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -245,6 +272,9 @@ public class BucketActivitiesFragment extends Fragment {
                 activityObj.setBucket(bucketList);
                 activityObj.setLocation(location);
                 activityObj.setWeb(web);
+                if (address != null){
+                    activityObj.setAddress(address);
+                }
                 activityObj.saveInBackground(getNewActivitySaveCallback(activityObj, alertDialog));
             }
         });
@@ -374,6 +404,19 @@ public class BucketActivitiesFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Log.e(TAG, status.getStatusMessage());
+                return;
+            }
+            Place place = Autocomplete.getPlaceFromIntent(data);
+            Log.d(TAG, "Place: " + place.getName());
+            etLocation.setText(place.getName(), TextView.BufferType.EDITABLE);
+            address = "geo:0,0?q=" + place.getAddress();
+            return;
+        }
+
         if ((data != null) && requestCode == PICK_PHOTO_CODE) {
             Uri photoUri = data.getData();
 
@@ -416,6 +459,14 @@ public class BucketActivitiesFragment extends Fragment {
                     //do something like displaying a message that he didn`t allow the app to access gallery and you wont be able to let him select from gallery
                 }
                 break;
+            case LOCATION_REQUEST_PERMISSION_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getLocation();
+                } else {
+                    // start intent without location bias
+                    Intent intent = intentBuilder.build(getContext());
+                    startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+                }
         }
     }
 
@@ -440,5 +491,32 @@ public class BucketActivitiesFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    private void getLocation() {
+
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager != null) {
+            // check permissions
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_REQUEST_PERMISSION_CODE);
+                return;
+            }
+            // getting GPS status
+            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                Toast.makeText(getContext(), "Enable GPS", Toast.LENGTH_SHORT).show();
+                return;
+            };
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            Double latitude;
+            Double longitude;
+            if (location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+                LatLng northEast = new LatLng(latitude + 0.5, longitude + 0.5);
+                LatLng southWest = new LatLng(latitude - 0.5, longitude - 0.5);
+                Intent intent = intentBuilder.setLocationBias(RectangularBounds.newInstance(southWest, northEast)).build(getContext());
+                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+            }
+        }
+    }
 
 }
