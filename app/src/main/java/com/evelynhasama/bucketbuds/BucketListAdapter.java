@@ -67,6 +67,7 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
         TextView tvBucketName;
         TextView tvUserCount;
         TextView tvActivityCount;
+        ImageView ivCheckBox;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -74,6 +75,7 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
             tvBucketName = itemView.findViewById(R.id.tvBucketNameIBL);
             tvUserCount = itemView.findViewById(R.id.tvUserCountIBL);
             tvActivityCount = itemView.findViewById(R.id.tvActivityCountIBL);
+            ivCheckBox = itemView.findViewById(R.id.ivCheckBoxIBL);
         }
 
         public void bind(BucketList bucket) {
@@ -82,6 +84,9 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
             Glide.with(context).load(bucket.getImage().getUrl()).centerCrop().into(ivBucketImage);
             tvUserCount.setText(String.valueOf(bucket.getUserCount()));
             tvActivityCount.setText(String.valueOf(bucket.getActivityCount()));
+
+            int checkImage = bucket.getCompleted()? R.drawable.ic_checked_box : R.drawable.ic_unchecked_box;
+            ivCheckBox.setImageResource(checkImage);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

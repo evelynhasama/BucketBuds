@@ -41,6 +41,8 @@ public class InspoFragment extends Fragment {
     ImageView mIvRandomize;
     ChipGroup cgFilter;
     String radiusFilter;
+    Double latitude;
+    Double longitude;
     IEventAPI[] mApis = {SeatGeekHelper.getInstance(), MusementHelper.getInstance(), TicketMasterHelper.getInstance()};
 
     public static InspoFragment newInstance() {
@@ -116,18 +118,22 @@ public class InspoFragment extends Fragment {
             };
 
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            Double latitude;
-            Double longitude;
+
             if (location != null) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
                 mAdapter.clear();
-                for (IEventAPI api: mApis) {
-                    api.getEvents(getContext(), latitude, longitude, mAdapter, radiusFilter);
-                }
+                getAPIData(getContext());
             }
         }
     }
+
+    public void getAPIData(Context context){
+        for (IEventAPI api: mApis) {
+            api.getEvents(context, latitude, longitude, mAdapter, radiusFilter);
+        }
+    }
+
 
     private void setRandomView(){
 
