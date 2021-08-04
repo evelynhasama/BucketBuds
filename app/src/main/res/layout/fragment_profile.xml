@@ -131,20 +131,6 @@
         android:layout_marginBottom="-3dp"
         android:background="@android:color/white" />
 
-    <Button
-        android:id="@+id/btnEditProfile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/ivProfileImagePF"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="0dp"
-        android:layout_toEndOf="@+id/ivProfileImagePF"
-        android:backgroundTint="@color/lavender"
-        android:elevation="10dp"
-        android:text="@string/edit_profile_info"
-        android:textColor="@color/black"
-        android:textSize="10sp" />
-
     <TextView
         android:id="@+id/tvBucketCountPF"
         android:layout_width="wrap_content"
@@ -156,5 +142,15 @@
         android:textColor="@color/grape"
         android:textStyle="bold"
         tools:text="12" />
+
+    <ProgressBar
+        android:id="@+id/pbLoadingPF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="59dp"
+        android:layout_marginTop="61dp"
+        android:indeterminate="true" />
 
 </RelativeLayout>

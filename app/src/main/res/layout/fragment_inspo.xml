@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:paddingVertical="10dp"
         android:text="@string/get_random_idea"
         android:textAlignment="center"

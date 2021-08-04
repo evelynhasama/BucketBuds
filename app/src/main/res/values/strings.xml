@@ -11,9 +11,9 @@
     <string name="agreement">You are agreeing to the Bucket Buds </string>
     <string name="terms_of_service">Terms of Service</string>
     <string name="sign_up">Sign up</string>
-    <string name="inspo">inspo</string>
-    <string name="buckets">buckets</string>
-    <string name="profile">profile</string>
+    <string name="inspo">Inspiration</string>
+    <string name="buckets">Buckets</string>
+    <string name="profile">Profile</string>
     <string name="log_out">Log out</string>
     <string name="edit_profile_info">Edit Profile Info</string>
     <string name="bio">bio...</string>
@@ -43,4 +43,11 @@
     <string name="get_random_idea">Get Random Idea</string>
     <string name="find_local_activities">Find Local Activities</string>
     <string name="add_to_bucket">Add to Bucket</string>
+    <string name="delete_bucket">Delete Bucket</string>
+    <string name="delete">delete</string>
+    <string name="edit">Edit</string>
+    <string name="calendar">Calendar</string>
+    <string name="create">Create</string>
+    <string name="add">Add</string>
+    <string name="sort_filter">Sort/Filter</string>
 </resources>

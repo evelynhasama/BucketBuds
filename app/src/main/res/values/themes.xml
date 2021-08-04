@@ -26,4 +26,9 @@
         <item name="android:fontFamily">@font/lato</item>
     </style>
 
+    <style name="DialogAnimationCorner">
+        <item name="android:windowEnterAnimation">@anim/from_right_top</item>
+        <item name="android:windowExitAnimation">@anim/to_right_top</item>
+    </style>
+
 </resources>

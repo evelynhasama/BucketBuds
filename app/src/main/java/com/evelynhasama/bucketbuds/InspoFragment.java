@@ -148,8 +148,7 @@ public class InspoFragment extends Fragment {
         mTvRandomTitle = mRandomView.findViewById(R.id.tvTitleIA);
         mIvRandomize = mRandomView.findViewById(R.id.ivCheckBoxIA);
 
-        mIvRandomize.setBackgroundColor(getResources().getColor(R.color.cadet_blue));
-        Glide.with(getContext()).load(R.drawable.ic_replay).into(mIvRandomize);
+        mIvRandomize.setImageResource(R.drawable.ic_replay);
 
         mIvRandomize.setOnClickListener(new View.OnClickListener() {
             @Override

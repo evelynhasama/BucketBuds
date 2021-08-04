@@ -4,46 +4,46 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.ImageDecoder;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.parse.FindCallback;
-import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import nl.dionsegijn.konfetti.KonfettiView;
+import nl.dionsegijn.konfetti.models.Shape;
 
 public class BucketActivitiesFragment extends Fragment {
 
@@ -57,7 +57,6 @@ public class BucketActivitiesFragment extends Fragment {
     List<User> users;
     BucketUsersAdapter bucketUsersAdapter;
     BucketActivitiesAdapter activitiesAdapter;
-    ImageView ivBucketImageDEB;
     ImageView ivBucketImage;
     TextView tvBucketName;
     TextView tvBucketDescription;
@@ -65,6 +64,8 @@ public class BucketActivitiesFragment extends Fragment {
     int completedHeaderPosition;
     Switch swCompleted;
     BucketActivityHeaderItem header_completed;
+    KonfettiView konfettiView;
+    ProgressBar progressBar;
 
     public BucketActivitiesFragment() {
     }
@@ -80,6 +81,7 @@ public class BucketActivitiesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             bucketList = getArguments().getParcelable(ARG_BUCKET_LIST);
         }
@@ -95,13 +97,19 @@ public class BucketActivitiesFragment extends Fragment {
         tvBucketName = view.findViewById(R.id.tvBucketNameFBA);
         tvBucketDescription = view.findViewById(R.id.tvBucketDescriptionFBA);
         ivBucketImage = view.findViewById(R.id.ivBucketImageFBA);
-        Button btnEditBucket = view.findViewById(R.id.btnEditBucketFBA);
-        Button btnAddActivity = view.findViewById(R.id.btnAddActivityFBA);
         RecyclerView rvBucketUsers = view.findViewById(R.id.rvBucketFriendsFBA);
         RecyclerView rvBucketActivities = view.findViewById(R.id.rvActivitiesFBA);
+        konfettiView = view.findViewById(R.id.vKonfettiFBA);
+        progressBar = view.findViewById(R.id.pbLoadingFBA);
+        progressBar.setVisibility(ProgressBar.INVISIBLE);
 
-        Glide.with(getContext()).load(bucketList.getImage().getUrl()).centerCrop()
-                .transform(new RoundedCorners(10)).into(ivBucketImage);
+        Glide.with(getContext()).load(bucketList.getImage().getUrl()).into(ivBucketImage);
+        ivBucketImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onPickPhoto(v);
+            }
+        });
         tvBucketName.setText(bucketList.getName());
         tvBucketDescription.setText(bucketList.getDescription());
         swCompleted.setChecked(bucketList.getCompleted() ? true : false);
@@ -110,6 +118,24 @@ public class BucketActivitiesFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 bucketList.setCompleted(isChecked);
+                if (isChecked){
+                    completedHeaderPosition = allActivityItemsList.indexOf(header_completed);
+                    // when the active section is not empty
+                    if (completedHeaderPosition != 1) {
+                        swCompleted.setChecked(false);
+                        Toast.makeText(getContext(), "Complete all activities in your bucket list", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    konfettiView.build()
+                            .addColors(getResources().getColor(R.color.cadet_blue), getResources().getColor(R.color.grape), getResources().getColor(R.color.lavender))
+                            .setDirection(0.0, 359.0)
+                            .setSpeed(1f, 5f)
+                            .setFadeOutEnabled(true)
+                            .setTimeToLive(2000L)
+                            .addShapes(Shape.Square.INSTANCE, Shape.Circle.INSTANCE)
+                            .setPosition(-50f, konfettiView.getWidth() + 50f, -50f, -50f)
+                            .streamFor(200, 2000L);
+                    }
                 bucketList.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
@@ -118,21 +144,6 @@ public class BucketActivitiesFragment extends Fragment {
                         }
                     }
                 });
-            }
-        });
-
-        btnAddActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "btnAddActivity clicked");
-                showAddActivityDialog();
-            }
-        });
-
-        btnEditBucket.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showEditBucketDialog();
             }
         });
 
@@ -211,6 +222,8 @@ public class BucketActivitiesFragment extends Fragment {
         alertDialogBuilder.setView(messageView);
         // Create alert dialog
         final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationCorner;
         EditText etTitle = messageView.findViewById(R.id.etTitleDAA);
         EditText etDescription = messageView.findViewById(R.id.etDescriptionDAA);
         EditText etLocation = messageView.findViewById(R.id.etLocationDAA);
@@ -288,22 +301,15 @@ public class BucketActivitiesFragment extends Fragment {
         alertDialogBuilder.setView(messageView);
         // Create alert dialog
         final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationCorner;
         EditText etName = messageView.findViewById(R.id.etBucketNameDEB);
         EditText etDescription = messageView.findViewById(R.id.etDescriptionDEB);
-        ivBucketImageDEB = messageView.findViewById(R.id.ivBucketImageDEB);
         Button btnSave = messageView.findViewById(R.id.btnSaveDEB);
         Button btnCancel = messageView.findViewById(R.id.btnCancelDEB);
 
         etDescription.setText(bucketList.getDescription(), TextView.BufferType.EDITABLE);
         etName.setText(bucketList.getName(), TextView.BufferType.EDITABLE);
-        Glide.with(getContext()).load(bucketList.getImage().getUrl()).centerCrop().into(ivBucketImageDEB);
-
-        ivBucketImageDEB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onPickPhoto(v);
-            }
-        });
 
         // Configure dialog buttons
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -329,8 +335,7 @@ public class BucketActivitiesFragment extends Fragment {
                         tvBucketDescription.setText(description);
                         tvBucketName.setText(name);
                         alertDialog.dismiss();
-                        Glide.with(getContext()).load(bucketList.getImage().getUrl()).centerCrop()
-                                .transform(new RoundedCorners(10)).into(ivBucketImage);
+                        Glide.with(getContext()).load(bucketList.getImage().getUrl()).centerCrop().into(ivBucketImage);
                     }
                 });
             }
@@ -381,15 +386,27 @@ public class BucketActivitiesFragment extends Fragment {
 
             // Load the image located at photoUri into selectedImage
             Bitmap selectedImage = loadFromUri(photoUri);
-            ivBucketImageDEB.setImageBitmap(selectedImage);
-
+            progressBar.bringToFront();
+            progressBar.setVisibility(ProgressBar.VISIBLE);
             // convert to ParseFile and set to BucketList
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            selectedImage.compress(Bitmap.CompressFormat.PNG,100,stream);
+            selectedImage.compress(Bitmap.CompressFormat.PNG,70,stream);
             byte[] byteArray = stream.toByteArray();
 
             ParseFile file = new ParseFile(PHOTO_FILE_NAME, byteArray);
             bucketList.setImage(file);
+            bucketList.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e != null) {
+                        Log.e(TAG, "error saving image" + e);
+                        return;
+                    }
+                    ivBucketImage.setImageBitmap(selectedImage);
+                    progressBar.setVisibility(ProgressBar.INVISIBLE);
+                    Log.d(TAG, "done saving bucket image");
+                }
+            });
         }
     }
 
@@ -408,5 +425,27 @@ public class BucketActivitiesFragment extends Fragment {
                 break;
         }
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+        List<Integer> visibles = new ArrayList<>();
+        visibles.add(MenuHelper.ADD);
+        visibles.add(MenuHelper.EDIT);
+        MenuHelper.onCreateOptionsMenu(menu, visibles);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == MenuHelper.EDIT) {
+            showEditBucketDialog();
+        }
+        else if (item.getItemId() == MenuHelper.ADD){
+            showAddActivityDialog();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }

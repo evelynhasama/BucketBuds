@@ -3,7 +3,9 @@ package com.evelynhasama.bucketbuds;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.ColorDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +43,8 @@ import com.parse.SaveCallback;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProfileFragment extends Fragment {
 
@@ -57,11 +62,11 @@ public class ProfileFragment extends Fragment {
     TextView tvFriendCount;
     TextView tvBucketCount;
     ImageView ivProfileImage;
-    Button btnEditProfile;
     TabLayout tabLayout;
     ViewPager viewPager;
     User user;
     UserPub userPub;
+    ProgressBar progressBar;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -92,9 +97,11 @@ public class ProfileFragment extends Fragment {
         tvFriendCount = view.findViewById(R.id.tvFriendCountPF);
         tvBucketCount = view.findViewById(R.id.tvBucketCountPF);
         ivProfileImage = view.findViewById(R.id.ivProfileImagePF);
-        btnEditProfile = view.findViewById(R.id.btnEditProfile);
         tabLayout = view.findViewById(R.id.sliding_tabsPF);
         viewPager = view.findViewById(R.id.viewpagerPF);
+        progressBar = view.findViewById(R.id.pbLoadingPF);
+
+        progressBar.setVisibility(ProgressBar.INVISIBLE);
 
         ParseFile image = user.getImage();
         if (image == null){
@@ -116,12 +123,6 @@ public class ProfileFragment extends Fragment {
             tvBio.setText(bio);
         }
 
-        btnEditProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showEditProfileDialog();
-            }
-        });
 
         ivProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,6 +146,8 @@ public class ProfileFragment extends Fragment {
         alertDialogBuilder.setView(messageView);
         // Create alert dialog
         final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationCorner;
         EditText etUsername = messageView.findViewById(R.id.etUsernameDE);
         EditText etBio = messageView.findViewById(R.id.etBioDE);
         EditText etFirstName = messageView.findViewById(R.id.etFirstNameDE);
@@ -252,6 +255,7 @@ public class ProfileFragment extends Fragment {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == getActivity().RESULT_OK) {
                 // Load the taken image into a preview
+                progressBar.setVisibility(ProgressBar.VISIBLE);
                 user.setImage(new ParseFile(photoFile));
                 user.saveInBackground(new SaveCallback() {
                     @Override
@@ -259,6 +263,7 @@ public class ProfileFragment extends Fragment {
                         if (e == null) {
                             Bitmap takenImage = rotateBitmapOrientation(photoFile.getAbsolutePath());
                             Glide.with(view).load(takenImage).transform(new CenterCrop(), new RoundedCorners(20)).into(ivProfileImage);
+                            progressBar.setVisibility(ProgressBar.INVISIBLE);
                         } else {
                             Toast.makeText(getContext(), "Image failed to save", Toast.LENGTH_SHORT).show();
                         }
@@ -306,21 +311,24 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
-        MenuItem miLogout = menu.findItem(R.id.logout);
-        MenuItem miCreate = menu.findItem(R.id.miCreate);
-        miCreate.setVisible(false);
-        miLogout.setVisible(true);
+        inflater.inflate(R.menu.menu_main, menu);
+        List<Integer> visibles = new ArrayList<>();
+        visibles.add(MenuHelper.LOGOUT);
+        visibles.add(MenuHelper.EDIT);
+        MenuHelper.onCreateOptionsMenu(menu, visibles);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.logout) {
+        if (item.getItemId() == MenuHelper.LOGOUT) {
             ParseUser.logOut();
             Intent intent = new Intent(getContext(), LoginActivity.class);
             startActivity(intent);
             getActivity().finish();
+        }
+        else if (item.getItemId() == MenuHelper.EDIT){
+            showEditProfileDialog();
         }
         return super.onOptionsItemSelected(item);
     }

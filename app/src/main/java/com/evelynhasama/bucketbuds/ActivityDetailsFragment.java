@@ -1,9 +1,13 @@
 package com.evelynhasama.bucketbuds;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -12,22 +16,29 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import com.parse.DeleteCallback;
 import com.parse.ParseException;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 public class ActivityDetailsFragment extends Fragment implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
@@ -47,13 +58,12 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
     TextView tvStartDate;
     TextView tvEndDate;
     Button btnCalendarEvent;
-    Button btnSetDates;
     Boolean allDay;
     Switch swAllDay;
     Boolean afterSetStart; // false when setting the start date/time and true after
     TextView tvCalEventStatus;
-    Button btnEditActivity;
     Button btnDeleteActivity;
+    Menu mMenu;
 
     public ActivityDetailsFragment() {
         // Required empty public constructor
@@ -70,6 +80,7 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             activityObj = getArguments().getParcelable(ARG_ACTIVITY_OBJ);
         }
@@ -88,10 +99,8 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
         tvWebsite = view.findViewById(R.id.tvWebsiteFAD);
         tvEndDate = view.findViewById(R.id.tvEndDateFAD);
         btnCalendarEvent = view.findViewById(R.id.btnCalendarEventFAD);
-        btnSetDates = view.findViewById(R.id.btnSetDatesFAD);
         swAllDay = view.findViewById(R.id.swAllDay);
         tvCalEventStatus = view.findViewById(R.id.tvCalStatusFAD);
-        btnEditActivity = view.findViewById(R.id.btnEditActivityFAD);
         btnDeleteActivity = view.findViewById(R.id.btnDeleteActivityFAD);
 
         tvTitle.setText(activityObj.getName());
@@ -126,14 +135,6 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
             }
         });
 
-        btnSetDates.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                afterSetStart = false;
-                showDatePickerDialog(v, true);
-            }
-        });
-
         btnCalendarEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,13 +162,6 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
                         getActivity().getSupportFragmentManager().popBackStack();
                     }
                 });
-            }
-        });
-
-        btnEditActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showEditActivityDialog();
             }
         });
 
@@ -287,7 +281,9 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
     }
 
     public void eventAlreadyCreated(){
-        btnSetDates.setVisibility(View.GONE);
+        if (mMenu != null){
+            MenuHelper.setInvisible(mMenu, MenuHelper.CALENDAR);
+        }
         btnCalendarEvent.setVisibility(View.GONE);
         swAllDay.setClickable(false);
         tvCalEventStatus.setText("This activity is already scheduled and a calendar invite has been sent");
@@ -315,6 +311,8 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
         alertDialogBuilder.setView(messageView);
         // Create alert dialog
         final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationCorner;
         EditText etTitle = messageView.findViewById(R.id.etTitleDAA);
         EditText etDescription = messageView.findViewById(R.id.etDescriptionDAA);
         EditText etLocation = messageView.findViewById(R.id.etLocationDAA);
@@ -374,5 +372,32 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
 
         alertDialog.show();
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        mMenu = menu;
+        inflater.inflate(R.menu.menu_main, menu);
+        List<Integer> visibles = new ArrayList<>();
+        if (!activityObj.getEventCreated()) {
+            visibles.add(MenuHelper.CALENDAR);
+        }
+        visibles.add(MenuHelper.EDIT);
+        MenuHelper.onCreateOptionsMenu(menu, visibles);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == MenuHelper.EDIT) {
+            showEditActivityDialog();
+        }
+        else if (item.getItemId() == MenuHelper.CALENDAR){
+            afterSetStart = false;
+            showDatePickerDialog(view, true);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 
 }
