@@ -22,6 +22,17 @@
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/ivCheckBoxIBL"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_below="@+id/ivBucketImageIBL"
+                android:layout_marginStart="66dp"
+                android:layout_marginTop="3dp"
+                android:layout_toEndOf="@+id/imageView7"
+                card_view:srcCompat="@drawable/ic_unchecked_box"
+                card_view:tint="@color/cadet_blue" />
+
+            <ImageView
                 android:id="@+id/imageView7"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
