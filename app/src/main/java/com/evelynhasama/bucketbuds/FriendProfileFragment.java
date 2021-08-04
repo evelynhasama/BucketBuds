@@ -27,8 +27,10 @@ public class FriendProfileFragment extends Fragment {
 
     public static final String ARG_PARSE_FRIEND = "friend";
     public static final String ARG_FRIEND_USER_PUB = "friendUserPub";
+    public static final String ARG_CURRENT_USER_PUB = "userPub";
     public static final String TAG = "FriendProfileFragment";
 
+    UserPub currentUserPub;
     User friend;
     UserPub friendUserPub;
     View view;
@@ -47,10 +49,11 @@ public class FriendProfileFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static FriendProfileFragment newInstance(ParseUser parseFriend, UserPub friendUserPub) {
+    public static FriendProfileFragment newInstance(ParseUser parseFriend, UserPub friendUserPub, UserPub currentUserPub) {
         FriendProfileFragment fragment = new FriendProfileFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_FRIEND_USER_PUB, friendUserPub);
+        args.putParcelable(ARG_CURRENT_USER_PUB, currentUserPub);
         args.putParcelable(ARG_PARSE_FRIEND, parseFriend);
         fragment.setArguments(args);
         return fragment;
@@ -63,6 +66,7 @@ public class FriendProfileFragment extends Fragment {
             ParseUser parseUser = getArguments().getParcelable(ARG_PARSE_FRIEND);
             friend = new User(parseUser);
             friendUserPub = getArguments().getParcelable(ARG_FRIEND_USER_PUB);
+            currentUserPub = getArguments().getParcelable(ARG_CURRENT_USER_PUB);
         }
     }
 
@@ -99,16 +103,34 @@ public class FriendProfileFragment extends Fragment {
         rvFriendBucketLists.setLayoutManager(new GridLayoutManager(getContext(), 2));
         adapter = new FriendBucketsAdapter(getContext(), bucketLists);
         rvFriendBucketLists.setAdapter(adapter);
-        getBuckets();
+        getUserBuckets();
 
         return view;
     }
 
-    private void getBuckets() {
+    private void getUserBuckets() {
         FindCallback<BucketList> findCallback = new FindCallback<BucketList>() {
             @Override
             public void done(List<BucketList> objects, ParseException e) {
-                Log.d(TAG, "get buckets "+objects.size());
+                if (e != null){
+                    Log.e(TAG, String.valueOf(e));
+                    return;
+                }
+                List<String> bucketIds = new ArrayList<>();
+                for (BucketList bucketList: objects){
+                    bucketIds.add(bucketList.getObjectId());
+                }
+                adapter.setMyBuckets(bucketIds);
+                getFriendBuckets();
+            }
+        };
+        currentUserPub.getBucketsRelation().getQuery().findInBackground(findCallback);
+    }
+
+    private void getFriendBuckets() {
+        FindCallback<BucketList> findCallback = new FindCallback<BucketList>() {
+            @Override
+            public void done(List<BucketList> objects, ParseException e) {
                 if (e != null){
                     Log.e(TAG, String.valueOf(e));
                     return;

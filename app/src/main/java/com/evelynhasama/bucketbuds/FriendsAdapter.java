@@ -140,7 +140,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Fragment myFragment = FriendProfileFragment.newInstance(user.getParseUser(), otherUserPub);
+                    Fragment myFragment = FriendProfileFragment.newInstance(user.getParseUser(), otherUserPub, currentUserPub);
                     activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, myFragment).addToBackStack(null).commit();
                 }
             });

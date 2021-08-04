@@ -1,13 +1,20 @@
 package com.evelynhasama.bucketbuds;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import org.jetbrains.annotations.NotNull;
@@ -17,12 +24,13 @@ public class FriendBucketsAdapter extends RecyclerView.Adapter<FriendBucketsAdap
 
     public static final String TAG = "FriendBucketsAdapter";
     Context context;
-    List<BucketList> buckets;
+    List<BucketList> friendBuckets;
     View view;
+    List<String> userBucketIds;
 
-    public FriendBucketsAdapter(Context context, List<BucketList> buckets) {
+    public FriendBucketsAdapter(Context context, List<BucketList> friendBuckets) {
         this.context = context;
-        this.buckets = buckets;
+        this.friendBuckets = friendBuckets;
     }
 
     @NonNull
@@ -35,13 +43,17 @@ public class FriendBucketsAdapter extends RecyclerView.Adapter<FriendBucketsAdap
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull FriendBucketsAdapter.ViewHolder holder, int position) {
-        BucketList bucket = buckets.get(position);
+        BucketList bucket = friendBuckets.get(position);
         holder.bind(bucket);
     }
     
     @Override
     public int getItemCount() {
-        return buckets.size();
+        return friendBuckets.size();
+    }
+
+    public void setMyBuckets(List<String> bucketIds){
+        this.userBucketIds = bucketIds;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -76,10 +88,45 @@ public class FriendBucketsAdapter extends RecyclerView.Adapter<FriendBucketsAdap
                 public boolean onLongClick(View v) {
                     v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                     // join bucket
-                    return false;
+                    if (userBucketIds.contains(bucket.getObjectId())) {
+                        Toast.makeText(context, "Mutual bucket list", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                    showRequestDialog(bucket);
+                    return true;
                 }
             });
         }
+    }
+
+    private void showRequestDialog(BucketList bucketList){
+        View messageView = LayoutInflater.from(context).
+                inflate(R.layout.dialog_request_to_join, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setView(messageView);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        TextView tvBucketName = messageView.findViewById(R.id.tvBucketNameDRJ);
+        Button btnSave = messageView.findViewById(R.id.btnSaveDRJ);
+        Button btnCancel = messageView.findViewById(R.id.btnCancelDRJ);
+
+        tvBucketName.setText(bucketList.getName());
+
+        // Configure dialog buttons
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: process request to join
+                alertDialog.dismiss();
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.cancel();
+            }
+        });
+        alertDialog.show();
     }
 
 }
