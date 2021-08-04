@@ -85,12 +85,12 @@ public class FriendsPageFragment extends Fragment {
         RecyclerView rvUsers = view.findViewById(R.id.rvFriends);
         SearchView searchView = view.findViewById(R.id.svFriends);
         if (mPage == FRIENDS_PAGE) {
-            friendsAdapter = new FriendsAdapter(getContext(), friends, userPub, true, this, new ArrayList<>());
+            friendsAdapter = new FriendsAdapter(getContext(), friends, userPub, true, this, new ArrayList<>(), getActivity());
             rvUsers.setAdapter(friendsAdapter);
             rvUsers.setLayoutManager(new LinearLayoutManager(context));
             searchView.setVisibility(View.GONE);
         } else {
-            addFriendsAdapter = new FriendsAdapter(getContext(), addFriends, userPub,false, FriendsPageFragment.this, friendIds);
+            addFriendsAdapter = new FriendsAdapter(getContext(), addFriends, userPub,false, FriendsPageFragment.this, friendIds, getActivity());
             rvUsers.setAdapter(addFriendsAdapter);
             rvUsers.setLayoutManager(new LinearLayoutManager(context));
             searchView.setVisibility(View.VISIBLE);

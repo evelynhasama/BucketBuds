@@ -1,5 +1,6 @@
 package com.evelynhasama.bucketbuds;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -31,16 +33,18 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     Fragment fragment;
     List<String> friendsId;
     UserPub currentUserPub;
+    FragmentActivity activity;
     public static final User currentUser = User.getCurrentUser();
 
     // pass in context and list of users
-    public FriendsAdapter(Context context, List<User> users, UserPub currentUserPub, Boolean friendsBool, Fragment fragment, List<String> friendsId){
+    public FriendsAdapter(Context context, List<User> users, UserPub currentUserPub, Boolean friendsBool, Fragment fragment, List<String> friendsId, FragmentActivity activity){
         this.friendsBool = friendsBool;
         this.context = context;
         this.users = users;
         this.currentUserPub = currentUserPub;
         this.fragment = fragment;
         this.friendsId = friendsId;
+        this.activity = activity;
     }
 
     @NonNull
@@ -79,9 +83,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         TextView tvLastName;
         TextView tvBucketCount;
         TextView tvFriendCount;
+        View view;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            view = itemView;
             if (friendsBool) {
                 ivProfileImage = itemView.findViewById(R.id.ivProfileImageIF);
                 tvUsername = itemView.findViewById(R.id.tvUsernameIF);
@@ -130,6 +136,14 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 }
             };
             ivRemoveFriend.setOnClickListener(removeFriendClickListener);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Fragment myFragment = FriendProfileFragment.newInstance(user.getParseUser(), otherUserPub);
+                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, myFragment).addToBackStack(null).commit();
+                }
+            });
         }
 
         public void bindNotFriends(User user) {
