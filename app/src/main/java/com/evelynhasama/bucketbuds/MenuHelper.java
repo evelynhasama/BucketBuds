@@ -13,6 +13,7 @@ public class MenuHelper {
     public static final int EDIT = R.id.miEdit;
     public static final int TOOL = R.id.miTool;
     public static final int MAP = R.id.miMap;
+    public static final int REQUESTS = R.id.miRequests;
 
     static MenuItem miLogout;
     static MenuItem miCreate;
@@ -21,6 +22,7 @@ public class MenuHelper {
     static MenuItem miEdit;
     static MenuItem miTool;
     static MenuItem miMap;
+    static MenuItem miRequests;
 
     public static void onCreateOptionsMenu(Menu menu, List<Integer> visibles) {
 
@@ -31,6 +33,7 @@ public class MenuHelper {
         miEdit = menu.findItem(EDIT);
         miTool = menu.findItem(TOOL);
         miMap = menu.findItem(MAP);
+        miRequests = menu.findItem(REQUESTS);
 
         miLogout.setVisible(visibles.contains(R.id.logout));
         miCreate.setVisible(visibles.contains(R.id.miCreate));
@@ -39,6 +42,7 @@ public class MenuHelper {
         miEdit.setVisible(visibles.contains(R.id.miEdit));
         miTool.setVisible(visibles.contains(R.id.miTool));
         miMap.setVisible(visibles.contains(R.id.miMap));
+        miRequests.setVisible(visibles.contains(R.id.miRequests));
     }
 
     public static void setVisible(Menu menu, int id){

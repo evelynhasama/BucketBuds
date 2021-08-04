@@ -2,6 +2,11 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/miRequests"
+        android:icon="@android:drawable/ic_menu_send"
+        android:title="@string/requests"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/miMap"
         android:icon="@android:drawable/ic_menu_mapmode"
         android:title="@string/map"

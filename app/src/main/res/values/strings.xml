@@ -53,4 +53,7 @@
     <string name="map">Map</string>
     <string name="send">Send</string>
     <string name="request_to_join">Request to join:</string>
+    <string name="requests">Requests</string>
+    <string name="requested_to_join">Requested to join:</string>
+    <string name="bucket_requests">Bucket Requests</string>
 </resources>

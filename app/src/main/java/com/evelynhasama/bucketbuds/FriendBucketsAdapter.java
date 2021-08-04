@@ -12,11 +12,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
+
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
@@ -116,7 +118,21 @@ public class FriendBucketsAdapter extends RecyclerView.Adapter<FriendBucketsAdap
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: process request to join
+                BucketRequest request = new BucketRequest();
+                request.setBucket(bucketList);
+                request.setFromUser(User.getCurrentUser());
+                request.setStatus(BucketRequest.PENDING);
+                SaveCallback requestSaveCallback = new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (hasError(e)){
+                            return;
+                        }
+                        bucketList.addBucketRequest(request);
+                        bucketList.saveInBackground(getBucketListSaveCallback());
+                    }
+                };
+                request.saveInBackground(requestSaveCallback);
                 alertDialog.dismiss();
             }
         });
@@ -127,6 +143,27 @@ public class FriendBucketsAdapter extends RecyclerView.Adapter<FriendBucketsAdap
             }
         });
         alertDialog.show();
+    }
+
+    private SaveCallback getBucketListSaveCallback() {
+        return new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (hasError(e)){
+                    return;
+                }
+                Toast.makeText(context, "Request sent", Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
+
+    private Boolean hasError(ParseException e){
+        if (e != null){
+            Log.d(TAG, "error saving request "+ e);
+            Toast.makeText(context, "Error sending request", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
     }
 
 }
