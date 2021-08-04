@@ -1,0 +1,16 @@
+{
+  "events": [
+    {
+      "name": "Activity Named 1",
+      "description": "description number 1",
+      "location": "Home",
+      "web": "google.com"
+    },
+    {
+      "name": "Activity Named 2",
+      "description": "description number 2",
+      "location": "1 Hacker Way",
+      "web": "facebook.com"
+    }
+  ]
+}
