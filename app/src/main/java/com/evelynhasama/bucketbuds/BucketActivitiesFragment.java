@@ -119,6 +119,13 @@ public class BucketActivitiesFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 bucketList.setCompleted(isChecked);
                 if (isChecked){
+                    completedHeaderPosition = allActivityItemsList.indexOf(header_completed);
+                    // when the active section is not empty
+                    if (completedHeaderPosition != 1) {
+                        swCompleted.setChecked(false);
+                        Toast.makeText(getContext(), "Complete all activities in your bucket list", Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     konfettiView.build()
                             .addColors(getResources().getColor(R.color.cadet_blue), getResources().getColor(R.color.grape), getResources().getColor(R.color.lavender))
                             .setDirection(0.0, 359.0)
