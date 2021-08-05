@@ -12,7 +12,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.SaveCallback;
 
 import org.jetbrains.annotations.NotNull;
@@ -84,7 +87,12 @@ public class BucketRequestsAdapter extends RecyclerView.Adapter<BucketRequestsAd
             fromUser = request.getFromUser();
             tvFirstName.setText(fromUser.getFirstName());
             tvLastName.setText(fromUser.getLastName());
-            Glide.with(context).load(fromUser.getImage().getUrl()).circleCrop().into(ivProfileImage);
+            ParseFile image = fromUser.getImage();
+            if (image == null){
+                Glide.with(view).load(R.drawable.profile_placeholder).circleCrop().into(ivProfileImage);
+            } else {
+                Glide.with(view).load(image.getUrl()).circleCrop().into(ivProfileImage);
+            }
             // the user's own request to join other buckets
             if (request.getFromUser().getObjectId().equals(User.getCurrentUser().getObjectId())){
                 bindOwnRequest(request);

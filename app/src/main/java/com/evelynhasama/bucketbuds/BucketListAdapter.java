@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import org.jetbrains.annotations.NotNull;
@@ -188,16 +189,28 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
     }
 
     public void deleteBucket(BucketList bucketList, int position) {
-        bucketList.deleteInBackground(new DeleteCallback() {
+        bucketList.getBucketRequestsRelation().getQuery().findInBackground(new FindCallback<BucketRequest>() {
             @Override
-            public void done(ParseException e) {
-                if (e != null){
-                    Log.d(TAG, String.valueOf(e));
-                    return;
+            public void done(List<BucketRequest> objects, ParseException e) {
+                for (BucketRequest request: objects){
+                    try {
+                        request.delete();
+                    } catch (ParseException parseException) {
+                        parseException.printStackTrace();
+                    }
                 }
-                buckets.remove(position);
-                notifyItemRemoved(position);
-                Toast.makeText(context, "Bucket list deleted", Toast.LENGTH_SHORT).show();
+                bucketList.deleteInBackground(new DeleteCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null){
+                            Log.d(TAG, String.valueOf(e));
+                            return;
+                        }
+                        buckets.remove(position);
+                        notifyItemRemoved(position);
+                        Toast.makeText(context, "Bucket list deleted", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }
