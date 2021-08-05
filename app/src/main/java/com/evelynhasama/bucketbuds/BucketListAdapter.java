@@ -26,6 +26,8 @@ import com.parse.SaveCallback;
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
+import static android.view.View.GONE;
+
 
 public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.ViewHolder> {
 
@@ -68,6 +70,7 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
         TextView tvUserCount;
         TextView tvActivityCount;
         ImageView ivCheckBox;
+        Button btnJoinBucket;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -76,10 +79,12 @@ public class BucketListAdapter extends RecyclerView.Adapter<BucketListAdapter.Vi
             tvUserCount = itemView.findViewById(R.id.tvUserCountIBL);
             tvActivityCount = itemView.findViewById(R.id.tvActivityCountIBL);
             ivCheckBox = itemView.findViewById(R.id.ivCheckBoxIBL);
+            btnJoinBucket = itemView.findViewById(R.id.btnJoinBucketIBL);
         }
 
         public void bind(BucketList bucket) {
 
+            btnJoinBucket.setVisibility(GONE);
             tvBucketName.setText(bucket.getName());
             Glide.with(context).load(bucket.getImage().getUrl()).centerCrop().into(ivBucketImage);
             tvUserCount.setText(String.valueOf(bucket.getUserCount()));

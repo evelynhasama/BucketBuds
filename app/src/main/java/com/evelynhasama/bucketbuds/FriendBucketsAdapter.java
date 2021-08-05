@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
-import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.jetbrains.annotations.NotNull;
@@ -65,6 +67,7 @@ public class FriendBucketsAdapter extends RecyclerView.Adapter<FriendBucketsAdap
         TextView tvUserCount;
         TextView tvActivityCount;
         ImageView ivCheckBox;
+        Button btnJoinBucket;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -73,6 +76,7 @@ public class FriendBucketsAdapter extends RecyclerView.Adapter<FriendBucketsAdap
             tvUserCount = itemView.findViewById(R.id.tvUserCountIBL);
             tvActivityCount = itemView.findViewById(R.id.tvActivityCountIBL);
             ivCheckBox = itemView.findViewById(R.id.ivCheckBoxIBL);
+            btnJoinBucket = itemView.findViewById(R.id.btnJoinBucketIBL);
         }
 
         public void bind(BucketList bucket) {
@@ -82,22 +86,35 @@ public class FriendBucketsAdapter extends RecyclerView.Adapter<FriendBucketsAdap
             tvUserCount.setText(String.valueOf(bucket.getUserCount()));
             tvActivityCount.setText(String.valueOf(bucket.getActivityCount()));
 
-            int checkImage = bucket.getCompleted()? R.drawable.ic_checked_box : R.drawable.ic_unchecked_box;
+            int checkImage = bucket.getCompleted() ? R.drawable.ic_checked_box : R.drawable.ic_unchecked_box;
             ivCheckBox.setImageResource(checkImage);
 
-            view.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                    // join bucket
-                    if (userBucketIds.contains(bucket.getObjectId())) {
-                        Toast.makeText(context, "Mutual bucket list", Toast.LENGTH_SHORT).show();
-                        return false;
+            Boolean mutualBucket = userBucketIds.contains(bucket.getObjectId());
+            String btnText = mutualBucket ? "Mutual" : "Join";
+            btnJoinBucket.setClickable(!mutualBucket);
+            btnJoinBucket.setText(btnText);
+
+            if (!mutualBucket) {
+                FindCallback<BucketRequest> bucketRequestFindCallback = new FindCallback<BucketRequest>() {
+                    @Override
+                    public void done(List<BucketRequest> objects, ParseException e) {
+                        if (!objects.isEmpty()){
+                            Toast.makeText(context, "Request " + objects.get(0).getStatus(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        showRequestDialog(bucket);
                     }
-                    showRequestDialog(bucket);
-                    return true;
-                }
-            });
+                };
+                View.OnClickListener clickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ParseQuery<BucketRequest> query = new ParseQuery<BucketRequest>(BucketRequest.class);
+                        query.whereEqualTo(BucketRequest.KEY_FROM_USER, ParseUser.getCurrentUser()).whereEqualTo(BucketRequest.KEY_BUCKET, bucket);
+                        query.findInBackground(bucketRequestFindCallback);
+                    }
+                };
+                btnJoinBucket.setOnClickListener(clickListener);
+            }
         }
     }
 
