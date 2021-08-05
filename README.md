@@ -28,35 +28,37 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
 
 **Required Must-have Stories**
 
-* User can sign up with a new user profile
-* User can log in/log out of the app
-* User can add friends (other users) by phone number or username
-* User can remove friends
-* User can view their profile, bio, list of friends
-* User can edit their profile information
-* User can create lists shared amongst friends with list descriptions and ideal finish date
-* User can view all of their bucket lists
-* User can add activities with details (name, description, location, date/time) to a bucket list 
-* User can delete items in the bucket list
-* User can schedule events with the group using the Calendar Provider
-* User can see sort/filter list by completed/active bucket status, alphabetical order
-* User can get inspiration for activities they may be interested in through the APIs
- 
+* [x] User can sign up with a new user profile
+* [x] User can log in/log out of the app
+* [x] User can add friends (other users) by username
+* [x] User can remove friends
+* [x] User can view their profile, bio, list of friends
+* [x] User can edit their profile information
+* [x] User can create lists shared amongst friends with list descriptions and image
+* [x] User can view all of their bucket lists
+* [x] User can add activities with details (name, description, location, date/time) to a bucket list 
+* [x] User can delete activities in the bucket list
+* [x] User can schedule events with the group using the Calendar Provider
+* [x] User can filter bucket lists by completed/active status and sort by alphabetical order/last modified/created at
+* [x] User can get inspiration for activities they may be interested in through the APIs
 
 **Optional Nice-to-have Stories**
 
-* User can check if everyone's calenders are free or busy using the [Freebusy: query](https://developers.google.com/calendar/api/v3/reference/freebusy/query)
-* User can upload photos of completed activities into the bucket
-    * User can view photo details and which activity
-* Users can chat with the group through on-device messaging or in-app Parse chat
-* When adding friends, user's contacts can provide suggestions
-* User can copy/add over inspiration activities to their lists
-* User can add friends to a bucket list after list creation
-* User can modify activity details
-* User can route to event locations through on-device Google Maps
-* User can search through their home stream of bucket lists
-* User can search through bucket list for activity
-* User can view friends' profiles
+* [ ] User can check if everyone's calenders are free or busy using the [Freebusy: query](https://developers.google.com/calendar/api/v3/reference/freebusy/query)
+* [ ] User can upload photos of completed activities into the bucket
+    * [ ] User can view photo details and which activity
+* [ ] Users can chat with the group through on-device messaging or in-app Parse chat
+* [ ] When adding friends, user's contacts can provide suggestions
+* [x] User can copy/add over inspiration activities to their lists
+* [x] User can add friends to a bucket list after list creation (through Bucket Requests)
+* [x] User can modify activity details
+* [x] User can route to event locations through on-device Google Maps
+* [ ] User can search through their home stream of bucket lists
+* [ ] User can search through bucket list for activity
+* [x] User can view friends' profiles
+* [x] User can edit bucket list details
+* [x] User can filter local inspiration activities by mile radius
+* [x] User can select a location for the activity through Google Places Autocomplete
 
 
 ### 2. Screen Archetypes
@@ -69,23 +71,34 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
     * User can view their profile, bio, list of friends
     * User can remove friends
     * User can edit their profile information
-* Add friends screen (Fragment)
-    * User can add friends (other users) by phone number or username
+    * User can add friends (other users) by username
+* Friends Profile screen
+   * User can view friends' profiles
+   * User can add friends to a bucket list after list creation (through Bucket Requests)
 * Home Stream screen
     * User can view all of their bucket lists
+    * User can filter bucket lists by completed/active status and sort by alphabetical order/last modified/created at
+* Bucket Requests Screen
+   * User can add friends to a bucket list after list creation (through Bucket Requests)
 * Create Bucket List screen
-    * User can create bucket lists shared amongst friends with list descriptions and ideal finish date
-* Bucket List screen
-    * User can delete items in the bucket list
+    * User can create bucket lists shared amongst friends with list descriptions and image
+* Bucket List Activities screen
     * User can add activities with details (name, description, location) to a bucket list
+    * User can select a location for the activity through Google Places Autocomplete
+    * User can edit bucket list details
 * Activity Details screen
+    * User can delete activities in the bucket list
     * User can schedule events with the group using the the Calendar Provider
+    * User can modify activity details
+    * User can route to event locations through on-device Google Maps
 * Inspiration screen
     * User can get inspiration for activities they may be interested in through some of the following APIs:
       * [Bored API](https://www.boredapi.com/)
       * [Ticketmaster Dsicovery API](https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/)
       * [SeatGeek API](https://platform.seatgeek.com/#events)
       * [Musement API (actvities search)](https://api-docs.musement.com/docs/activities)
+    * User can filter local inspiration activities by mile radius
+    * User can copy/add over inspiration activities to their lists
 
 ### 3. Navigation
 
@@ -102,21 +115,31 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    * Registration screen
 * Registration screen
    * Home Stream screen (after registering)
-   * Login screen
+   * Login screen (when tap menu item)
 * Profile screen
-    * Add Friends screen
-* Add Friends screen (Fragment)
-    * Profile screen
+    * Friends Profile screen (when tapping friend)
+    * Login screen (after logging out)
+* Friends Profile screen
+    * None 
 * Home Stream screen
-    * Bucket List screen (when tapping on bucket list)
+    * Bucket List Activities screen (when tapping on bucket list)
+    * Create Bucket List Screen (when tap menu item)
+    * Bucket Requests Screen (when tap menu item)
+* Bucket Requests Screen
+    * None 
 * Create Bucket List screen
     * Home screen (after creating or back)
-* Bucket List screen
-    * Home Stream screen (back)
+* Bucket List Activities screen
     * Activity details screen (when tapping on activity)
+    * Create activity dialog (when tap menu item)
+       * Google Places Autocomplete (when editing location)
 * Activity Details screen
-    * Bucket List screen (back)
+    * Google Places Autocomplete (when editing location)
+    * Map to location (when tap menu item)
+    * Calendar to schedule event (when tap menu item)
 * Inspiration screen
+    * Inspo Activity Details Screen
+* Inspo Activity Details Screen
     * None
 
 ## Wireframes
@@ -124,10 +147,6 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    * <img src="https://github.com/evelynhasama/BucketBuds/blob/main/wireframes/login.jpg" width=500>
 * Main Workflow
    * <img src="https://github.com/evelynhasama/BucketBuds/blob/main/wireframes/mainworkflow.jpg" width=800>
-
-### [BONUS] Digital Wireframes & Mockups
-
-### [BONUS] Interactive Prototype
 
 ## Schema 
 ### Models
@@ -142,7 +161,6 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    | firstName     | String          | first name |
    | lastName      | String          | last name |
    | email         | String          | gmail address |
-   | calenderId    | String          | calenderId for Google Calendar API |
    | bio           | String          | words to describe themself |
    | image         | File            | profile picture |
    | userPub       | Pointer<UserPub>| points to user's public user |
@@ -174,6 +192,7 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    | activities    | Relation(Activity)| relation to activities in the bucket |
    | userCount     | Number          | number of users who own the bucket |
    | activityCount | Number          | number of activities in the bucket |
+   | bucketRequests| Relation(BucketRequest) | relation to users who requested the bucket |
    
 #### Activity
 
@@ -190,10 +209,21 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
    | bucket        | Pointer  | points to bucket list |
    | web           | String   | link to the activity web page |
    | eventCreated  | Boolean  | true when calender is event created |
+   | address       | String   | address provided by Google Places autocomplete |
+ 
+ #### BucketRequest
 
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | objectId      | String   | unique id for the activity (default field) |
+   | fromUser      | Pointer  | points to user who sent the request |
+   | bucket        | Pointer  | points to the bucket the user wants to join |
+   | status        | String   | pending, approved, denied |
+   | receiver      | Pointer  | bucket user who approved/denied the request | 
+ 
 
 ### Networking
-#### List of network requests by screen
+#### List of network requests to Parse by screen
 * Login screen
     * logInInBackground()
 * Registration screen
@@ -201,24 +231,41 @@ Collaborative bucket list app that allows users to create shared bucket lists wi
 * Profile screen
     * PUT update user profile info 
     * GET get user's profile info
-* Add Friends screen (Fragment)
-    * GET query for users by search
-    * PUT update friends list
+    * PUT add/remove friends
+    * GET get user's friends
+    * GET search for users by username
+* Friends Profile screen
+    * GET get friend's profile info
+    * GET get friend's buckets
+    * GET get user's buckets
+    * GET get bucket requests
+    * PUT create bucket requests
 * Home Stream screen
     * GET query for the user's own bucket lists
+    * deleteInBackground()
+* Bucket Requests Screen
+    * GET get user's outgoing requests
+    * GET get user's bucket lists
+    * GET get incoming requests for the user's buckets
+    * PUT respond to bucket requests
 * Create Bucket List screen
     * PUT create a bucket list
-* Bucket List screen
+* Bucket List Activities screen
     * GET query for activities
     * PUT create new activities
+    * PUT update bucket list activity count, completed status
 * Activity Details screen
     * PUT modify the activity info
+    * deleteInBackground()
 * Inspiration screen
     * None
+* Inspo Activity Details Screen
+    * PUT add activity to bucket list
 
-#### OPTIONAL: API Endpoints
+#### API Endpoints
 * [Bored API](https://www.boredapi.com/documentation)
    * Get a random event: GET http://www.boredapi.com/api/activity/
 * [Ticketmaster Dsicovery API](https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/)
 * [SeatGeek API](https://platform.seatgeek.com/#events)
 * [Musement API (actvities search)](https://api-docs.musement.com/docs/activities)
+* [Google Places Autocomplete](https://developers.google.com/maps/documentation/places/android-sdk/autocomplete#option_2_use_an_intent_to_launch_the_autocomplete_activity)
