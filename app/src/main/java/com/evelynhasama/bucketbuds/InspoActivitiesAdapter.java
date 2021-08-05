@@ -37,7 +37,8 @@ public class InspoActivitiesAdapter extends RecyclerView.Adapter<InspoActivities
     }
 
     public void addData(ActivityObj activityObj) {
-        mActivities.add(activityObj);
+        int position = binarySearch(activityObj);
+        mActivities.add(position, activityObj);
     }
 
     @NonNull
@@ -97,6 +98,23 @@ public class InspoActivitiesAdapter extends RecyclerView.Adapter<InspoActivities
                 }
             });
         }
+    }
+
+    private int binarySearch(ActivityObj activityObj){
+        int l = 0;
+        int r = mActivities.size()-1;
+        while (l <= r) {
+            int mid = Math.floorDiv((l + r), 2);
+            if (mActivities.get(mid).getName().compareTo(activityObj.getName()) < 0) {
+                l = mid + 1;
+            } else {
+                if (mActivities.get(mid).getName().equals(activityObj.getName())) {
+                    return mid;
+                }
+                r = mid - 1;
+            }
+        }
+        return l;
     }
 
 }
