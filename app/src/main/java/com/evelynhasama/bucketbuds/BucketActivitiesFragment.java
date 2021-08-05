@@ -203,7 +203,7 @@ public class BucketActivitiesFragment extends Fragment {
         rvBucketActivities.setAdapter(activitiesAdapter);
         rvBucketActivities.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        bucketList.getActivitiesRelation().getQuery().addDescendingOrder(ActivityObj.KEY_UPDATED).findInBackground(getActivitiesFindCallback());
+        bucketList.getActivitiesRelation().getQuery().include(ActivityObj.KEY_BUCKET).findInBackground(getActivitiesFindCallback());
 
         return view;
     }
