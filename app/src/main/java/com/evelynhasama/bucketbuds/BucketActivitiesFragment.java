@@ -64,8 +64,6 @@ public class BucketActivitiesFragment extends Fragment {
     public static final String TAG = "BucketActivitiesFragment";
     public static final String PHOTO_FILE_NAME = "bucket_image.jpg";
     public final static int PICK_PHOTO_CODE = 111;
-    private static int AUTOCOMPLETE_REQUEST_CODE = 21;
-    public static final int LOCATION_REQUEST_PERMISSION_CODE = 133;
 
     Autocomplete.IntentBuilder intentBuilder;
     BucketList bucketList;
@@ -255,7 +253,12 @@ public class BucketActivitiesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 intentBuilder = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields);
-                getLocation();
+                Intent intent = LocationHelper.getLocationPlacesAutocomplete(getActivity(), getContext(), intentBuilder);
+                if (intent == null) {
+                    // start intent without location bias
+                    intent = intentBuilder.build(getContext());
+                }
+                startActivityForResult(intent, LocationHelper.AUTOCOMPLETE_REQUEST_CODE);
             }
         });
 
@@ -412,7 +415,7 @@ public class BucketActivitiesFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+        if (requestCode == LocationHelper.AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 Status status = Autocomplete.getStatusFromIntent(data);
                 Log.e(TAG, status.getStatusMessage());
@@ -468,13 +471,14 @@ public class BucketActivitiesFragment extends Fragment {
                     //do something like displaying a message that he didn`t allow the app to access gallery and you wont be able to let him select from gallery
                 }
                 break;
-            case LOCATION_REQUEST_PERMISSION_CODE:
+            case LocationHelper.LOCATION_REQUEST_PERMISSION_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getLocation();
-                } else {
-                    // start intent without location bias
-                    Intent intent = intentBuilder.build(getContext());
-                    startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+                    Intent intent = LocationHelper.getLocationPlacesAutocomplete(getActivity(), getContext(), intentBuilder);
+                    if (intent == null) {
+                        // start intent without location bias
+                        intent = intentBuilder.build(getContext());
+                    }
+                    startActivityForResult(intent, LocationHelper.AUTOCOMPLETE_REQUEST_CODE);
                 }
         }
     }
@@ -498,34 +502,6 @@ public class BucketActivitiesFragment extends Fragment {
             showAddActivityDialog();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void getLocation() {
-
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager != null) {
-            // check permissions
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_REQUEST_PERMISSION_CODE);
-                return;
-            }
-            // getting GPS status
-            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-                Toast.makeText(getContext(), "Enable GPS", Toast.LENGTH_SHORT).show();
-                return;
-            };
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            Double latitude;
-            Double longitude;
-            if (location != null) {
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
-                LatLng northEast = new LatLng(latitude + 0.2, longitude + 0.2);
-                LatLng southWest = new LatLng(latitude - 0.2, longitude - 0.2);
-                Intent intent = intentBuilder.setLocationBias(RectangularBounds.newInstance(southWest, northEast)).build(getContext());
-                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
-            }
-        }
     }
 
 }

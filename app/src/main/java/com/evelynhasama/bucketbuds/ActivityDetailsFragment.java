@@ -62,8 +62,6 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
     public static final SimpleDateFormat DATE_TIME_FORMATTER = new SimpleDateFormat("M/dd/yyyy hh:mm a", Locale.US);
     public static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("M/dd/yyyy", Locale.US);
     public static final int REQUEST_PERMISSION_CODE = 133;
-    private static int AUTOCOMPLETE_REQUEST_CODE = 21;
-    public static final int LOCATION_REQUEST_PERMISSION_CODE = 133;
 
     private ActivityObj activityObj;
     View view;
@@ -321,13 +319,14 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
             }
             Toast.makeText(getContext(), "Please accept calendar permission requests to create events", Toast.LENGTH_LONG).show();
         }
-        if (requestCode == LOCATION_REQUEST_PERMISSION_CODE) {
+        if (requestCode == LocationHelper.LOCATION_REQUEST_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getLocation();
-            } else {
-                // start intent without location bias
-                Intent intent = intentBuilder.build(getContext());
-                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+                Intent intent = LocationHelper.getLocationPlacesAutocomplete(getActivity(), getContext(), intentBuilder);
+                if (intent == null) {
+                    // start intent without location bias
+                    intent = intentBuilder.build(getContext());
+                }
+                startActivityForResult(intent, LocationHelper.AUTOCOMPLETE_REQUEST_CODE);
             }
         }
     }
@@ -355,7 +354,11 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
             @Override
             public void onClick(View v) {
                 intentBuilder = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields);
-                getLocation();
+                Intent intent = LocationHelper.getLocationPlacesAutocomplete(getActivity(), getContext(), intentBuilder);
+                if (intent != null){
+                    startActivityForResult(intent, LocationHelper.AUTOCOMPLETE_REQUEST_CODE);
+                    return;
+                }
             }
         });
 
@@ -453,37 +456,9 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
         return super.onOptionsItemSelected(item);
     }
 
-    private void getLocation() {
-
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager != null) {
-            // check permissions
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_REQUEST_PERMISSION_CODE);
-                return;
-            }
-            // getting GPS status
-            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-                Toast.makeText(getContext(), "Enable GPS", Toast.LENGTH_SHORT).show();
-                return;
-            };
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            Double latitude;
-            Double longitude;
-            if (location != null) {
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
-                LatLng northEast = new LatLng(latitude + 0.2, longitude + 0.2);
-                LatLng southWest = new LatLng(latitude - 0.2, longitude - 0.2);
-                Intent intent = intentBuilder.setLocationBias(RectangularBounds.newInstance(southWest, northEast)).build(getContext());
-                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
-            }
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+        if (requestCode == LocationHelper.AUTOCOMPLETE_REQUEST_CODE) {
             Log.d(TAG, "result code:" + resultCode);
             if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 Status status = Autocomplete.getStatusFromIntent(data);
