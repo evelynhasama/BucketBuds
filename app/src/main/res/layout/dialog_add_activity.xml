@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:background="@drawable/dialog_rounded"
@@ -40,17 +42,41 @@
         android:hint="@string/description"
         android:textSize="14sp" />
 
-    <EditText
-        android:id="@+id/etLocationDAA"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
-        android:hint="@string/location"
-        android:inputType="textEmailAddress"
-        android:textSize="14sp" />
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/etLocationDAA"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_toStartOf="@+id/ibSearchPlaces"
+            android:hint="@string/location"
+            android:inputType="textEmailAddress"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/ibSearchPlaces"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="4dp"
+            android:backgroundTint="@color/white"
+            android:tint="@color/cadet_blue"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_search"
+            tools:layout_editor_absoluteX="338dp" />
+
+    </RelativeLayout>
 
     <EditText
         android:id="@+id/etWebsiteDAA"

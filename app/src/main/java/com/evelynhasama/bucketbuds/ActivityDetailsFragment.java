@@ -4,10 +4,14 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -25,21 +29,31 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+
+import static android.app.Activity.RESULT_OK;
 
 public class ActivityDetailsFragment extends Fragment implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
 
@@ -64,6 +78,10 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
     TextView tvCalEventStatus;
     Button btnDeleteActivity;
     Menu mMenu;
+    EditText etLocation;
+    String address;
+    Autocomplete.IntentBuilder intentBuilder;
+    List<Place.Field> fields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS);
 
     public ActivityDetailsFragment() {
         // Required empty public constructor
@@ -301,6 +319,16 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
             }
             Toast.makeText(getContext(), "Please accept calendar permission requests to create events", Toast.LENGTH_LONG).show();
         }
+        if (requestCode == LocationHelper.LOCATION_REQUEST_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = LocationHelper.getLocationPlacesAutocomplete(getActivity(), getContext(), intentBuilder);
+                if (intent == null) {
+                    // start intent without location bias
+                    intent = intentBuilder.build(getContext());
+                }
+                startActivityForResult(intent, LocationHelper.AUTOCOMPLETE_REQUEST_CODE);
+            }
+        }
     }
 
     public void showEditActivityDialog(){
@@ -315,11 +343,24 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
         alertDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationCorner;
         EditText etTitle = messageView.findViewById(R.id.etTitleDAA);
         EditText etDescription = messageView.findViewById(R.id.etDescriptionDAA);
-        EditText etLocation = messageView.findViewById(R.id.etLocationDAA);
+        etLocation = messageView.findViewById(R.id.etLocationDAA);
         EditText etWebsite = messageView.findViewById(R.id.etWebsiteDAA);
         Button btnSave = messageView.findViewById(R.id.btnSaveDAA);
         Button btnCancel = messageView.findViewById(R.id.btnCancelDAA);
         TextView tvDialogTitle = messageView.findViewById(R.id.tvTitleDAA);
+        ImageButton ibSearchPlaces = messageView.findViewById(R.id.ibSearchPlaces);
+
+        ibSearchPlaces.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intentBuilder = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields);
+                Intent intent = LocationHelper.getLocationPlacesAutocomplete(getActivity(), getContext(), intentBuilder);
+                if (intent != null){
+                    startActivityForResult(intent, LocationHelper.AUTOCOMPLETE_REQUEST_CODE);
+                    return;
+                }
+            }
+        });
 
         tvDialogTitle.setText("Edit Activity Info");
         etTitle.setText(activityObj.getName(), TextView.BufferType.EDITABLE);
@@ -345,6 +386,9 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
                 activityObj.setDescription(description);
                 activityObj.setLocation(location);
                 activityObj.setWeb(web);
+                if (address != null){
+                    activityObj.setAddress(address);
+                }
                 SaveCallback saveCallback = new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
@@ -356,6 +400,11 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
                         tvDescription.setText("Description: "+ description);
                         tvLocation.setText("Location: " + location);
                         tvWebsite.setText("Website: "+ web);
+                        if (address != null){
+                            MenuHelper.setVisible(mMenu, MenuHelper.MAP);
+                        } else {
+                            MenuHelper.setInvisible(mMenu, MenuHelper.MAP);
+                        }
                         alertDialog.dismiss();
                     }
                 };
@@ -381,6 +430,9 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
         if (!activityObj.getEventCreated()) {
             visibles.add(MenuHelper.CALENDAR);
         }
+        if (activityObj.getAddress() != null && !activityObj.getAddress().isEmpty()){
+            visibles.add(MenuHelper.MAP);
+        }
         visibles.add(MenuHelper.EDIT);
         MenuHelper.onCreateOptionsMenu(menu, visibles);
         super.onCreateOptionsMenu(menu, inflater);
@@ -395,9 +447,31 @@ public class ActivityDetailsFragment extends Fragment implements DatePickerDialo
             afterSetStart = false;
             showDatePickerDialog(view, true);
         }
+        else if (item.getItemId() == MenuHelper.MAP){
+            Uri gmmIntentUri = Uri.parse(activityObj.getAddress());
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            startActivity(mapIntent);
+        }
         return super.onOptionsItemSelected(item);
     }
 
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == LocationHelper.AUTOCOMPLETE_REQUEST_CODE) {
+            Log.d(TAG, "result code:" + resultCode);
+            if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Log.e(TAG, status.getStatusMessage());
+                return;
+            }
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                Log.d(TAG, "Place: " + place.getName());
+                etLocation.setText(place.getName(), TextView.BufferType.EDITABLE);
+                address = "geo:0,0?q=" + place.getAddress();
+            }
+        }
+    }
 
 }

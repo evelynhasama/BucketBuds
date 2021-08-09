@@ -5,10 +5,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-
 import android.os.Bundle;
 import android.view.MenuItem;
-
+import com.google.android.libraries.places.api.Places;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
         final Fragment fragment_profile = new ProfileFragment();
         final Fragment fragment_buckets = new BucketsFragment();
         final Fragment fragment_inspo = new InspoFragment();
+      
+        // Initialize the Places SDK
+        Places.initialize(getApplicationContext(), getString(R.string.google_api_key));
         ActionBar actionBar = getSupportActionBar();
         // handle navigation selection
         bottomNavigationView.setOnNavigationItemSelectedListener(
