@@ -164,6 +164,7 @@ public class BucketsFragment extends Fragment {
         List<Integer> visibles = new ArrayList<>();
         visibles.add(MenuHelper.ADD);
         visibles.add(MenuHelper.TOOL);
+        visibles.add(MenuHelper.REQUESTS);
         MenuHelper.onCreateOptionsMenu(menu, visibles);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -177,6 +178,11 @@ public class BucketsFragment extends Fragment {
         }
         else if (item.getItemId() == MenuHelper.TOOL){
             showSortFilterDialog();
+        }
+        else if (item.getItemId() == MenuHelper.REQUESTS){
+            FragmentActivity activity = getActivity();
+            Fragment myFragment = new BucketRequestsFragment();
+            activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, myFragment).addToBackStack(null).commit();
         }
         return super.onOptionsItemSelected(item);
     }

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".FriendProfileFragment">
+
+    <TextView
+        android:id="@+id/tvFriendCountFPF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvBucketCountFPF"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="5dp"
+        android:layout_toStartOf="@+id/ivBucketFPF"
+        android:textColor="@color/grape"
+        android:textStyle="bold"
+        tools:text="12" />
+
+    <ImageView
+        android:id="@+id/ivFriendFPF"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/ivBucketFPF"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        app:srcCompat="@drawable/person_icon"
+        app:tint="@color/grape"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tvLastNameFPF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="30dp"
+        android:layout_toEndOf="@+id/tvFirstNameFPF"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:text="Johnson" />
+
+    <ImageView
+        android:id="@+id/ivProfileImageFPF"
+        android:layout_width="100dp"
+        android:layout_height="130dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:clickable="true"
+        tools:srcCompat="@drawable/profile_placeholder" />
+
+    <TextView
+        android:id="@+id/tvFirstNameFPF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_toEndOf="@+id/ivProfileImageFPF"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:text="Alex" />
+
+    <TextView
+        android:id="@+id/tvUsernameFPF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvFirstNameFPF"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/ivProfileImageFPF"
+        android:textSize="16sp"
+        tools:text="alexander23" />
+
+    <ImageView
+        android:id="@+id/ivBucketFPF"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        app:srcCompat="@drawable/bucket_icon"
+        app:tint="@color/grape"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tvBioFPF"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivProfileImageFPF"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        android:autoLink="web"
+        android:ellipsize="end"
+        android:maxLines="4"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        tools:text="bio" />
+
+    <TextView
+        android:id="@+id/tvBucketCountFPF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="5dp"
+        android:layout_toStartOf="@+id/ivBucketFPF"
+        android:textColor="@color/grape"
+        android:textStyle="bold"
+        tools:text="12" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFriendBucketLists"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tvBioFPF"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp" />
+
+</RelativeLayout>

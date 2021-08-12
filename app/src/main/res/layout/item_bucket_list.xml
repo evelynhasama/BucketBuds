@@ -18,7 +18,7 @@
 
         <RelativeLayout
             android:id="@+id/rlBucketIBL"
-            android:layout_width="match_parent"
+            android:layout_width="180dp"
             android:layout_height="wrap_content">
 
             <ImageView
@@ -26,9 +26,9 @@
                 android:layout_width="17dp"
                 android:layout_height="17dp"
                 android:layout_below="@+id/ivBucketImageIBL"
-                android:layout_marginStart="66dp"
+                android:layout_alignParentEnd="true"
                 android:layout_marginTop="3dp"
-                android:layout_toEndOf="@+id/imageView7"
+                android:layout_marginEnd="10dp"
                 card_view:srcCompat="@drawable/ic_unchecked_box"
                 card_view:tint="@color/cadet_blue" />
 
@@ -108,6 +108,18 @@
                 android:textSize="12sp"
                 android:textStyle="normal"
                 tools:text="2" />
+
+            <Button
+                android:id="@+id/btnJoinBucketIBL"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="51dp"
+                android:layout_marginTop="90dp"
+                android:textColor="@color/black"
+                android:textSize="10sp" />
 
         </RelativeLayout>
 

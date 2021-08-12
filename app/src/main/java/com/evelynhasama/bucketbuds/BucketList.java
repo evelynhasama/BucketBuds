@@ -21,6 +21,7 @@ public class BucketList extends ParseObject {
     public static final String KEY_ACTIVITIES = "activities";
     public static final String KEY_ACTIVITY_COUNT = "activityCount";
     public static final String KEY_USER_COUNT = "userCount";
+    public static final String KEY_BUCKET_REQUESTS = "bucketRequests";
     public static final String TAG = "BucketListClass";
 
     public BucketList(){}
@@ -61,6 +62,12 @@ public class BucketList extends ParseObject {
         relation.add(ParseUser.getCurrentUser());
     }
 
+    public void addFriend(User friend) {
+        ParseRelation<ParseUser> relation = getUsersRelation();
+        relation.add(friend.getParseUser());
+        setUserCount(getUserCount() + 1);
+    }
+
     public void setImage(ParseFile image) {
         put(KEY_IMAGE, image);
     }
@@ -99,6 +106,15 @@ public class BucketList extends ParseObject {
 
     public void setActivityCount(int activityCount) {
         put(KEY_ACTIVITY_COUNT, activityCount);
+    }
+
+    public ParseRelation<BucketRequest> getBucketRequestsRelation() {
+        return getRelation(KEY_BUCKET_REQUESTS);
+    }
+
+    public void addBucketRequest(BucketRequest bucketRequest) {
+        ParseRelation<BucketRequest> relation = getBucketRequestsRelation();
+        relation.add(bucketRequest);
     }
 
 }
