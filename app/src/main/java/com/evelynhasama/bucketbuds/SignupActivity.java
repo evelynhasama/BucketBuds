@@ -88,8 +88,8 @@ public class SignupActivity extends AppCompatActivity {
     public void goMainActivity(){
         // Navigate to main activity through intent
         Intent intent  = new Intent(SignupActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-        finish();
     }
 
     public void signUpFailedToast(){

@@ -52,7 +52,6 @@ public class LoginActivity extends AppCompatActivity {
                 // Navigate to sign up activity
                 Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
     }
